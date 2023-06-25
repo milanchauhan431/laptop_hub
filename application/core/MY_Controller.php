@@ -34,6 +34,7 @@ class MY_Controller extends CI_Controller{
 		$this->load->model('masterModel');
 		$this->load->model('DashboardModel','dashboard');
 		$this->load->model('PermissionModel','permission');
+		$this->load->model('StockTransModel','itemStock');
 
 		/* Configration Models */
 		$this->load->model("TermsModel","terms");
@@ -73,6 +74,7 @@ class MY_Controller extends CI_Controller{
 
 		/* Accounting Model */
 		$this->load->model("SalesInvoiceModel","salesInvoice");
+		$this->load->model("PurchaseInvoiceModel","purchaseInvoice");
 
 		$this->setSessionVariables(["masterModel","dashboard","permission","terms","transport","hsnModel","materialGrade","itemCategory","brandMaster","sizeMaster","item","department","designation","employeeCategory","shiftModel","employee","party","transMainModel","taxMaster","expenseMaster","salesOrder","purchaseOrder","purchaseIndent","vehicleType","storeLocation","gateEntry","gateInward","salesInvoice"]);
 	}
