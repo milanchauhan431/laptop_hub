@@ -24,20 +24,34 @@ $(document).ready(function(){
 
     $(document).on('keyup', '.calculateSummary', function () { claculateColumn(); });
     $(document).on('change','#gstin', function(){ gstin(); });
+    $(document).on('change','#sales_type', function(){ gstin(); });
+	$(document).on('change',"#apply_round",function(){ claculateColumn(); });
 });
 
 function gstin(){
     var gstin = $("#gstin").find(":selected").val();	
+	var sales_type = $("#sales_type").find(":selected").val();
 
     var gst_type= 1; var stateCode = 24;
-    if(gstin != ""){
+	
+	if(sales_type == 2){
 		if(gstin == "URP"){
-			stateCode = 24;
 			gst_type = 3;
+			stateCode = 96;
 		}else{
-			stateCode = gstin.substr(0, 2);
-        	if(stateCode == 24 || stateCode == "24"){gst_type= 1;}else{gst_type= 2;}
-		}        
+			gst_type = 2;
+			stateCode = 97;
+		}		
+	}else{
+    	if(gstin != ""){		
+			if(gstin == "URP"){
+				stateCode = 24;
+				gst_type = 3;
+			}else{
+				stateCode = gstin.substr(0, 2);
+				if(stateCode == 24 || stateCode == "24"){gst_type= 1;}else{gst_type= 2;}
+			} 
+		}		       
     }
 
     $("#gst_type").val(gst_type);

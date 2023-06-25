@@ -4,8 +4,7 @@ class SalesInvoiceModel extends MasterModel{
     private $transChild = "trans_child";
     private $transExpense = "trans_expense";
     private $transDetails = "trans_details";
-    private $orderBom = "order_bom";
-    private $purchseReq = "purchase_request";
+    private $stockTrans = "stock_transaction";
 
     public function getDTRows($data){
         $data['tableName'] = $this->transMain;
@@ -55,10 +54,18 @@ class SalesInvoiceModel extends MasterModel{
                 $this->trash($this->transExpense,['trans_main_id'=>$data['id']]);
                 $this->remove($this->transDetails,['main_ref_id'=>$data['id'],'table_name'=>$this->transMain,'description'=>"SI TERMS"]);
                 $this->remove($this->transDetails,['main_ref_id'=>$data['id'],'table_name'=>$this->transMain,'description'=>"SI MASTER DETAILS"]);
+                $this->remove($this->stockTrans,['main_ref_id'=>$data['id'],'entry_type'=>$data['entry_type']]);
             endif;
             
-            $data['opp_acc_id'] = $data['party_id'];
+            if($data['memo_type'] == "CASH"):
+				$cashAccData = $this->party->getParty(['system_code'=>"CASHACC"]);
+				$data['opp_acc_id'] = $cashAccData->id;
+			else:
+				$data['opp_acc_id'] = $data['party_id'];
+			endif;
             $data['ledger_eff'] = 1;
+            $data['gstin'] = (!empty($data['gstin']))?$data['gstin']:"URP";
+
             $accType = getSystemCode($data['entry_type'],false);
             if(!empty($accType)):
 				$spAcc = $this->party->getParty(['system_code'=>$accType]);
@@ -104,7 +111,28 @@ class SalesInvoiceModel extends MasterModel{
                 $row['entry_type'] = $data['entry_type'];
                 $row['trans_main_id'] = $result['id'];
                 $row['is_delete'] = 0;
-                $this->store($this->transChild,$row);
+                $itemTrans = $this->store($this->transChild,$row);
+
+                if($row['stock_eff'] == 1):
+                    $stockData = [
+                        'id' => "",
+                        'entry_type' => $data['entry_type'],
+                        'unique_id' => 0,
+                        'ref_date' => $data['trans_date'],
+                        'ref_no' => $data['trans_number'],
+                        'main_ref_id' => $result['id'],
+                        'child_ref_id' => $itemTrans['id'],
+                        'location_id' => $this->RTD_STORE->id,
+                        'batch_no' => "GB",
+                        'party_id' => $data['party_id'],
+                        'item_id' => $row['item_id'],
+                        'p_or_m' => -1,
+                        'qty' => $row['qty'],
+                        'price' => $row['price']
+                    ];
+
+                    $this->store($this->stockTrans,$stockData);
+                endif;
             endforeach;
             
             $data['trans_main_id'] = $result['id'];
@@ -135,7 +163,7 @@ class SalesInvoiceModel extends MasterModel{
         $queryData = array();
         $queryData['tableName'] = $this->transMain;
         $queryData['select'] = "trans_main.*,trans_details.t_col_1 as contact_person,trans_details.t_col_2 as contact_no,trans_details.t_col_3 as ship_address";
-        $queryData['leftJoin']['trans_details'] = "trans_main.id = trans_details.main_ref_id AND trans_details.description = 'SO MASTER DETAILS' AND trans_details.table_name = '".$this->transMain."'";
+        $queryData['leftJoin']['trans_details'] = "trans_main.id = trans_details.main_ref_id AND trans_details.description = 'SI MASTER DETAILS' AND trans_details.table_name = '".$this->transMain."'";
         $queryData['where']['trans_main.id'] = $data['id'];
         $result = $this->row($queryData);
 
@@ -153,7 +181,7 @@ class SalesInvoiceModel extends MasterModel{
         $queryData['select'] = "i_col_1 as term_id,t_col_1 as term_title,t_col_2 as condition";
         $queryData['where']['main_ref_id'] = $data['id'];
         $queryData['where']['table_name'] = $this->transMain;
-        $queryData['where']['description'] = "SO TERMS";
+        $queryData['where']['description'] = "SI TERMS";
         $result->termsConditions = $this->rows($queryData);
 
         return $result;
@@ -180,6 +208,8 @@ class SalesInvoiceModel extends MasterModel{
         try{
             $this->db->trans_begin();
 
+            $dataRow = $this->getSalesInvoice(['id'=>$id,'itemList'=>1]);
+
             $this->transMainModel->deleteLedgerTrans($id);
 
             $this->trash($this->transChild,['trans_main_id'=>$id]);
@@ -187,6 +217,8 @@ class SalesInvoiceModel extends MasterModel{
             
             $this->remove($this->transDetails,['main_ref_id'=>$id,'table_name'=>$this->transMain,'description'=>"SI TERMS"]);
             $this->remove($this->transDetails,['main_ref_id'=>$id,'table_name'=>$this->transMain,'description'=>"SI MASTER DETAILS"]);
+
+            $this->remove($this->stockTrans,['main_ref_id'=>$dataRow->id,'entry_type'=>$dataRow->entry_type]);
 
             $result = $this->trash($this->transMain,['id'=>$id],'Sales Invoice');
 

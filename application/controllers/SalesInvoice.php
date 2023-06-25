@@ -51,8 +51,34 @@ class SalesInvoice extends MY_Controller{
 
         if(empty($data['party_id']))
             $errorMessage['party_id'] = "Party Name is required.";
-        if(empty($data['itemData']))
+        if(empty($data['itemData'])):
             $errorMessage['itemData'] = "Item Details is required.";
+        else:
+            $bQty = array();
+            foreach($data['itemData'] as $key => $row):
+                if($row['stock_eff'] == 1):
+                    $postData = ['location_id' => $this->RTD_STORE->id,'batch_no' => "GB",'item_id' => $row['item_id'],'stock_required'=>1,'single_row'=>1];
+                    if(!empty($row['id'])):
+                        $postData['customWhere'] = "stock_transaction.child_ref_id != ".$row['id']." AND stock_transaction.main_ref_id != ".$data['id']." AND stock_transaction.entry_type != ".$data['entry_type'];
+                    endif;
+                    $stockData = $this->itemStock->getItemStockBatchWise($postData);
+                    
+                    if(!isset($bQty[$row['item_id']])):
+                        $bQty[$row['item_id']] = $row['qty'] ;
+                    else:
+                        $bQty[$row['item_id']] += $row['qty'];
+                    endif;
+
+                    if(empty($stockData)):
+                        $errorMessage['qty'.$key] = "Stock not available.";
+                    else:
+                        if($bQty[$row['item_id']] > $stockData->qty):
+                            $errorMessage['qty'.$key] = "Stock not available.";
+                        endif;
+                    endif;
+                endif;
+            endforeach;
+        endif;
         
         if(!empty($errorMessage)):
             $this->printJson(['status'=>0,'message'=>$errorMessage]);

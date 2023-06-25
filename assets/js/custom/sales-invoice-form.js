@@ -4,6 +4,7 @@ $(document).ready(function(){
 		$('#itemForm')[0].reset();
 		$("#itemForm input:hidden").val('');
 		$('#itemForm #row_index').val("");
+		$('#itemForm #stock_eff').val("1");
         $("#itemForm .error").html();
 
 		var party_id = $('#party_id').val();
@@ -149,6 +150,8 @@ function AddRow(data) {
 	var refIdInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][ref_id]", value: data.ref_id });
     var itemCodeInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][item_code]", value: data.item_code });
     var itemtypeInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][item_type]", value: data.item_type });
+	var stockEffInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][stock_eff]", value: data.stock_eff });
+    var pormInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][p_or_m]", value: -1 });
     cell = $(row.insertCell(-1));
     cell.html(data.item_name);
     cell.append(idInput);
@@ -158,6 +161,8 @@ function AddRow(data) {
     cell.append(refIdInput);
     cell.append(itemCodeInput);
     cell.append(itemtypeInput);
+	cell.append(stockEffInput);
+    cell.append(pormInput);
 
     var hsnCodeInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][hsn_code]", value: data.hsn_code });
 	cell = $(row.insertCell(-1));
