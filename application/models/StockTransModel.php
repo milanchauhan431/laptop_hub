@@ -2,6 +2,84 @@
 class StockTransModel extends MasterModel{
     private $stockTrans = "stock_transaction";
 
+    public function getDTRows($data){
+        $data['tableName'] = $this->stockTrans;
+        $data['select'] = "stock_transaction.*,item_master.item_code,item_master.item_name";
+
+        $data['leftJoin']['item_master'] = "item_master.id = stock_transaction.item_id";
+
+        $data['where']['stock_transaction.p_or_m'] = 1;
+        $data['where']['stock_transaction.ref_date >='] = $this->startYearDate;
+        $data['where']['stock_transaction.ref_date <='] = $this->endYearDate;
+        
+        $data['searchCol'][] = "";
+        $data['searchCol'][] = "";
+        $data['serachCol'][] = "DATE_FORMAT(stock_transaction.ref_date,'%d-%m-%Y')";
+        $data['searchCol'][] = "item_master.item_code";
+        $data['serachCol'][] = "item_master.item_name";
+        $data['serachCol'][] = "stock_transaction.qty";
+        $data['serachCol'][] = "stock_transaction.size";
+        $data['serachCol'][] = "stock_transaction.remark";
+
+		$columns =array(); foreach($data['searchCol'] as $row): $columns[] = $row; endforeach;
+        if(isset($data['order'])){$data['order_by'][$columns[$data['order'][0]['column']]] = $data['order'][0]['dir'];}
+        
+        return $this->pagingRows($data);
+    }
+
+
+    public function save($data){
+        try{
+            $this->db->trans_begin();
+
+            $result = $this->store($this->stockTrans,$data,'Stock');
+        
+            if ($this->db->trans_status() !== FALSE):
+                $this->db->trans_commit();
+                return $result;
+            endif;
+        }catch(\Exception $e){
+            $this->db->trans_rollback();
+            return ['status'=>2,'message'=>"somthing is wrong. Error : ".$e->getMessage()];
+        }
+    }
+
+    public function delete($id){
+        try{
+            $this->db->trans_begin();
+
+            $transData = $this->getStockTrans($id);
+            $itemStock = $this->getItemCurrentStock(['item_id'=>$transData->item_id]);
+            if($transData->qty > $itemStock->qty):
+                return ['status'=>0,'message'=>'Item Stock Used. You cant delete this record.'];
+            endif;
+
+            $result = $this->trash($this->stockTrans,['id'=>$id],'Stock');
+
+            if ($this->db->trans_status() !== FALSE):
+                $this->db->trans_commit();
+                return $result;
+            endif;
+        }catch(\Exception $e){
+            $this->db->trans_rollback();
+            return ['status'=>2,'message'=>"somthing is wrong. Error : ".$e->getMessage()];
+        }
+    }
+
+    public function getStockTrans($data){
+        $queryData['tableName'] = $this->stockTrans;
+        $queryData['where']['id'] = $data['id'];
+        return $this->row($queryData);
+    }
+
+    // Get Single Item Stock From Stock Transaction
+    public function getItemCurrentStock($data){
+        $queryData['tableName'] = $this->stockTrans;
+        $queryData['select'] = "SUM(qty * p_or_m) as qty";
+        $queryData['where']['item_id'] = $data['item_id'];
+        return $this->row($queryData);
+    }
+
     /* Created At : 09-12-2022 [Milan Chauhan] */
     public function getItemStockBatchWise($data){
         $queryData['tableName'] = $this->stockTrans;

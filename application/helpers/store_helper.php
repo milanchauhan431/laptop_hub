@@ -43,7 +43,17 @@ function getStoreDtHeader($page){
     $data['gateInward'][] = ["name" => "Party Name"];
     $data['gateInward'][] = ["name" => "Item Name"];
     $data['gateInward'][] = ["name" => "Qty"];
-    $data['gateInward'][] = ["name" => "PO. NO."];   
+    $data['gateInward'][] = ["name" => "PO. NO."]; 
+    
+    /* FG Stock Inward Table Header */
+    $data['stockTrans'][] = ["name" => "Action", "style" => "width:5%;", "textAlign" => "center"];
+    $data['stockTrans'][] = ["name" => "#", "style" => "width:5%;", "textAlign" => "center"];
+    $data['stockTrans'][] = ["name" => "Date"];
+    $data['stockTrans'][] = ["name"=> "Item Code"];
+    $data['stockTrans'][] = ["name" => "Item Name"];
+    $data['stockTrans'][] = ["name" => "Qty"];
+    $data['stockTrans'][] = ["name" => "Box Capacity"];
+    $data['stockTrans'][] = ["name" => "Remark"];
 
     return tableHeader($data[$page]);
 }
@@ -122,6 +132,16 @@ function getGateInwardData($data){
 
         return [$action,$data->sr_no,$data->trans_number,formatDate($data->trans_date),$data->party_name,$data->item_name,$data->qty,$data->po_number];
     endif;
+}
+
+/* FG Stock Inward Table Data */
+function getStockTransData($data){
+    $deleteParam = "{'postData':{'id' : ".$data->id."},'message' : 'Stock'}";
+    $deleteButton = '<a class="btn btn-danger btn-delete permission-remove" href="javascript:void(0)" onclick="trash('.$deleteParam.');" datatip="Remove" flow="down"><i class="ti-trash"></i></a>';
+
+    $action = getActionButton($deleteButton);
+
+    return [$action,$data->sr_no,formatDate($data->ref_date),$data->item_code,$data->item_name,$data->qty,$data->size,$data->remark];
 }
 
 ?>
