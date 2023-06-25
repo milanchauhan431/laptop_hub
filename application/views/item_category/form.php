@@ -24,7 +24,7 @@
                 </select>
             </div>
 
-            <div class="col-md-4 form-group">
+            <div class="col-md-6 form-group">
                 <label for="final_category">Final Category</label>
                 <select name="final_category" id="final_category" class="form-control single-select">
                     <option value="0" <?=(!empty($dataRow) && $dataRow->final_category == 0) ? "selected" : "";?>>No</option>
@@ -32,7 +32,7 @@
                 </select>
             </div>
 
-            <div class="col-md-4 form-group returnable">
+            <div class="col-md-6 form-group returnable">
                 <label for="is_return">Returnable</label>
                 <select name="is_return" id="is_return" class="form-control single-select">
                     <option value="0" <?=(!empty($dataRow) && $dataRow->is_return == 0) ? "selected" : "";?>>No</option>
@@ -45,7 +45,7 @@
                 <input type="text" name="tool_type" class="form-control req" value="<?=(!empty($dataRow->tool_type))?$dataRow->tool_type:""?>" />
             </div>
 
-			<div class="col-md-4 form-group">
+			<div class="col-md-4 form-group hidden">
                 <label for="batch_stock">Stock Type</label>
                 <select name="batch_stock" id="batch_stock" class="form-control">
                     <?php

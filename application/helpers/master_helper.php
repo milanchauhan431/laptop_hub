@@ -34,7 +34,7 @@ function getMasterDtHeader($page){
     $data['itemCategory'][] = ["name"=>"Category Name"];
     $data['itemCategory'][] = ["name"=>"Parent Category"];
     $data['itemCategory'][] = ["name"=>"Is Final ?"];
-    $data['itemCategory'][] = ["name"=>"Stock Type"];
+    //$data['itemCategory'][] = ["name"=>"Stock Type"];
     $data['itemCategory'][] = ["name"=>"Is Returnable ?"];
     $data['itemCategory'][] = ["name"=>"Remark"];
 
@@ -142,7 +142,7 @@ function getItemCategoryData($data){
 
     $action = getActionButton($editButton.$deleteButton);
 
-    return [$action,$data->sr_no,$data->category_name,$data->parent_category_name,$data->is_final_text,$data->stock_type_text,$data->is_returnable_text,$data->remark];
+    return [$action,$data->sr_no,$data->category_name,$data->parent_category_name,$data->is_final_text,/* $data->stock_type_text, */$data->is_returnable_text,$data->remark];
 }
 
 function getBrandData($data){

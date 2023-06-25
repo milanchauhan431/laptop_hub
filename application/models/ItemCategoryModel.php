@@ -22,7 +22,7 @@ class ItemCategoryModel extends MasterModel{
         $data['searchCol'][] = "item_category.category_name";
         $data['searchCol'][] = "pc.category_name";
         $data['searchCol'][] = "(CASE WHEN item_category.final_category = 1 THEN 'YES' ELSE 'NO' END)";
-        $data['searchCol'][] = "(CASE WHEN item_category.batch_stock = 1 THEN 'Batch Wise' WHEN item_category.batch_stock = 2 THEN 'Serial Wise' ELSE 'None' END)";
+        //$data['searchCol'][] = "(CASE WHEN item_category.batch_stock = 1 THEN 'Batch Wise' WHEN item_category.batch_stock = 2 THEN 'Serial Wise' ELSE 'None' END)";
         $data['searchCol'][] = "(CASE WHEN item_category.is_return = 1 THEN 'YES' ELSE 'NO' END)";
 
 		$columns =array(); foreach($data['searchCol'] as $row): $columns[] = $row; endforeach;
