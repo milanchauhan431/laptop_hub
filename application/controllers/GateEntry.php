@@ -8,6 +8,7 @@ class GateEntry extends MY_Controller{
         $this->data['headData']->pageTitle = "Gate Entry Register";
 		$this->data['headData']->controller = "gateEntry";  
         $this->data['headData']->pageUrl = "gateEntry";      
+        $this->data['entryData'] = $this->transMainModel->getEntryType(['controller'=>'gateEntry']);
     }
 
     public function index(){        
@@ -33,8 +34,8 @@ class GateEntry extends MY_Controller{
         $this->data['vehicleTypeList'] = $this->vehicleType->getVehicleTypeList();
         $this->data['partyList'] = $this->party->getPartyList(['party_category'=>[1,2,3]]);
         $this->data['itemList'] = $this->item->getItemList(['item_type'=>[2,3]]);
-        $this->data['trans_no'] = $this->gateEntry->getNextNo();
-        $this->data['trans_prefix'] = "GE/".n2y(getFyDate("Y"));
+        $this->data['trans_no'] = $this->transMainModel->getMirNextNo();
+        $this->data['trans_prefix'] = $this->data['entryData']->trans_prefix;//n2y(getFyDate("Y"));
         $this->data['trans_number'] = $this->data['trans_prefix'].sprintf("%04d",$this->data['trans_no']);
         $this->load->view($this->form,$this->data);
     }
@@ -71,10 +72,11 @@ class GateEntry extends MY_Controller{
             $this->printJson(['status'=>0,'message'=>$errorMessage]);
         else:
             if(empty($data['id'])):
-                $data['trans_prefix'] = "GE/".n2y(getFyDate("Y"));;
-                $data['trans_no'] = $this->gateEntry->getNextNo();
+                $data['trans_prefix'] = $this->data['entryData']->trans_prefix;//n2y(getFyDate("Y"));;
+                $data['trans_no'] = $this->transMainModel->getMirNextNo();
                 $data['trans_number'] = $data['trans_prefix'].sprintf("%04d",$data['trans_no']);
             endif;
+
             /* $data['driver_name'] = ucwords($data['driver_name']); */
             $data['vehicle_no'] = (!empty($data['vehicle_no']))?strtoupper($data['vehicle_no']):"";
             $data['inv_date'] = (!empty($data['inv_date']))?$data['inv_date']:null;

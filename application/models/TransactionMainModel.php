@@ -2,6 +2,7 @@
 class TransactionMainModel extends MasterModel{
     private $transMain = "trans_main";
     private $transChild = "trans_child";
+	private $mir = "mir";
 
 	public function getEntryType($data){
 		$queryData['tableName'] = "sub_menu_master";
@@ -26,6 +27,15 @@ class TransactionMainModel extends MasterModel{
 		$trans_no = $this->specificRow($data)->trans_no;
 		$trans_no = (empty($last_no))?($trans_no + 1):$trans_no;
 		return $trans_no;
+    }
+
+	public function getMirNextNo($type = 1){
+        $queryData['tableName'] = $this->mir;
+        $queryData['select'] = "ifnull(MAX(trans_no + 1),1) as next_no";
+        $queryData['where']['trans_type'] = $type;
+        $queryData['where']['trans_date >='] = $this->startYearDate;
+        $queryData['where']['trans_date <='] = $this->endYearDate;
+        return $this->row($queryData)->next_no;
     }
 
 	public function getStockUniqueId($data){

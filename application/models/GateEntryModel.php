@@ -2,15 +2,6 @@
 class GateEntryModel extends MasterModel{
     private $mir = "mir";
 
-    public function getNextNo($type = 1){
-        $queryData['tableName'] = $this->mir;
-        $queryData['select'] = "ifnull(MAX(trans_no + 1),1) as next_no";
-        $queryData['where']['trans_type'] = $type;
-        $queryData['where']['trans_date >='] = $this->startYearDate;
-        $queryData['where']['trans_date <='] = $this->endYearDate;
-        return $this->row($queryData)->next_no;
-    }
-
     public function getDTRows($data){
         $data['tableName'] = $this->mir;
         $data['select'] = "mir.id,mir.trans_number,DATE_FORMAT(mir.trans_date,'%d-%m-%Y') as trans_date,mir.driver_name,mir.driver_contact,mir.vehicle_no,mir.transporter,mir.vehicle_type,vehicle_types.vehicle_type as vehicle_type_name,transport_master.transport_name,mir.qty as no_of_items,mir.trans_status,mir.lr,mir.inv_no,mir.inv_date,mir.doc_no,mir.doc_date";

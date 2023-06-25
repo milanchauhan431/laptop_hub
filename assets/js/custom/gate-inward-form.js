@@ -35,8 +35,8 @@ $(document).ready(function(){
         formData.mir_id = "";
         formData.id = "";
 
-        formData.location_id = $("#location_id").val();
-        formData.location_name = $("#location_id :selected").text();
+        /* formData.location_id = $("#location_id").val();
+        formData.location_name = $("#location_id :selected").text(); */
         formData.po_number = $("#po_id :selected").data('po_no');
         formData.item_name = $("#item_idc").val();
         formData.heat_no = $("#heat_no").val();
@@ -59,12 +59,12 @@ $(document).ready(function(){
         if(formData.qty == "" || parseFloat(formData.qty) == 0){ 
             $('.qty').html("Qty is required.");
         }
-        if(formData.location_id == ""){ 
+        /* if(formData.location_id == ""){ 
             $('.location_id').html("Location is required.");
-        }
-        if(formData.item_stock_type == 1 && formData.heat_no == ""){ 
+        } */
+        /* if(formData.item_stock_type == 1 && formData.heat_no == ""){ 
             $('.heat_no').html("Heat No. is required.");
-        }
+        } */
         
         var errorCount = $('.error:not(:empty)').length;
 
@@ -72,7 +72,7 @@ $(document).ready(function(){
            
             AddBatchRow(formData);
 
-            $("#location_id").val("");$("#location_id").select2({ dropdownParent: $('#location_id').parent() });
+            //$("#location_id").val("");$("#location_id").select2({ dropdownParent: $('#location_id').parent() });
             $("#heat_no").val("");
             $("#mill_heat_no").val("");
             $("#qty").val("");
@@ -192,17 +192,17 @@ function AddBatchRow(data){
 
     var mirIdInput = $("<input/>",{type:"hidden",name:"batchData["+countRow+"][mir_id]",value:data.mir_id});
     var mirTransIdInput = $("<input/>",{type:"hidden",name:"batchData["+countRow+"][id]",value:data.id});
-    var locationIdInput = $("<input/>",{type:"hidden",name:"batchData["+countRow+"][location_id]",value:data.location_id});
+    /* var locationIdInput = $("<input/>",{type:"hidden",name:"batchData["+countRow+"][location_id]",value:data.location_id});
     cell = $(row.insertCell(-1));
-	cell.html(data.location_name);
+	cell.html(data.location_name); */
     cell.append(mirIdInput);
     cell.append(mirTransIdInput);
-	cell.append(locationIdInput);
+	//cell.append(locationIdInput);
 
-    var batchNoInput = $("<input/>",{type:"hidden",name:"batchData["+countRow+"][batch_no]",value:data.batch_no});
+    /* var batchNoInput = $("<input/>",{type:"hidden",name:"batchData["+countRow+"][batch_no]",value:data.batch_no});
     cell = $(row.insertCell(-1));
 	cell.html(data.batch_no);
-    cell.append(batchNoInput);
+    cell.append(batchNoInput); */
 
     var heatNoInput = $("<input/>",{type:"hidden",name:"batchData["+countRow+"][heat_no]",value:data.heat_no});
     /* cell = $(row.insertCell(-1));

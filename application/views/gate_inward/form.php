@@ -45,7 +45,7 @@
                 <input type="date" name="doc_date" id="doc_date" class="form-control req" value="<?=(!empty($gateInwardData->doc_date))?$gateInwardData->doc_date:((!empty($gateEntryData->doc_date))?$gateEntryData->doc_date:"")?>">
             </div>
 
-            <div class="col-md-4 form-group">
+            <div class="col-md-3 form-group">
                 <!-- <label for="po_trans_id">Purchase Order</label>
                 <select id="po_trans_id" class="form-control single-select">
                     <option value="">Select Purchase Order</option>
@@ -60,7 +60,7 @@
                 <input type="hidden" id="po_trans_id" value="">
             </div>
 
-            <div class="col-md-4 form-group">
+            <div class="col-md-3 form-group">
                 <label for="item_id">Item Name</label>
                 <select id="item_id" class="form-control itemDetails single-select" data-res_function="resItemDetail">
                     <option value="">Select Item Name</option>
@@ -86,18 +86,18 @@
                 <input type="text" id="price" class="form-control floatVal" value="">
             </div>
 
-            <div class="col-md-4 form-group">
+            <!-- <div class="col-md-4 form-group">
                 <label for="location_id">Location</label>
                 <select id="location_id" class="form-control model-select2">
                     <option value="">Select Location</option>
                     <?php
-                        if(!empty($locationList)):
+                        /* if(!empty($locationList)):
                             echo getLocationListOption($locationList);
-                        endif;
+                        endif; */
                     ?>
                 </select>
                 <div class="error location_id"></div>
-            </div>
+            </div> -->
 
             <input type="hidden" id="heat_no" class="form-control" value="">
             <!-- <div class="col-md-4 form-group" >
@@ -138,8 +138,8 @@
                             <th>#</th>
                             <th>PO No</th>
                             <th style="width:30%;">Item Name</th>
-                            <th>Location</th>
-                            <th>Batch NO</th>
+                            <!-- <th>Location</th>
+                            <th>Batch NO</th> -->
                             <!-- <th>Heat No</th>
                             <th>Mill Heat No</th> -->
                             <th>Qty</th>

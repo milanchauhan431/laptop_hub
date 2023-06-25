@@ -92,8 +92,8 @@ class GateInwardModel extends masterModel{
                     $this->trash($this->mirTrans,['id',$row->id]);
                 endforeach;
             else:
-                $data['trans_no'] = $this->gateEntry->getNextNo(2);
-                $data['trans_prefix'] = "GI/".n2y(getFyDate("Y"));
+                $data['trans_no'] = $this->transMainModel->getMirNextNo(2);
+                $data['trans_prefix'] = $this->data['entryData']->trans_prefix;//.n2y(getFyDate("Y"));
                 $data['trans_number'] = $data['trans_prefix'].sprintf("%04d",$data['trans_no']);
             endif;
 
@@ -106,6 +106,7 @@ class GateInwardModel extends masterModel{
                 $itemData = $this->item->getItem($row['item_id']);
 
                 $row['mir_id'] = $result['id'];
+                $row['location_id'] = $this->RTD_STORE->id;
                 $row['type'] = 1;
                 $row['is_delete'] = 0;
 
@@ -310,15 +311,15 @@ class GateInwardModel extends masterModel{
                     return ['status'=>0,'message'=>['ok_qty_'.$key => "Invalid Qty."]];
                 endif;
 
-                $row['trans_status'] = ($mirItem->qty >= $totalQty)?1:0;
+                $row['trans_status'] = ($totalQty >= $mirItem->qty)?1:0;
 
                 $this->store($this->mirTrans,$row);
 
                 if(!empty($row['ok_qty'])):
                     $stockData = [
                         'id' => "",
-                        'entry_type' => 26,
-                        'unique_id' => $this->transMainModel->getStockUniqueId(['location_id' => $mirItem->location_id,'batch_no' => $mirItem->batch_no,'item_id' => $mirItem->item_id]),
+                        'entry_type' => $this->data['entryData']->id,
+                        'unique_id' => 0,//$this->transMainModel->getStockUniqueId(['location_id' => $mirItem->location_id,'batch_no' => $mirItem->batch_no,'item_id' => $mirItem->item_id]),
                         'ref_date' => $mirData->trans_date,
                         'ref_no' => $mirData->trans_number,
                         'main_ref_id' => $mirData->id,

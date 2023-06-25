@@ -9,6 +9,7 @@ class GateInward extends MY_Controller{
         $this->data['headData']->pageTitle = "Gate Inward Register";
 		$this->data['headData']->controller = "gateInward";
         $this->data['headData']->pageUrl = "gateInward";
+        $this->data['entryData'] = $this->transMainModel->getEntryType(['controller'=>'gateInward']);
     }
 
     public function index(){
@@ -38,23 +39,23 @@ class GateInward extends MY_Controller{
         $data = $this->input->post();
         $gateEntryData = $this->gateEntry->getGateEntry($data['id']);
         $this->data['gateEntryData'] = $gateEntryData;
-        $this->data['partyList'] = $this->party->getPartyList();
+        $this->data['partyList'] = $this->party->getPartyList(['party_category'=>[1,2,3]]);
         $this->data['itemList'] = $this->item->getItemList();
         $this->data['locationList'] = $this->storeLocation->getStoreLocationList(['store_type'=>'0,15','final_location'=>1]);
         $this->data['materialGradeList'] = $this->materialGrade->getMaterialGrades();
-        $this->data['trans_no'] = $this->gateEntry->getNextNo(2);
-        $this->data['trans_prefix'] = "GI/".n2y(getFyDate("Y"));
+        $this->data['trans_no'] = $this->transMainModel->getMirNextNo(2);
+        $this->data['trans_prefix'] = $this->data['entryData']->trans_prefix;//.n2y(getFyDate("Y"));
         $this->data['trans_number'] = $this->data['trans_prefix'].sprintf("%04d",$this->data['trans_no']);
         $this->load->view($this->form,$this->data);
     }
 
     public function addGateInward(){
-        $this->data['partyList'] = $this->party->getPartyList();
+        $this->data['partyList'] = $this->party->getPartyList(['party_category'=>[1,2,3]]);
         $this->data['itemList'] = $this->item->getItemList();
         $this->data['locationList'] = $this->storeLocation->getStoreLocationList(['store_type'=>'0,15','final_location'=>1]);
         $this->data['materialGradeList'] = $this->materialGrade->getMaterialGrades();
-        $this->data['trans_no'] = $this->gateEntry->getNextNo(2);
-        $this->data['trans_prefix'] = "GI/".n2y(getFyDate("Y"));
+        $this->data['trans_no'] = $this->transMainModel->getMirNextNo(2);
+        $this->data['trans_prefix'] = $this->data['entryData']->trans_prefix;//.n2y(getFyDate("Y"));
         $this->data['trans_number'] = $this->data['trans_prefix'].sprintf("%04d",$this->data['trans_no']);
         $this->load->view($this->form,$this->data);
     }
@@ -119,7 +120,7 @@ class GateInward extends MY_Controller{
     public function edit(){
         $data = $this->input->post();
         $gateInward = $this->gateInward->getGateInward($data['id']);
-        $this->data['partyList'] = $this->party->getPartyList();
+        $this->data['partyList'] = $this->party->getPartyList(['party_category'=>[1,2,3]]);
         $this->data['itemList'] = $this->item->getItemList();
         $this->data['locationList'] = $this->storeLocation->getStoreLocationList(['store_type'=>'0,15','final_location'=>1]);
         $this->data['gateInwardData'] = $gateInward;
