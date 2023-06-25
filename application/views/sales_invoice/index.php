@@ -16,7 +16,7 @@
                                     </li>
                                 </ul>
                             </div> -->
-                            <div class="col-md-6 text-center">
+                            <div class="col-md-6 text-left">
                                 <h4 class="card-title">Sales Invoice</h4>
                             </div>
                             <div class="col-md-6">
