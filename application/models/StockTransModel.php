@@ -48,7 +48,7 @@ class StockTransModel extends MasterModel{
         try{
             $this->db->trans_begin();
 
-            $transData = $this->getStockTrans($id);
+            $transData = $this->getStockTrans(['id'=>$id]);
             $itemStock = $this->getItemCurrentStock(['item_id'=>$transData->item_id]);
             if($transData->qty > $itemStock->qty):
                 return ['status'=>0,'message'=>'Item Stock Used. You cant delete this record.'];
