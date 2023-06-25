@@ -318,7 +318,7 @@ class GateInwardModel extends masterModel{
                     $stockData = [
                         'id' => "",
                         'entry_type' => 26,
-                        'unique_id' => $this->transMainModel->getStockUniqueId(),
+                        'unique_id' => $this->transMainModel->getStockUniqueId(['location_id' => $mirItem->location_id,'batch_no' => $mirItem->batch_no,'item_id' => $mirItem->item_id]),
                         'ref_date' => $mirData->trans_date,
                         'ref_no' => $mirData->trans_number,
                         'main_ref_id' => $mirData->id,
