@@ -85,7 +85,7 @@
                 <!-- End Financial Years -->
 
                 <!-- Apps Menu -->
-                <li class="nav-item dropdown dropdown-apps-wrapper">
+                <!-- <li class="nav-item dropdown dropdown-apps-wrapper">
                     <a class="nav-link dropdown-toggle waves-effect waves-dark" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="ti-layout-grid3 font-20" style="vertical-align: middle;"></i> </a>
                     <div class="dropdown-menu dropdown-menu-right mailbox animated flipInY" style="min-width:325px;">
                         <span class="with-arrow"><span class="bg-default"></span></span>
@@ -158,12 +158,12 @@
                                     </div>
                                 </div>
                             </li>
-                            <!--<li>
+                            <!/--<li>
                                 <a class="nav-link text-center m-b-5" href="javascript:void(0);"><strong>View all Apps</strong><i class="fa fa-angle-right"></i></a>
-                            </li>-->
+                            </li>--/>
                         </ul>
                     </div>
-                </li>
+                </li> -->
                 <!-- End Apps Menu -->
                 <!-- Comment -->
                 <li class="nav-item dropdown">
