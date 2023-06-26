@@ -124,5 +124,11 @@ class SalesOrders extends MY_Controller{
             $this->printJson($this->salesOrder->delete($id));
         endif;
     }
+
+    public function getPartyOrders(){
+        $data = $this->input->post();
+        $this->data['orderItems'] = $this->salesOrder->getPendingOrderItems($data);
+        $this->load->view('sales_invoice/create_invoice',$this->data);
+    }
 }
 ?>

@@ -50,7 +50,31 @@ class SalesInvoiceModel extends MasterModel{
             endif;
 
             if(!empty($data['id'])):
-                $this->trash($this->transChild,['trans_main_id'=>$data['id']]);
+                $dataRow = $this->getSalesInvoice(['id'=>$data['id'],'itemList'=>1]);
+                foreach($dataRow->itemList as $row):
+                    if(!empty($row->ref_id)):
+                        $setData = array();
+                        $setData['tableName'] = $this->transChild;
+                        $setData['where']['id'] = $row->ref_id;
+                        $setData['set']['dispatch_qty'] = 'dispatch_qty, - '.$row->qty;
+                        $setData['update']['trans_status'] = "(CASE WHEN (dispatch_qty - ".$row->qty.") >= qty THEN 1 ELSE 0 END)";
+                        $this->setValue($setData);
+                    endif;
+
+                    $this->trash($this->transChild,['id'=>$row->id]);
+                endforeach;
+
+                if(!empty($dataRow->ref_id)):
+                    $oldRefIds = explode(",",$dataRow->ref_id);
+                    foreach($oldRefIds as $main_id):
+                        $setData = array();
+                        $setData['tableName'] = $this->transMain;
+                        $setData['where']['id'] = $main_id;
+                        $setData['update']['trans_status'] = "(SELECT IF( COUNT(id) = SUM(IF(trans_status <> 0, 1, 0)) ,1 , 0 ) as trans_status FROM trans_child WHERE trans_main_id = ".$main_id." AND is_delete = 0)";
+                        $this->setValue($setData);
+                    endforeach;
+                endif;
+                
                 $this->trash($this->transExpense,['trans_main_id'=>$data['id']]);
                 $this->remove($this->transDetails,['main_ref_id'=>$data['id'],'table_name'=>$this->transMain,'description'=>"SI TERMS"]);
                 $this->remove($this->transDetails,['main_ref_id'=>$data['id'],'table_name'=>$this->transMain,'description'=>"SI MASTER DETAILS"]);
@@ -65,6 +89,7 @@ class SalesInvoiceModel extends MasterModel{
 			endif;
             $data['ledger_eff'] = 1;
             $data['gstin'] = (!empty($data['gstin']))?$data['gstin']:"URP";
+            $data['gst_amount'] = $data['igst_amount'] + $data['cgst_amount'] + $data['sgst_amount'];
 
             $accType = getSystemCode($data['entry_type'],false);
             if(!empty($accType)):
@@ -133,7 +158,27 @@ class SalesInvoiceModel extends MasterModel{
 
                     $this->store($this->stockTrans,$stockData);
                 endif;
+
+                if(!empty($row['ref_id'])):
+                    $setData = array();
+                    $setData['tableName'] = $this->transChild;
+                    $setData['where']['id'] = $row['ref_id'];
+                    $setData['set']['dispatch_qty'] = 'dispatch_qty, + '.$row['qty'];
+                    $setData['update']['trans_status'] = "(CASE WHEN (dispatch_qty + ".$row['qty'].") >= qty THEN 1 ELSE 0 END)";
+                    $this->setValue($setData);
+                endif;
             endforeach;
+
+            if(!empty($data['ref_id'])):
+                $refIds = explode(",",$data['ref_id']);
+                foreach($refIds as $main_id):
+                    $setData = array();
+                    $setData['tableName'] = $this->transMain;
+                    $setData['where']['id'] = $main_id;
+                    $setData['update']['trans_status'] = "(SELECT IF( COUNT(id) = SUM(IF(trans_status <> 0, 1, 0)) ,1 , 0 ) as trans_status FROM trans_child WHERE trans_main_id = ".$main_id." AND is_delete = 0)";
+                    $this->setValue($setData);
+                endforeach;
+            endif;
             
             $data['trans_main_id'] = $result['id'];
             $this->transMainModel->ledgerEffects($data,$expenseData);
@@ -209,10 +254,33 @@ class SalesInvoiceModel extends MasterModel{
             $this->db->trans_begin();
 
             $dataRow = $this->getSalesInvoice(['id'=>$id,'itemList'=>1]);
+            
+            foreach($dataRow->itemList as $row):
+                if(!empty($row->ref_id)):
+                    $setData = array();
+                    $setData['tableName'] = $this->transChild;
+                    $setData['where']['id'] = $row->ref_id;
+                    $setData['set']['dispatch_qty'] = 'dispatch_qty, - '.$row->qty;
+                    $setData['update']['trans_status'] = "(CASE WHEN (dispatch_qty - ".$row->qty.") >= qty THEN 1 ELSE 0 END)";
+                    $this->setValue($setData);
+                endif;
+
+                $this->trash($this->transChild,['id'=>$row->id]);
+            endforeach;
+
+            if(!empty($dataRow->ref_id)):
+                $oldRefIds = explode(",",$dataRow->ref_id);
+                foreach($oldRefIds as $main_id):
+                    $setData = array();
+                    $setData['tableName'] = $this->transMain;
+                    $setData['where']['id'] = $main_id;
+                    $setData['update']['trans_status'] = "(SELECT IF( COUNT(id) = SUM(IF(trans_status <> 0, 1, 0)) ,1 , 0 ) as trans_status FROM trans_child WHERE trans_main_id = ".$main_id." AND is_delete = 0)";
+                    $this->setValue($setData);
+                endforeach;
+            endif;
 
             $this->transMainModel->deleteLedgerTrans($id);
 
-            $this->trash($this->transChild,['trans_main_id'=>$id]);
             $this->trash($this->transExpense,['trans_main_id'=>$id]);
             
             $this->remove($this->transDetails,['main_ref_id'=>$id,'table_name'=>$this->transMain,'description'=>"SI TERMS"]);

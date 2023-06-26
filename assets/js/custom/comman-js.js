@@ -718,7 +718,7 @@ function edit(data){
 	var fnsave = data.fnsave;if(fnsave == "" || fnsave == null){fnsave="save";}
 	var controllerName = data.controller;if(controllerName == "" || controllerName == null){controllerName=controller;}
 	var savebtn_text = data.savebtn_text;
-	if(savebtn_text == "" || savebtn_text == null){savebtn_text="Save";}
+	if(savebtn_text == "" || savebtn_text == null){savebtn_text='<i class="fa fa-check"></i> Save';}
 
 	var resFunction = data.res_function || "";
 	var jsStoreFn = data.js_store_fn || 'store';
@@ -738,6 +738,7 @@ function edit(data){
 		if(resFunction != ""){
 			$("#"+data.modal_id+" .modal-body form").attr('data-res_function',resFunction);
 		}
+		$("#"+data.modal_id+" .modal-footer .btn-save").html(savebtn_text);
 		$("#"+data.modal_id+" .modal-footer .btn-save").attr('onclick',jsStoreFn+"("+fnJson+");");
 		$("#"+data.modal_id+" .modal-footer .btn-close").attr('data-modal_id',data.form_id);
 

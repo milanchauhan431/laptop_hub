@@ -45,7 +45,6 @@ class SalesOrderModel extends MasterModel{
         return $this->pagingRows($data);
     }
 
-
     public function save($data){
         try{
             $this->db->trans_begin();
@@ -190,6 +189,16 @@ class SalesOrderModel extends MasterModel{
             $this->db->trans_rollback();
             return ['status'=>2,'message'=>"somthing is wrong. Error : ".$e->getMessage()];
         }
+    }
+
+    public function getPendingOrderItems($data){
+        $queryData = array();
+        $queryData['tableName'] = $this->transChild;
+        $queryData['select'] = "trans_child.*,(trans_child.qty - trans_child.dispatch_qty) as pending_qty,trans_main.entry_type as main_entry_type,trans_main.trans_number,trans_main.trans_date,trans_main.doc_no";
+        $queryData['leftJoin']['trans_main'] = "trans_child.trans_main_id = trans_main.id";
+        $queryData['where']['trans_main.party_id'] = $data['party_id'];
+        $queryData['where']['(trans_child.qty - trans_child.dispatch_qty) >'] = 0;
+        return $this->rows($queryData);
     }
 }
 ?>

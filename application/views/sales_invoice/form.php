@@ -8,7 +8,7 @@
                         <h4><u>Sales Invoice</u></h4>
                     </div>
                     <div class="card-body">
-                        <form autocomplete="off" id="saveSalesOrder" data-res_function="resSaveInvoice" enctype="multipart/form-data">
+                        <form autocomplete="off" id="saveSalesInvoice" data-res_function="resSaveInvoice" enctype="multipart/form-data">
                             <div class="col-md-12">
                                 <div class="row">
 
@@ -40,7 +40,8 @@
                                     <div class="col-md-5 form-group">
                                         <label for="party_id">Customer Name</label>
                                         <div class="float-right">	
-											<span class="dropdown float-right">
+                                            
+											<span class="dropdown float-right m-r-5">
 												<a class="text-primary font-bold waves-effect waves-dark" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" datatip="Progress" flow="down">+ Add New</a>
 
 												<div class="dropdown-menu dropdown-menu-left user-dd animated flipInY" x-placement="start-left">
@@ -50,6 +51,10 @@
 													
 												</div>
 											</span>
+
+                                            <span class="float-right m-r-10">
+                                                <a class="text-primary font-bold waves-effect waves-dark getPendingOrders" href="javascript:void(0)">+ Sales Order</a>
+                                            </span>
 										</div>
                                         <select name="party_id" id="party_id" class="form-control single-select partyDetails partyOptions req" data-res_function="resPartyDetail" data-party_category="1">
 											<option value="">Select Party</option>
@@ -194,7 +199,7 @@
                     </div>
                     <div class="card-footer">
                         <div class="col-md-12">
-                            <button type="button" class="btn waves-effect waves-light btn-outline-success float-right save-form" onclick="customStore({'formId':'saveSalesOrder'});" ><i class="fa fa-check"></i> Save</button>
+                            <button type="button" class="btn waves-effect waves-light btn-outline-success float-right save-form" onclick="customStore({'formId':'saveSalesInvoice'});" ><i class="fa fa-check"></i> Save</button>
                             <a href="javascript:void(0)" onclick="window.location.href='<?=base_url($headData->controller)?>'" class="btn waves-effect waves-light btn-outline-secondary float-right btn-close press-close-btn save-form" style="margin-right:10px;"><i class="fa fa-times"></i> Cancel</a>
                         </div>
                     </div>
@@ -291,7 +296,7 @@
 
 <?php $this->load->view('includes/footer'); ?>
 <script src="<?php echo base_url(); ?>assets/js/custom/sales-invoice-form.js?v=<?= time() ?>"></script>
-<script src="<?php echo base_url(); ?>assets/js/custom/row-attachment.js?v=<?= time() ?>"></script>
+<!-- <script src="<?php echo base_url(); ?>assets/js/custom/row-attachment.js?v=<?= time() ?>"></script> -->
 <script src="<?php echo base_url(); ?>assets/js/custom/calculate.js?v=<?= time() ?>"></script>
 
 <?php
