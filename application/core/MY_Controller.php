@@ -19,7 +19,7 @@ class MY_Controller extends CI_Controller{
 	public $automotiveArray = ["1" => 'Yes', "2" => "No"];
 	public $vendorTypes = ['Manufacture', 'Service'];
 
-	public $itemTypes = [1 => "Finish Goods", 2 => "Consumable", 3 => "Raw Material", 4 => "Capital Goods", 5 => "Machineries", 6 => "Instruments", 7 => "Gauges", 8 => "Services", 9 => "Packing Material", 10 => "Scrap"];
+	public $itemTypes = [1 => "Finish Goods", 2 => "Consumable", 3 => "Raw Material"/* , 4 => "Capital Goods", 5 => "Machineries", 6 => "Instruments", 7 => "Gauges", 8 => "Services", 9 => "Packing Material", 10 => "Scrap" */];
 	public $stockTypes = [0=>"None",1=>'Batch Wise',2=>"Serial Wise"];
 	public $fgColorCode = ["White","Grey"];
 	public $fgCapacity = ["3 Ton","5 Ton"];
@@ -75,6 +75,9 @@ class MY_Controller extends CI_Controller{
 		/* Accounting Model */
 		$this->load->model("SalesInvoiceModel","salesInvoice");
 		$this->load->model("PurchaseInvoiceModel","purchaseInvoice");
+
+		/* Store Report Model */
+		$this->load->model('report/StoreReportModel','storeReport');
 
 		$this->setSessionVariables(["masterModel","dashboard","permission","terms","transport","hsnModel","materialGrade","itemCategory","brandMaster","sizeMaster","item","department","designation","employeeCategory","shiftModel","employee","party","transMainModel","taxMaster","expenseMaster","salesOrder","purchaseOrder","purchaseIndent","vehicleType","storeLocation","gateEntry","gateInward","salesInvoice"]);
 	}

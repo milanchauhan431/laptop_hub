@@ -12,7 +12,7 @@
                 </li>
                 <?=$this->permission->getEmployeeMenus()?>
                 <li class="sidebar-item">
-                    <a class="sidebar-link waves-effect waves-dark sidebar-link" href="<?=base_url('reportsView')?>" aria-expanded="false">
+                    <a class="sidebar-link waves-effect waves-dark sidebar-link" href="<?=base_url('reportList')?>" aria-expanded="false">
                         <i class="icon-Bar-Chart"></i><span class="hide-menu">Reports </span>
                     </a>
                 </li>
