@@ -103,8 +103,8 @@ function getPartyData($data){
         $gstParam = "{'postData':{'id' : ".$data->id."}, 'modal_id' : 'modal-lg','button' : 'close', 'form_id' : 'gstDetail', 'title' : 'GST Detail', 'fnedit' : 'gstDetail', 'fnsave' : 'saveGstDetail','js_store_fn' : 'customStore'}";
         $gstJsonBtn = '<a class="btn btn-warning btn-contact permission-modify" href="javascript:void(0)" datatip="GST Detail" flow="down" onclick="edit('.$gstParam.');"><i class="fab fa-google"></i></a>';
 
-        $contactParam = "{'postData':{'id' : ".$data->id."}, 'modal_id' : 'modal-lg','button' : 'close', 'form_id' : 'contactDetail', 'title' : 'Contact Detail', 'fnedit' : 'contactDetail', 'fnsave' : 'saveContactDetail','js_store_fn' : 'customStore'}";
-        $contactBtn = '<a class="btn btn-info btn-contact permission-modify" href="javascript:void(0)" datatip="Contact Detail" flow="down" onclick="edit('.$contactParam.');"><i class="fa fa-address-book"></i></a>';
+        /* $contactParam = "{'postData':{'id' : ".$data->id."}, 'modal_id' : 'modal-lg','button' : 'close', 'form_id' : 'contactDetail', 'title' : 'Contact Detail', 'fnedit' : 'contactDetail', 'fnsave' : 'saveContactDetail','js_store_fn' : 'customStore'}";
+        $contactBtn = '<a class="btn btn-info btn-contact permission-modify" href="javascript:void(0)" datatip="Contact Detail" flow="down" onclick="edit('.$contactParam.');"><i class="fa fa-address-book"></i></a>'; */
     endif;
 
     $action = getActionButton($contactBtn.$gstJsonBtn.$editButton.$deleteButton);
