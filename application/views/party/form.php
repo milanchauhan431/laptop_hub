@@ -98,10 +98,11 @@
             
             <div class="col-md-3 form-group">
                 <label for="country_id">Select Country</label>
-                <select name="country_id" id="country_id" class="form-control country_list single-select req" tabindex="-1" data-state_id="state_id">
+                <select name="country_id" id="country_id" class="form-control country_list single-select req" tabindex="-1" data-state_id="state_id" data-selected_state_id="<?=(!empty($dataRow->state_id))?$dataRow->state_id:4030?>">
                     <option value="">Select Country</option>
                     <?php foreach($countryData as $row):
-                        $selected = (!empty($dataRow->country_id) && $dataRow->country_id == $row->id)?"selected":"";
+                        $selected = (!empty($dataRow->country_id) && $dataRow->country_id == $row->id)?"selected":((empty($dataRow) && $row->id == 101)?"selected":"");
+
                     ?>
                         <option value="<?=$row->id?>" <?=$selected?>><?=$row->name?></option>
                     <?php endforeach; ?>
@@ -110,19 +111,15 @@
 
             <div class="col-md-3 form-group">
                 <label for="state_id">Select State</label>
-                <select name="state_id" id="state_id" class="form-control state_list single-select req" data-city_id="city_id" tabindex="-1">
-                    <?php if(empty($dataRow->id)): ?>
-                        <option value="">Select State</option>
-                    <?php else: echo $dataRow->stateOption; endif;?>
+                <select name="state_id" id="state_id" class="form-control state_list single-select req" data-city_id="city_id" data-selected_city_id="<?=(!empty($dataRow->city_id))?$dataRow->city_id:""?>" tabindex="-1">
+                    <option value="">Select State</option>
                 </select>
             </div>
             
             <div class="col-md-3 form-group">
                 <label for="city_id">Select City</label>
                 <select name="city_id" id="city_id" class="form-control single-select req" tabindex="-1">
-                    <?php if(empty($dataRow->id)): ?>
-                        <option value="">Select City</option>
-                    <?php else: echo $dataRow->cityOptions; endif;?>
+                    <option value="">Select City</option>
                 </select>
             </div>
 
@@ -138,7 +135,7 @@
 
             <div class="col-md-3 form-group">
                 <label for="delivery_country_id">Delivery Country</label>
-                <select name="delivery_country_id" id="delivery_country_id" class="form-control country_list single-select" tabindex="-1" data-state_id="delivery_state_id">
+                <select name="delivery_country_id" id="delivery_country_id" class="form-control country_list single-select" tabindex="-1" data-state_id="delivery_state_id" data-selected_state_id="<?=(!empty($dataRow->delivery_state_id))?$dataRow->delivery_state_id:""?>">
                     <option value="">Select Country</option>
                     <?php foreach($countryData as $row):
                         $selected = (!empty($dataRow->delivery_country_id) && $dataRow->delivery_country_id == $row->id)?"selected":"";
@@ -150,19 +147,15 @@
 
             <div class="col-md-3 form-group">
                 <label for="delivery_state_id">Delivery State</label>
-                <select name="delivery_state_id" id="delivery_state_id" class="form-control state_list single-select" data-city_id="delivery_city_id" tabindex="-1">
-                    <?php if(empty($dataRow->id)): ?>
-                        <option value="">Select State</option>
-                    <?php else: echo $dataRow->deliveryStateOption; endif;?>
+                <select name="delivery_state_id" id="delivery_state_id" class="form-control state_list single-select" data-city_id="delivery_city_id" data-selected_city_id="<?=(!empty($dataRow->delivery_city_id))?$dataRow->delivery_city_id:""?>" tabindex="-1">
+                    <option value="">Select State</option>
                 </select>
             </div>
             
             <div class="col-md-3 form-group">
                 <label for="delivery_city_id">Select City</label>
                 <select name="delivery_city_id" id="delivery_city_id" class="form-control single-select" tabindex="-1">
-                    <?php if(empty($dataRow->id)): ?>
-                        <option value="">Select City</option>
-                    <?php else: echo $dataRow->deliveryCityOptions; endif;?>
+                    <option value="">Select City</option>
                 </select>
             </div>
 
@@ -190,6 +183,9 @@
 </form>
 <script>
 $(document).ready(function(){
+    $("#country_id").trigger('change');
+    $("#delivery_country_id").trigger('change');
+    
     $(document).on('change','#party_category',function(){
         var party_category = $(this).val();
         $.ajax({

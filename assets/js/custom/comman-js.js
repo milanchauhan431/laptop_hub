@@ -178,7 +178,7 @@ $(document).ready(function(){
 						$("#"+state_id).comboSelect();
 					}else{
 						$("#"+state_id).comboSelect();
-						$("#"+state_id).focus();
+						//$("#"+state_id).focus();
 					}	
 				}
 			});
@@ -205,7 +205,7 @@ $(document).ready(function(){
 						$("#"+city_id).comboSelect();
 					}else{
 						$("#"+city_id).comboSelect();
-						$("#"+city_id).focus();
+						//$("#"+city_id).focus();
 					}					
 				}
 			});

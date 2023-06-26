@@ -148,13 +148,6 @@ class Parties extends MY_Controller{
     public function edit(){
         $data = $this->input->post();
         $result = $this->party->getParty($data);
-        
-        $result->stateOption = $this->getStatesOptions(['country_id'=>$result->country_id, 'state_id'=>$result->state_id]);
-        $result->cityOptions = $this->getCitiesOptions(['state_id'=>$result->state_id, 'city_id'=>$result->city_id]);
-        
-        $result->deliveryStateOption = $this->getStatesOptions(['country_id'=>$result->delivery_country_id, 'state_id'=>$result->delivery_state_id]);
-        $result->deliveryCityOptions = $this->getCitiesOptions(['state_id'=>$result->delivery_state_id, 'city_id'=>$result->delivery_city_id]);
-        
         $this->data['dataRow'] = $result;
         $this->data['currencyData'] = $this->party->getCurrencyList();
         $this->data['countryData'] = $this->party->getCountries();
