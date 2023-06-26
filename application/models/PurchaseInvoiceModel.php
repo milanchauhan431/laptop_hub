@@ -59,7 +59,7 @@ class PurchaseInvoiceModel extends MasterModel{
 			endif;
             $data['ledger_eff'] = 1;
 
-            $accType = getSystemCode($data['entry_type'],false);
+            $accType = getSystemCode($data['vou_name_s'],false);
             if(!empty($accType)):
 				$spAcc = $this->party->getParty(['system_code'=>$accType]);
                 $data['vou_acc_id'] = (!empty($spAcc))?$spAcc->id:0;
@@ -130,7 +130,7 @@ class PurchaseInvoiceModel extends MasterModel{
                 endif;
             endforeach;
             
-            $data['trans_main_id'] = $result['id'];
+            $data['id'] = $result['id'];
             $this->transMainModel->ledgerEffects($data,$expenseData);
 
             if ($this->db->trans_status() !== FALSE):

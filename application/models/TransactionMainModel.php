@@ -57,11 +57,11 @@ class TransactionMainModel extends MasterModel{
 		return $this->row($queryData)->unique_id;
 	}
 	
-    public function getTransPrefix($entry_type){
+    /* public function getTransPrefix($entry_type){
 		$prefix = 'TRANS/';
         switch($entry_type)
 		{
-			/* case 1: $prefix = 'SE/';break;
+			case 1: $prefix = 'SE/';break;
 			case 2: $prefix = 'SQ/';break;
 			case 3: $prefix = 'SQR/';break;
 			case 4: $prefix = 'SO/';break;
@@ -80,7 +80,7 @@ class TransactionMainModel extends MasterModel{
 			case 20: $prefix = 'JINV/';break;
 			case 21: $prefix = 'AS/';break;
 			case 22: $prefix = 'EL/';break;
-			case 26: $prefix = 'SER/';break; */
+			case 26: $prefix = 'SER/';break;
 
 			case 20: $prefix = 'SO/';break;
 			case 21: $prefix = 'AE/';break;
@@ -88,7 +88,7 @@ class TransactionMainModel extends MasterModel{
 			default : $prefix = 'TRANS/';break;
 		}
 		return $prefix.getFyDate("Y").'/';
-    }
+    } */
 
 	public function ledgerEffects($transMainData,$expenseData = array()){
 		try{
