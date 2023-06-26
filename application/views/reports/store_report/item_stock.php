@@ -61,7 +61,6 @@
 
 
 <?php $this->load->view('includes/footer'); ?>
-<?=$floatingMenu?>
 <script>
 $(document).ready(function(){
 	reportTable();
