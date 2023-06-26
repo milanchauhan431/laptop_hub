@@ -10,7 +10,7 @@
                                 <h4 class="card-title"><?=$this->partyCategory[$party_category]?></h4>
                             </div>
                             <div class="col-md-6">
-                                <button type="button" class="btn waves-effect waves-light btn-outline-primary float-right addNew permission-write press-add-btn" data-button="both" data-modal_id="modal-xl" data-function="addParty" data-form_title="Add <?=$this->partyCategory[$party_category]?>" data-postdata='{"party_category" : <?=$party_category?> }' ><i class="fa fa-plus"></i> Add <?=$this->partyCategory[$party_category]?></button>
+                                <button type="button" class="btn waves-effect waves-light btn-outline-primary float-right addNew permission-write press-add-btn" data-button="both" data-modal_id="<?=($party_category !=4)?"modal-xl":"modal-md"?>" data-function="addParty" data-form_title="Add <?=$this->partyCategory[$party_category]?>" data-postdata='{"party_category" : <?=$party_category?> }' ><i class="fa fa-plus"></i> Add <?=$this->partyCategory[$party_category]?></button>
                             </div>
                         </div>
                     </div>

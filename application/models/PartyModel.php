@@ -1,6 +1,7 @@
 <?php
 class PartyModel extends MasterModel{
     private $partyMaster = "party_master";
+    private $groupMaster = "group_master";
     private $countries = "countries";
 	private $states = "states";
 	private $cities = "cities";
@@ -16,26 +17,38 @@ class PartyModel extends MasterModel{
 
     public function getDTRows($data){
         $data['tableName'] = $this->partyMaster;
-        $data['where']['party_category'] = $data['party_category'];
+        $data['select'] = "";
+
+        if($data['party_category'] != 4):
+            $data['where']['party_master.party_category'] = $data['party_category'];
+        endif;
 
         $data['searchCol'][] = "";
 		$data['searchCol'][] = "";
         if($data['party_category'] == 1):
-            $data['searchCol'][] = "party_name";
-			$data['searchCol'][] = "contact_person";
-			$data['searchCol'][] = "party_mobile";
-			$data['searchCol'][] = "party_code";
-			$data['searchCol'][] = "currency";
+            $data['searchCol'][] = "party_master.party_name";
+			$data['searchCol'][] = "party_master.contact_person";
+			$data['searchCol'][] = "party_master.party_mobile";
+			$data['searchCol'][] = "party_master.party_code";
+			$data['searchCol'][] = "party_master.currency";
         elseif($data['party_category'] == 2):
-            $data['searchCol'][] = "party_name";
-			$data['searchCol'][] = "contact_person";
-			$data['searchCol'][] = "party_mobile";
-			$data['searchCol'][] = "party_code";
+            $data['searchCol'][] = "party_master.party_name";
+			$data['searchCol'][] = "party_master.contact_person";
+			$data['searchCol'][] = "party_master.party_mobile";
+			$data['searchCol'][] = "party_master.party_code";
         elseif($data['party_category'] == 3):
-            $data['searchCol'][] = "party_name";
-			$data['searchCol'][] = "contact_person";
-			$data['searchCol'][] = "party_mobile";
-			$data['searchCol'][] = "party_address";
+            $data['searchCol'][] = "party_master.party_name";
+			$data['searchCol'][] = "party_master.contact_person";
+			$data['searchCol'][] = "party_master.party_mobile";
+			$data['searchCol'][] = "party_master.party_address";
+        elseif($data['party_category'] == 4):
+            $data['select'] = "party_master.*,(CASE WHEN tl.op_balance > 0 THEN CONCAT(ABS(tl.op_balance), ' Cr.') WHEN tl.op_balance < 0 THEN CONCAT(ABS(tl.op_balance), ' Dr.') ELSE 0 END) as op_balance,(CASE WHEN tl.cl_balance > 0 THEN CONCAT(ABS(tl.cl_balance), ' Cr.') WHEN tl.cl_balance < 0 THEN CONCAT(ABS(tl.cl_balance), ' Dr.') ELSE 0 END) as cl_balance";
+            $data['leftJoin']["(SELECT tl.vou_acc_id , (am.opening_balance + SUM( CASE WHEN tl.trans_date < '".$this->startYearDate."' THEN (tl.amount * tl.p_or_m) ELSE 0 END )) as op_balance, (am.opening_balance  + SUM( CASE WHEN tl.trans_date <= '".$this->endYearDate."' THEN (tl.amount * tl.p_or_m) ELSE 0 END )) as cl_balance FROM party_master as am LEFT JOIN trans_ledger as tl ON am.id = tl.vou_acc_id WHERE am.is_delete = 0 AND tl.is_delete = 0 GROUP BY am.id) as tl"] = 'tl.vou_acc_id = party_master.id';
+
+            $data['searchCol'][] = "party_master.party_name";
+            $data['searchCol'][] = "party_master.group_name";
+            $data['searchCol'][] = "tl.op_balance";
+            $data['searchCol'][] = "tl.cl_balance";
         endif;
 
         $columns =array(); foreach($data['searchCol'] as $row): $columns[] = $row; endforeach;
@@ -137,10 +150,25 @@ class PartyModel extends MasterModel{
 				$errorMessage['party_name'] = "Company name is duplicate.";
 				$result = ['status' => 0, 'message' => $errorMessage];
             endif;
+
+            if($data['party_category'] != 4):
+                $groupCode = ($data['party_category'] == 1) ? "SD" : "SC";
+				$groupData = $this->getGroupOnGroupCode($groupCode, true);
+				$data['group_id'] = $groupData->id;
+				$data['group_name'] = $groupData->name;
+				$data['group_code'] = $groupData->group_code;
+            else:
+                $groupData = $this->getGroup($data['group_id']);
+                $data['group_name'] = $groupData->name;
+				$data['group_code'] = $groupData->group_code;
+            endif;
 			
             $result = $this->store($this->partyMaster, $data, 'Party');
-            $data['party_id'] = $result['id'];
-            $this->saveGstDetail($data);				
+
+            if($data['party_category'] != 4):
+                $data['party_id'] = $result['id'];
+                $this->saveGstDetail($data);	
+            endif;			
 			
 			if ($this->db->trans_status() !== FALSE) :
 				$this->db->trans_commit();
@@ -300,5 +328,38 @@ class PartyModel extends MasterModel{
 			return ['status' => 2, 'message' => "somthing is wrong. Error : " . $e->getMessage()];
 		}
 	}
+
+    public function getGroupOnGroupCode($groupCode,$defualtGroup = false){
+        $queryData = array();
+        $queryData['tableName'] = $this->groupMaster;
+        $queryData['where']['group_code'] = $groupCode;
+        if($defualtGroup == true)
+            $queryData['where']['is_default'] = 1;
+        $groupData = $this->row($queryData);
+        return $groupData;
+    }
+
+    public function getGroupListOnGroupCode($groupCode){
+        $queryData = array();
+        $queryData['tableName'] = $this->groupMaster;
+        $queryData['customWhere'][] = $groupCode;
+        $groupData = $this->rows($queryData);
+        return $groupData;
+    }
+
+    public function getGroup($id){
+        $queryData = array();
+        $queryData['tableName'] = $this->groupMaster;
+        $queryData['where']['id'] = $id;
+        $groupData = $this->row($queryData);
+        return $groupData;
+    }
+
+    public function getGroupList(){
+        $queryData = array();
+        $queryData['tableName'] = $this->groupMaster;
+        $groupData = $this->rows($queryData);
+        return $groupData;
+    }
 }
 ?>

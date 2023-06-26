@@ -28,6 +28,14 @@ function getMasterDtHeader($page){
     $data['vendor'][] = ["name"=>"Contact No."];
     $data['vendor'][] = ["name"=>"Address"];
 
+    /* Ledger Header */
+    $data['ledger'][] = ["name"=>"Action","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['ledger'][] = ["name"=>"#","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"]; 
+    $data['ledger'][] = ["name"=>"Ledger Name"];
+    $data['ledger'][] = ["name"=>"Group Name"];
+    $data['ledger'][] = ["name"=>"Op. Balance"];
+    $data['ledger'][] = ["name"=>"Cl. Balance"];
+
     /* Item Category Header */
     $data['itemCategory'][] = ["name"=>"Action","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"];
     $data['itemCategory'][] = ["name"=>"#","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"]; 
@@ -90,7 +98,7 @@ function getMasterDtHeader($page){
 
 function getPartyData($data){
     $deleteParam = "{'postData':{'id' : ".$data->id."},'message' : '".$data->party_category_name."'}";
-    $editParam = "{'postData':{'id' : ".$data->id."},'modal_id' : 'modal-xl', 'form_id' : 'edit".$data->party_category_name."', 'title' : 'Update ".$data->party_category_name."'}";
+    $editParam = "{'postData':{'id' : ".$data->id."},'modal_id' : '".(($data->table_status!=4)?"modal-xl":"modal-md")."', 'form_id' : 'edit".$data->party_category_name."', 'title' : 'Update ".$data->party_category_name."'}";
 
     /* $approvalParam = "{'id' : ".$data->id.", 'modal_id' : 'modal-md', 'form_id' : 'partyApproval', 'title' : 'Party Approval', 'fnEdit' : 'partyApproval', 'fnsave' : 'savePartyApproval'}";
     $approvalButton = '<a class="btn btn-info btn-approval permission-approve" href="javascript:void(0)" datatip="Party Approval" flow="down" onclick="edit('.$approvalParam.');"><i class="fa fa-check" ></i></a>'; */
@@ -109,13 +117,26 @@ function getPartyData($data){
 
     $action = getActionButton($contactBtn.$gstJsonBtn.$editButton.$deleteButton);
 
-    if($data->party_category == 1):
+    if($data->table_status == 1):
         $responseData = [$action,$data->sr_no,$data->party_name,$data->contact_person,$data->party_mobile,$data->party_code,$data->currency];
-    elseif($data->party_category == 2):
+    elseif($data->table_status == 2):
         $responseData = [$action,$data->sr_no,$data->party_name,$data->contact_person,$data->party_mobile,$data->party_code];
-    else:        
+    elseif($data->table_status == 3):        
         $responseData = [$action,$data->sr_no,$data->party_name,$data->contact_person,$data->party_mobile,$data->party_address];
+    else:
+        if($data->system_code != ""):
+            $gstJsonBtn = $editButton = $deleteButton = "";
+        endif;
+
+        if(in_array($data->group_code,["SC","SD"])):
+            $gstJsonBtn = $editButton = $deleteButton = "";
+        endif;
+
+        $action = getActionButton($contactBtn.$gstJsonBtn.$editButton.$deleteButton);
+
+        $responseData = [$action,$data->sr_no,$data->party_name,$data->group_name,$data->op_balance,$data->cl_balance];
     endif;
+
     return $responseData;
 }
 

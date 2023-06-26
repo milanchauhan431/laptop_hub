@@ -13,7 +13,7 @@ class MY_Controller extends CI_Controller{
 	public $empGrade = ["Grade A","Grade B","Grade C","Grade D"];
 	public $paymentMode = ['CASH','CHEQUE','NEFT','UPI'];
 
-	public $partyCategory = [1=>'Customer',2=>'Supplier',3=>'Vendor'/* ,4=>'Ledger' */];
+	public $partyCategory = [1=>'Customer',2=>'Supplier',3=>'Vendor',4=>'Ledger'];
 	public $suppliedType = [1=>'Goods',2=>'Services',3=>'Goods & Services'];
 	public $gstRegistrationTypes = [1=>'Registerd',2=>'Composition',3=>'Overseas',4=>'Un-Registerd'];
 	public $automotiveArray = ["1" => 'Yes', "2" => "No"];

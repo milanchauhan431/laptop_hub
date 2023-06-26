@@ -2,6 +2,7 @@
 class Parties extends MY_Controller{
     private $index = "party/index";
     private $form = "party/form";
+    private $ledgerForm = "party/ledger_form";
     private $gstFrom = "party/gst_form";
     private $contactFrom = "party/contact_form";
 
@@ -26,6 +27,7 @@ class Parties extends MY_Controller{
         $i = ($data['start']+1);
         foreach ($result['data'] as $row) :
             $row->sr_no = $i++;
+            $row->table_status = $party_category;
             $row->party_category_name = $this->partyCategory[$row->party_category];
             $sendData[] = getPartyData($row);
         endforeach;
@@ -36,11 +38,16 @@ class Parties extends MY_Controller{
     public function addParty(){
         $data = $this->input->post();
         $this->data['party_category'] = $data['party_category'];
-        $this->data['currencyData'] = $this->party->getCurrencyList();
-        $this->data['countryData'] = $this->party->getCountries();
-        $this->data['party_code'] = $this->getPartyCode($data['party_category']);
-        $this->data['salesExecutives'] = $this->employee->getEmployeeList();
-        $this->load->view($this->form, $this->data);
+        if($data['party_category'] != 4):            
+            $this->data['currencyData'] = $this->party->getCurrencyList();
+            $this->data['countryData'] = $this->party->getCountries();
+            $this->data['party_code'] = $this->getPartyCode($data['party_category']);
+            $this->data['salesExecutives'] = $this->employee->getEmployeeList();
+            $this->load->view($this->form, $this->data);
+        else:
+            $this->data['groupList'] = $this->party->getGroupList();
+            $this->load->view($this->ledgerForm,$this->data);
+        endif;
     }
 
     /* Auto Generate Party Code */
@@ -115,27 +122,31 @@ class Parties extends MY_Controller{
 
         if (empty($data['party_mobile']))
             $errorMessage['party_mobile'] = "Contact No. is required."; */
+
+        if($data['party_category'] != 4):
        
-        if (empty($data['supplied_types']))
-            $errorMessage['supplied_types'] = 'Supplied Types are required.';
+            if (empty($data['supplied_types']))
+                $errorMessage['supplied_types'] = 'Supplied Types are required.';
 
-        if (empty($data['gstin']) && in_array($data['registration_type'],[1,2]))
-            $errorMessage['gstin'] = 'Gstin is required.';
+            if (empty($data['gstin']) && in_array($data['registration_type'],[1,2]))
+                $errorMessage['gstin'] = 'Gstin is required.';
 
-        if (empty($data['country_id']))
-            $errorMessage['country_id'] = 'Country is required.';
+            if (empty($data['country_id']))
+                $errorMessage['country_id'] = 'Country is required.';
 
-        if (empty($data['state_id']))
-            $errorMessage['state_id'] = 'State is required.';
+            if (empty($data['state_id']))
+                $errorMessage['state_id'] = 'State is required.';
 
-        if (empty($data['city_id']))
-            $errorMessage['city_id'] = 'City is required.';
+            if (empty($data['city_id']))
+                $errorMessage['city_id'] = 'City is required.';
 
-        if (empty($data['party_address']))
-            $errorMessage['party_address'] = "Address is required.";
+            if (empty($data['party_address']))
+                $errorMessage['party_address'] = "Address is required.";
 
-        if (empty($data['party_pincode']))
-            $errorMessage['party_pincode'] = "Pincode is required.";
+            if (empty($data['party_pincode']))
+                $errorMessage['party_pincode'] = "Pincode is required.";
+                
+        endif;
 
         if (!empty($errorMessage)) :
             $this->printJson(['status' => 0, 'message' => $errorMessage]);
@@ -149,10 +160,15 @@ class Parties extends MY_Controller{
         $data = $this->input->post();
         $result = $this->party->getParty($data);
         $this->data['dataRow'] = $result;
-        $this->data['currencyData'] = $this->party->getCurrencyList();
-        $this->data['countryData'] = $this->party->getCountries();
-        $this->data['salesExecutives'] = $this->employee->getEmployeeList();
-        $this->load->view($this->form, $this->data);
+        if($result->party_category != 4):
+            $this->data['currencyData'] = $this->party->getCurrencyList();
+            $this->data['countryData'] = $this->party->getCountries();
+            $this->data['salesExecutives'] = $this->employee->getEmployeeList();
+            $this->load->view($this->form, $this->data);
+        else:
+            $this->data['groupList'] = $this->party->getGroupList();
+            $this->load->view($this->ledgerForm,$this->data);
+        endif;
     }
 
     public function delete(){

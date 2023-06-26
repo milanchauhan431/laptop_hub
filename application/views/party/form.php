@@ -16,8 +16,10 @@
                 <select name="party_category" id="party_category" class="form-control single-select req">
                     <?php
                         foreach($this->partyCategory as $key => $name):
-                            $selected = (!empty($dataRow->party_category) && $dataRow->party_category == $key)?"selected":((!empty($party_category) && $party_category == $key)?"selected":"");
-                            echo '<option value="'.$key.'" '.$selected.'>'.$name.'</option>';
+                            if($key <= 3):
+                                $selected = (!empty($dataRow->party_category) && $dataRow->party_category == $key)?"selected":((!empty($party_category) && $party_category == $key)?"selected":"");
+                                echo '<option value="'.$key.'" '.$selected.'>'.$name.'</option>';
+                            endif;
                         endforeach;
                     ?>
 				</select>
