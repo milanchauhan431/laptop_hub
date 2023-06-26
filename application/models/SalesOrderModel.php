@@ -197,6 +197,7 @@ class SalesOrderModel extends MasterModel{
         $queryData['select'] = "trans_child.*,(trans_child.qty - trans_child.dispatch_qty) as pending_qty,trans_main.entry_type as main_entry_type,trans_main.trans_number,trans_main.trans_date,trans_main.doc_no";
         $queryData['leftJoin']['trans_main'] = "trans_child.trans_main_id = trans_main.id";
         $queryData['where']['trans_main.party_id'] = $data['party_id'];
+        $queryData['where']['trans_child.entry_type'] = $this->data['entryData']->id;
         $queryData['where']['(trans_child.qty - trans_child.dispatch_qty) >'] = 0;
         return $this->rows($queryData);
     }
