@@ -135,7 +135,7 @@ class EmployeeModel extends MasterModel{
             endif;
 
             //$this->trash($this->empSalary,['emp_id'=>$id],'Employee');
-            $this->trash($this->empDocs,['emp_id'=>$id],'Employee');
+            $this->trash($this->empDocuments,['emp_id'=>$id],'Employee');
             $this->trash($this->empNom,['emp_id'=>$id],'Employee');
             $this->trash($this->empEdu,['emp_id'=>$id],'Employee');
 
