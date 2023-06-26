@@ -182,5 +182,35 @@ class Migration extends CI_Controller{
         }
     }
     
+    public function updateLedgerClosingBalance(){
+        try{
+            $this->db->trans_begin();
+            $partyData = $this->db->where('is_delete',0)->get("party_master")->result();
+            foreach($partyData as $row):
+                //Set oprning balance as closing balance
+                $this->db->where('id',$row->id);
+                $this->db->update('party_master',['cl_balance'=>'opening_balance']);
+
+                //get ledger trans amount total
+                $this->db->select("SUM(amount * p_or_m) as ledger_amount");
+                $this->db->where('vou_acc_id',$row->id);
+                $this->db->where('is_delete',0);
+                $ledgerTrans = $this->db->get('trans_ledger')->row();
+                $ledgerAmount = (!empty($ledgerTrans->ledger_amount))?$ledgerTrans->ledger_amount:0;
+
+                //update colsing balance
+                $this->db->set("cl_balance","`cl_balance` + ".$ledgerAmount,FALSE);
+                $this->db->where('id',$row->id);
+                $this->db->update('party_master');
+            endforeach;
+            if($this->db->trans_status() !== FALSE):
+                $this->db->trans_commit();
+                echo "Closing Balance Migration Success.";
+            endif;
+        }catch(\Exception $e){
+            $this->db->trans_rollback();
+            echo $e->getMessage();exit;
+        }
+    }
 }
 ?>
