@@ -101,7 +101,7 @@ class PurchaseOrders extends MY_Controller{
         endif;
     }
 
-    function printPO($id){
+    public function printPO($id){
 		$this->data['poData'] = $poData = $this->purchaseOrder->getPurchaseOrder(['id'=>$id,'itemList'=>1]);
 		$this->data['partyData'] = $this->party->getParty(['id'=>$poData->party_id]);
         $this->data['taxList'] = $this->taxMaster->getActiveTaxList(2);

@@ -111,5 +111,92 @@ class SalesInvoice extends MY_Controller{
             $this->printJson($this->salesInvoice->delete($id));
         endif;
     }
+
+    public function printInvoice($id="",$type=""){
+        $postData = $this->input->post();
+        //print_r($postData);exit;
+        $printTypes = array();
+        if(!empty($postData['original'])):
+            $printTypes[] = "ORIGINAL";
+        endif;
+
+        if(!empty($postData['duplicate'])):
+            $printTypes[] = "DUPLICATE";
+        endif;
+
+        if(!empty($postData['triplicate'])):
+            $printTypes[] = "TRIPLICATE";
+        endif;
+
+        if(!empty($postData['extra_copy'])):
+            for($i=1;$i<=$postData['extra_copy'];$i++):
+                $printTypes[] = "EXTRA COPY";
+            endfor;
+        endif;
+
+        $inv_id = (!empty($id))?$id:$postData['id'];
+
+		$this->data['invData'] = $invData = $this->salesInvoice->getSalesInvoice(['id'=>$inv_id,'itemList'=>1]);
+		$this->data['partyData'] = $this->party->getParty(['id'=>$invData->party_id]);
+        $this->data['taxList'] = $this->taxMaster->getActiveTaxList(2);
+        $this->data['expenseList'] = $this->expenseMaster->getActiveExpenseList(2);
+		$this->data['companyData'] = $companyData = $this->masterModel->getCompanyInfo();
+		$response="";
+		$logo=base_url('assets/images/logo.png');
+		$this->data['letter_head']=base_url('assets/images/letterhead-top.png');
+				
+        $pdfData = "";
+        $countPT = count($printTypes); $i=0;
+        foreach($printTypes as $printType):
+            ++$i;
+            $this->data['printType'] = $printType;
+            $this->data['maxLinePP'] = (!empty($postData['max_lines']))?$postData['max_lines']:14;
+		    $pdfData .= $this->load->view('sales_invoice/print',$this->data,true);
+            if($i != $countPT): $pdfData .= "<pagebreak>"; endif;
+        endforeach;
+
+        //print_r($pdfData);exit;
+		
+		$htmlHeader = '<img src="'.$this->data['letter_head'].'" class="img">';
+
+		$htmlFooter = '<table>
+            <tr>
+                <th colspan="2" style="vertical-align:bottom;text-align:right;font-size:1rem;padding:5px 2px;">
+                    For, ' . $companyData->company_name . '<br>
+                </th>
+            </tr>
+            <tr>
+                <td colspan="2" height="35"></td>
+            </tr>
+            <tr>
+                <td colspan="2" style="vertical-align:bottom;text-align:right;font-size:1rem;padding:5px 2px;"><b>Authorised Signature</b></td>
+            </tr>
+        </table>        
+        <table class="table top-table" style="margin-top:10px; border-top:1px solid #545454;">
+            <tr>
+                <td style="width:25%;font-size:12px;">This is computer generated invoice.</td>
+                <!--<td style="width:50%;text-align:left;">Inv No. & Date : '.$invData->trans_number.' ['.formatDate($invData->trans_date).']</td>
+                <td style="width:50%;text-align:right;">Page No. {PAGENO}/{nbpg}</td>-->
+            </tr>
+        </table>';
+        
+            
+		$mpdf = new \Mpdf\Mpdf();
+		$pdfFileName = str_replace(["/","-"," "],"_",$invData->trans_number).'.pdf';
+		$stylesheet = file_get_contents(base_url('assets/extra-libs/datatables.net-bs4/css/dataTables.bootstrap4.css'));
+		$stylesheet = file_get_contents(base_url('assets/css/style.css?v='.time()));
+		$stylesheet = file_get_contents(base_url('assets/css/pdf_style.css'));
+		$mpdf->WriteHTML($stylesheet,1);
+		$mpdf->SetDisplayMode('fullpage');
+		$mpdf->SetWatermarkImage($logo,0.03,array(120,45));
+		$mpdf->showWatermarkImage = true;
+		$mpdf->SetProtection(array('print'));
+		
+		$mpdf->SetHTMLHeader($htmlHeader);
+		$mpdf->SetHTMLFooter($htmlFooter);
+		$mpdf->AddPage('P','','','','',10,5,38,30,5,5,'','','','','','','','','','A4-P');
+		$mpdf->WriteHTML($pdfData);
+		$mpdf->Output($pdfFileName,'I');
+	}
 }
 ?>

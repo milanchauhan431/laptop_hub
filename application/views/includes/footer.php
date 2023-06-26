@@ -7,6 +7,7 @@
 		<?php $this->load->view('includes/modal_xl');?>
 		<?php $this->load->view('includes/modal_xxl');?>
 		<?php $this->load->view('includes/modal_master');?>
+		<?php $this->load->view('includes/print_modal');?>
 		<?php $this->load->view('includes/custom_panel');?>
 		<?php $this->load->view('includes/footerfiles');?>
 		

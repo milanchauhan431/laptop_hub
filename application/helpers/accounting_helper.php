@@ -32,7 +32,9 @@ function getSalesInvoiceData($data){
     $deleteParam = "{'postData':{'id' : ".$data->id."},'message' : 'Sales Invoice'}";
     $deleteButton = '<a class="btn btn-danger btn-delete permission-remove" href="javascript:void(0)" onclick="trash('.$deleteParam.');" datatip="Remove" flow="down"><i class="ti-trash"></i></a>';
 
-    $action = getActionButton($editButton.$deleteButton);
+    $print = '<a href="javascript:void(0)" class="btn btn-warning btn-edit printDialog permission-approve1" datatip="Print Invoice" flow="down" data-id="'.$data->id.'" data-fn_name="printInvoice"><i class="fa fa-print"></i></a>';
+
+    $action = getActionButton($print.$editButton.$deleteButton);
 
     return [$action,$data->sr_no,$data->trans_number,$data->trans_date,$data->party_name,$data->taxable_amount,$data->gst_amount,$data->net_amount];
 }

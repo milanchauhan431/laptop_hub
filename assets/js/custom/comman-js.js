@@ -357,6 +357,13 @@ $(document).ready(function(){
 		var fileName = $('#'+inputId).val().split('\\').pop() || "Choose file";
         $('label[for="' + inputId + '"]').html(fileName);
 	});
+
+	//$("#print_dialog").modal();
+	$(document).on("click",".printDialog",function(){
+		$("#printModel").attr('action',base_url + controller + "/" + ($(this).data('fn_name') || ""));
+		$("#printModel #id").val($(this).data('id'));
+		$("#print_dialog").modal();
+	});
 });
 
 $(window).on('pageshow', function() {
