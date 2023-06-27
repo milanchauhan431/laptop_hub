@@ -137,7 +137,9 @@ class SalesInvoiceModel extends MasterModel{
             foreach($itemData as $row):
                 $row['entry_type'] = $data['entry_type'];
                 $row['trans_main_id'] = $result['id'];
+                $row['gst_amount'] = $row['igst_amount'];
                 $row['is_delete'] = 0;
+
                 $itemTrans = $this->store($this->transChild,$row);
 
                 if($row['stock_eff'] == 1):
@@ -185,6 +187,10 @@ class SalesInvoiceModel extends MasterModel{
             $data['id'] = $result['id'];
             $this->transMainModel->ledgerEffects($data,$expenseData);
 
+            if($masterDetails['i_col_1'] < 100):
+                $this->saveCashInvoice($result['id']);
+            endif;
+
             if ($this->db->trans_status() !== FALSE):
                 $this->db->trans_commit();
                 return $result;
@@ -192,6 +198,86 @@ class SalesInvoiceModel extends MasterModel{
         }catch(\Exception $e){
             $this->db->trans_rollback();
             return ['status'=>2,'message'=>"somthing is wrong. Error : ".$e->getMessage()];
+        }
+    }
+
+    public function saveCashInvoice($id){
+        try{
+            $this->db->trans_begin();
+
+            $this->trash('trans_main_cash',['ref_id'=>$id]);
+            $this->trash('trans_child_cash',['entry_type'=>$id]);
+
+            $result = $this->getSalesInvoice(['id'=>$id,'itemList'=>1]);
+
+            $itemData = array();
+            $totalNetAmount = $titalDiscAmount = $totalAmount = 0;
+            foreach($result->itemList as $row):
+                $row->ref_id = $row->id;
+                $row->id = "";
+                $row->from_entry_type = $row->entry_type;
+                $row->entry_type = $result->id;
+
+                $row->gst_per = 0;
+                $row->gst_amount = 0;
+                $row->igst_per = 0;
+                $row->igst_amount = 0;
+                $row->cgst_per = 0;
+                $row->cgst_amount = 0;
+                $row->sgst_per = 0;
+                $row->sgst_amount = 0;
+
+                $row->price = ($row->org_price - $row->price);
+                $row->amount = $row->qty * $row->price;
+                $row->disc_amount = (!empty(floatVal($row->disc_per)))?round((($row->amount * $row->disc_per)/100),2):0;
+                $row->net_amount = $row->taxable_amount = $row->amount - $row->disc_amount;
+
+                $itemData[] = (array) $row;
+                $totalAmount += $row->amount;
+                $titalDiscAmount += $row->disc_amount;
+                $totalNetAmount += $row->net_amount;
+            endforeach;
+
+            $masterData = [
+                'id' => "",
+                'from_entry_type' => $result->entry_type,
+                'ref_id' => $result->id,
+                'trans_prefix' => $result->trans_prefix,
+                'trans_no' => $result->trans_no,
+                'trans_date' => $result->trans_date,
+                'trans_number' => $result->trans_number,
+                'memo_type' => $result->memo_type,
+                'gst_type' => $result->gst_type,
+                'vou_acc_id' => $result->vou_acc_id,
+                'opp_acc_id' => $result->opp_acc_id,
+                'party_id' => $result->party_id,
+                'party_name' => $result->party_name,
+                'gstin' => $result->gstin,
+                'party_state_code' => $result->party_state_code,
+                'sales_type' => $result->sales_type,
+                'order_type' => $result->order_type,
+                'doc_no' => $result->doc_no,
+                'doc_date' => $result->doc_date,
+                'total_amount' => $totalAmount,
+                'taxable_amount' => $totalNetAmount,
+                'disc_amount' => $titalDiscAmount,
+                'net_amount' => $totalNetAmount,
+            ];
+
+            $save = $this->store('trans_main_cash',$masterData);
+
+            foreach($itemData as $row):
+                $row['trans_main_id'] = $save['id'];
+                $this->store('trans_child_cash',$row);
+            endforeach;
+
+            if ($this->db->trans_status() !== FALSE):
+                $this->db->trans_commit();
+                return true;
+            endif;
+        }catch(\Exception $e){
+            $this->db->trans_rollback();
+            return false;
         }
     }
 
