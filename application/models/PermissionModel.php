@@ -304,11 +304,18 @@ class PermissionModel extends MasterModel{
                 endif;
             endif;
         endforeach;
-        if(!$this->session->userdata('emp_permission')):
+
+        /* if(!$this->session->userdata('emp_permission')):
             $this->session->set_userdata('emp_permission',$employeePermission);
         else:
             $this->session->set_userdata('emp_permission',$employeePermission);
-        endif;
+        endif; */
+        
+        $reportsPermission = $this->getEmployeeReportMenus()['reportPermission'];
+        $employeePermission = array_merge($employeePermission,$reportsPermission);
+        $this->session->set_userdata('emp_permission', array());
+        $this->session->set_userdata('emp_permission', $employeePermission);
+
         return $html;
     }
 
@@ -372,12 +379,16 @@ class PermissionModel extends MasterModel{
             $menu->subMenuData=$html;
             $menuArray[]=$menu;
         }
-        if (!$this->session->userdata('emp_permission')) :
+
+        $menuArray['reportPermission'] = $employeePermission;
+        return $menuArray;
+
+        /* if (!$this->session->userdata('emp_permission')) :
             $this->session->set_userdata('emp_permission', $employeePermission);
         else :
             $this->session->set_userdata('emp_permission', $employeePermission);
         endif;
-        return $menuArray;
+        return $menuArray; */
     }
 }
 ?>
