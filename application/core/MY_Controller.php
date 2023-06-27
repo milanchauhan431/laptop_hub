@@ -79,6 +79,9 @@ class MY_Controller extends CI_Controller{
 		/* Store Report Model */
 		$this->load->model('report/StoreReportModel','storeReport');
 
+		/* Accounting Report Model */
+		$this->load->model('report/AccountingReportModel','accountReport');
+
 		$this->setSessionVariables(["masterModel","dashboard","permission","terms","transport","hsnModel","materialGrade","itemCategory","brandMaster","sizeMaster","item","department","designation","employeeCategory","shiftModel","employee","party","transMainModel","taxMaster","expenseMaster","salesOrder","purchaseOrder","purchaseIndent","vehicleType","storeLocation","gateEntry","gateInward","salesInvoice"]);
 	}
 

@@ -9,7 +9,7 @@ class StoreReport extends MY_Controller{
 
     public function stockRegister(){
         $this->data['pageHeader'] = 'STOCK REGISTER';
-        //$this->data['headData']->pageUrl = "reports/storeReport/stockRegister";
+        $this->data['headData']->pageUrl = "reports/storeReport/stockRegister";
         $this->load->view("reports/store_report/item_stock",$this->data);
     }
 

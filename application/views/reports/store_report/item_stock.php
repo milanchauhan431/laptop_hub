@@ -26,7 +26,7 @@
                                         </select>
                                     </div>
                                     <div class="input-group-append">
-                                        <button type="button" class="btn waves-effect waves-light btn-success loadData" title="Load Data">
+                                        <button type="button" class="btn waves-effect waves-light btn-success refreshReportData loadData" title="Load Data">
 									        <i class="fas fa-sync-alt"></i> Load
 								        </button>
                                     </div>
@@ -65,6 +65,7 @@
 $(document).ready(function(){
 	reportTable();
     setTimeout(function(){$(".loadData").trigger('click');},500);
+    
     $(document).on('click','.loadData',function(e){
 		$(".error").html("");
 		var valid = 1;
@@ -87,34 +88,4 @@ $(document).ready(function(){
         }
     });   
 });
-
-function reportTable(){
-	var reportTable = $('#reportTable').DataTable({
-		responsive: true,
-		//'stateSave':true,
-		"autoWidth" : false,
-		order:[],
-		"columnDefs": 	[
-							{ type: 'natural', targets: 0 },
-							{ orderable: false, targets: "_all" }, 
-							{ className: "text-left", targets: [0,1] }, 
-							{ className: "text-center", "targets": "_all" } 
-						],
-		pageLength:25,
-		language: { search: "" },
-		lengthMenu: [
-            [ 10, 25, 50, 100, -1 ],[ '10 rows', '25 rows', '50 rows', '100 rows', 'Show all' ]
-        ],
-		dom: "<'row'<'col-sm-7'B><'col-sm-5'f>>" +"<'row'<'col-sm-12't>>" + "<'row'<'col-sm-5'i><'col-sm-7'p>>",
-		buttons: [ 'pageLength', 'excel', {text: 'Refresh',action: function ( e, dt, node, config ) {$(".loadData").trigger('click');}}]
-	});
-	reportTable.buttons().container().appendTo( '#reportTable_wrapper toolbar' );
-	$('.dataTables_filter .form-control-sm').css("width","97%");
-	$('.dataTables_filter .form-control-sm').attr("placeholder","Search.....");
-	$('.dataTables_filter').css("text-align","left");
-	$('.dataTables_filter label').css("display","block");
-	$('.btn-group>.btn:first-child').css("border-top-right-radius","0");
-	$('.btn-group>.btn:first-child').css("border-bottom-right-radius","0");
-	return reportTable;
-}
 </script>
