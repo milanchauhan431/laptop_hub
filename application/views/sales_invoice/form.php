@@ -132,6 +132,11 @@
                                         <label for="master_t_col_3">Ship To</label>
                                         <input type="text" name="masterDetails[t_col_3]" id="master_t_col_3" class="form-control" value="<?=(!empty($dataRow->ship_address))?$dataRow->ship_address:""?>">
                                     </div>
+
+                                    <div class="col-md-2 form-group">
+                                        <label for="bill_per">Bill (%)</label>
+                                        <input type="text" name="masterDetails[i_col_1]" id="master_i_col_1" class="form-control numericOnly" value="<?=(!empty($dataRow->bill_per))?$dataRow->bill_per:"100"?>">
+                                    </div>
                                 </div>
 
                                 <hr>
@@ -228,6 +233,7 @@
                                 <input type="hidden" name="item_id" id="item_id" value="0" />
                                 <input type="hidden" name="item_type" id="item_type" value="1" />
                                 <input type="hidden" name="stock_eff" id="stock_eff" value="1" />
+                                <input type="hidden" name="org_price" id="org_price" class="org_price" value="" />
                             </div>
                             
 

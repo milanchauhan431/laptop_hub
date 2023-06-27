@@ -4,7 +4,7 @@
             <input type="hidden" name="id" id="id" value="<?=(!empty($dataRow->id))?$dataRow->id:""?>">
             <input type="hidden" name="item_type" id="item_type" value="<?=(!empty($dataRow->item_type))?$dataRow->item_type:$item_type?>">
 
-            <div class="col-md-2 form-group">
+            <div class="col-md-3 form-group">
                 <label for="item_code">Item Code</label>
                 <input type="text" name="item_code" class="form-control" value="<?= (!empty($dataRow->item_code)) ? $dataRow->item_code : ""; ?>" />
             </div>
@@ -60,30 +60,12 @@
                 </div>
             <?php else: ?>
 
-            <div class="col-md-4 form-group">
+            <div class="col-md-6 form-group">
                 <label for="item_name">Item Name</label>
                 <input type="text" name="item_name" class="form-control req" value="<?=htmlentities((!empty($dataRow->item_name)) ? $dataRow->item_name : "")?>" />
             </div>
 
             <?php endif; ?>
-
-            <div class="col-md-2 form-group">
-                <label for="unit_id">Unit</label>
-                <select name="unit_id" id="unit_id" class="form-control single-select req">
-                    <option value="0">--</option>
-                    <?=getItemUnitListOption($unitData,((!empty($dataRow->unit_id))?$dataRow->unit_id:""))?>
-                </select>
-            </div>
-
-            <div class="col-md-2 form-group">
-                <label for="defualt_disc">Defual Disc. (%)</label>
-                <input type="text" name="defualt_disc" class="form-control floatOnly req" value="<?=(!empty($dataRow->defualt_disc)) ? $dataRow->defualt_disc : ""?>" />
-            </div>
-
-            <div class="<?=(!empty($dataRow->item_type) && $dataRow->item_type == 1 || !empty($item_type) && $item_type == 1)?"hidden":""?> col-md-2 form-group">
-                <label for="price">Price</label>
-                <input type="text" name="price" id="price" class="form-control floatOnly" value="<?=(!empty($dataRow->price))?$dataRow->price:""?>">
-            </div>
 
             <div class="col-md-3 form-group">
                 <label for="category_id">Category</label>
@@ -98,7 +80,27 @@
                 </select>
             </div>
 
-            <div class="col-md-3 form-group">
+            <div class="col-md-2 form-group">
+                <label for="unit_id">Unit</label>
+                <select name="unit_id" id="unit_id" class="form-control single-select req">
+                    <option value="0">--</option>
+                    <?=getItemUnitListOption($unitData,((!empty($dataRow->unit_id))?$dataRow->unit_id:""))?>
+                </select>
+            </div>
+
+            <div class="col-md-2 form-group">
+                <label for="defualt_disc">Defual Disc. (%)</label>
+                <input type="text" name="defualt_disc" class="form-control floatOnly req" value="<?=(!empty($dataRow->defualt_disc)) ? $dataRow->defualt_disc : ""?>" />
+            </div>
+
+            <div class="col-md-2 form-group">
+                <label for="price">Price</label>
+                <input type="text" name="price" id="price" class="form-control floatOnly" value="<?=(!empty($dataRow->price))?$dataRow->price:""?>">
+            </div>
+
+            
+
+            <div class="col-md-2 form-group">
                 <label for="hsn_code">HSN Code</label>
                 <select name="hsn_code" id="hsn_code" class="form-control single-select">
                     <option value="">Select HSN Code</option>
@@ -132,12 +134,12 @@
                 <input type="text" name="wh_min_qty" class="form-control floatOnly" value="<?= (!empty($dataRow->wh_min_qty)) ? $dataRow->wh_min_qty : "" ?>" />
             </div>
             
-            <div class="col-md-3 form-group">
+            <div class="col-md-2 form-group">
                 <label for="wkg">Weight/Nos <small>(In Kg.)</small> </label>
                 <input type="text" name="wkg" class="form-control floatOnly" value="<?= (!empty($dataRow->wkg)) ? $dataRow->wkg : "" ?>" />
             </div>
 
-            <div class="col-md-9 form-group">
+            <div class="col-md-8 form-group">
                 <label for="description">Product Description</label>
                 <textarea name="note" id="note" class="form-control" rows="1"><?=(!empty($dataRow->note))?$dataRow->note:""?></textarea>
             </div>
