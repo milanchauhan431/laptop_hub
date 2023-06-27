@@ -58,6 +58,9 @@ class PurchaseInvoiceModel extends MasterModel{
 				$data['opp_acc_id'] = $data['party_id'];
 			endif;
             $data['ledger_eff'] = 1;
+            $data['disc_amount'] = array_sum(array_column($data['itemData'],'disc_amount'));;
+            $data['total_amount'] = $data['taxable_amount'] + $data['disc_amount'];
+            $data['gst_amount'] = $data['igst_amount'] + $data['cgst_amount'] + $data['sgst_amount'];
 
             $accType = getSystemCode($data['vou_name_s'],false);
             if(!empty($accType)):
