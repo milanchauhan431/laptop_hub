@@ -138,6 +138,7 @@ class TransactionMainModel extends MasterModel{
 							if(!empty($accType)):
 								$spAcc = $this->party->getParty(['system_code'=>$accType]);
 								$transMainData['sp_acc_id'] = (!empty($spAcc))?$spAcc->id:0;
+								$this->edit('trans_main',['id'=>$transMainData['id']],['sp_acc_id'=>$transMainData['sp_acc_id']]);
 							else:
 								$transMainData['sp_acc_id'] = 0;
 							endif;
@@ -183,7 +184,6 @@ class TransactionMainModel extends MasterModel{
 						endif;
 					endif;
 
-
 					if((isset($transMainData['cess_amount'])) && $transMainData['cess_amount'] <> 0):
 						$transLedgerData['vou_acc_id'] = $transMainData['cess_acc_id'];
 						$transLedgerData['opp_acc_id'] = $transMainData['opp_acc_id'];
@@ -225,7 +225,7 @@ class TransactionMainModel extends MasterModel{
 								$transLedgerData['vou_acc_id'] = $expenseData[$row->map_code."_acc_id"];
 								$transLedgerData['opp_acc_id'] = $transMainData['opp_acc_id'];
 								$transLedgerData['amount'] = $expenseData[$row->map_code.'_amount'];
-								$transLedgerData['c_or_d'] = (in_array($transMainData['entry_type'],[12,13,18]))?(($row->add_or_deduct == 1)?"DR":"CR"):(($row->add_or_deduct == 1)?"CR":"DR");
+								$transLedgerData['c_or_d'] = (in_array($transMainData['vou_name_s'],["Purc","C.N.","GExp"]))?(($row->add_or_deduct == 1)?"DR":"CR"):(($row->add_or_deduct == 1)?"CR":"DR");
 								$this->storeTransLedger($transLedgerData);
 							endif;
 						endif;
@@ -236,7 +236,7 @@ class TransactionMainModel extends MasterModel{
 						$transLedgerData['vou_acc_id'] = $transMainData["round_off_acc_id"];
 						$transLedgerData['opp_acc_id'] = $transMainData['opp_acc_id'];
 						$transLedgerData['amount'] = abs($transMainData['round_off_amount']);
-						$transLedgerData['c_or_d'] = (in_array($transMainData['entry_type'],[12,13]))?(($transMainData['round_off_amount'] > 0)?"DR":"CR"):(($transMainData['round_off_amount'] > 0)?"CR":"DR");
+						$transLedgerData['c_or_d'] = (in_array($transMainData['vou_name_s'],["Purc","C.N."]))?(($transMainData['round_off_amount'] > 0)?"DR":"CR"):(($transMainData['round_off_amount'] > 0)?"CR":"DR");
 						$this->storeTransLedger($transLedgerData);
 					endif;
 				endif;
