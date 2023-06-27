@@ -255,7 +255,7 @@
                             </div>
                             <div class="col-md-4 form-group">
                                 <label for="price">Price</label>
-                                <input type="text" name="price" id="price" class="form-control floatOnly req" value="0" />
+                                <input type="text" name="price" id="price" class="form-control floatOnly req" value="0" readonly />
                             </div>
                             <div class="col-md-4 form-group">
                                 <label for="unit_id">Unit</label>        
