@@ -44,7 +44,9 @@ class SalesInvoiceModel extends MasterModel{
         try{
             $this->db->trans_begin();
 
+            $cahsEntryNew = false;
             if(empty($data['id'])):
+                $cahsEntryNew = true;
                 $data['trans_no'] = $this->transMainModel->nextTransNo($data['entry_type']);
                 $data['trans_number'] = $data['trans_prefix'].$data['trans_no'];
             endif;
@@ -79,6 +81,28 @@ class SalesInvoiceModel extends MasterModel{
                 $this->remove($this->transDetails,['main_ref_id'=>$data['id'],'table_name'=>$this->transMain,'description'=>"SI TERMS"]);
                 $this->remove($this->transDetails,['main_ref_id'=>$data['id'],'table_name'=>$this->transMain,'description'=>"SI MASTER DETAILS"]);
                 $this->remove($this->stockTrans,['main_ref_id'=>$data['id'],'entry_type'=>$data['entry_type']]);
+
+                if($data['masterDetails']['i_col_1'] != $dataRow->bill_per):
+                    $queryData = array();
+                    $queryData['tableName'] = $this->transMain;
+                    $queryData['select'] = "id,rop_amount";
+                    $queryData['where']['ref_id'] = $data['id'];
+                    $queryData['where']['from_entry_type'] = $data['entry_type'];
+                    $estimateId = $this->row($queryData);
+
+                    //Remove Estimate Recoreds
+                    if(!empty($estimateId->id)):
+                        if(floatVal($estimateId->rop_amount) > 0):
+                            $this->db->trans_rollback();
+                            return ['status'=>2,'message'=>"Estimate Amount is received. You can not change bill per."];
+                        else:
+                            if($data['masterDetails']['i_col_1'] == 100):
+                                $this->trash($this->transMain,['id'=>$estimateId]);
+                                $this->trash($this->transChild,['trans_main_id'=>$estimateId]);
+                            endif;
+                        endif;
+                    endif;
+                endif;
             endif;
             
             if($data['memo_type'] == "CASH"):
@@ -112,11 +136,13 @@ class SalesInvoiceModel extends MasterModel{
 
             $result = $this->store($this->transMain,$data,'Sales Invoice');
 
-            $masterDetails['id'] = "";
-            $masterDetails['main_ref_id'] = $result['id'];
-            $masterDetails['table_name'] = $this->transMain;
-            $masterDetails['description'] = "SI MASTER DETAILS";
-            $this->store($this->transDetails,$masterDetails);
+            if(!empty($masterDetails)):
+                $masterDetails['id'] = "";
+                $masterDetails['main_ref_id'] = $result['id'];
+                $masterDetails['table_name'] = $this->transMain;
+                $masterDetails['description'] = "SI MASTER DETAILS";
+                $this->store($this->transDetails,$masterDetails);
+            endif;
 
             $expenseData = array();
             if($expAmount <> 0):				
@@ -189,7 +215,7 @@ class SalesInvoiceModel extends MasterModel{
             $this->transMainModel->ledgerEffects($data,$expenseData);
 
             if($masterDetails['i_col_1'] < 100):
-                $this->saveCashInvoice($result['id']);
+                $this->saveCashInvoice($result['id'],$cahsEntryNew);
             endif;
 
             if ($this->db->trans_status() !== FALSE):
@@ -202,14 +228,25 @@ class SalesInvoiceModel extends MasterModel{
         }
     }
 
-    public function saveCashInvoice($id){
+    public function saveCashInvoice($id,$cahsEntryNew){
         try{
             $this->db->trans_begin();
 
-            $this->trash('trans_main_cash',['ref_id'=>$id]);
-            $this->trash('trans_child_cash',['entry_type'=>$id]);
-
             $result = $this->getSalesInvoice(['id'=>$id,'itemList'=>1]);
+
+            $entryData = $this->transMainModel->getEntryType(['controller'=>'estimate']);
+
+            $estimateId = "";
+            if($cahsEntryNew == false):
+                $queryData = array();
+                $queryData['tableName'] = $this->transMain;
+                $queryData['select'] = "id";
+                $queryData['where']['ref_id'] = $id;
+                $queryData['where']['from_entry_type'] = $result->entry_type;
+                $estimateId = $this->row($queryData)->id;
+
+                $this->trash($this->transChild,['trans_main_id'=>$estimateId]);
+            endif;            
 
             $itemData = array();
             $totalNetAmount = $titalDiscAmount = $totalAmount = 0;
@@ -217,8 +254,9 @@ class SalesInvoiceModel extends MasterModel{
                 $row->ref_id = $row->id;
                 $row->id = "";
                 $row->from_entry_type = $row->entry_type;
-                $row->entry_type = $result->id;
+                $row->entry_type = $entryData->id;
 
+                $row->stock_eff = 0;
                 $row->gst_per = 0;
                 $row->gst_amount = 0;
                 $row->igst_per = 0;
@@ -240,15 +278,16 @@ class SalesInvoiceModel extends MasterModel{
             endforeach;
 
             $masterData = [
-                'id' => "",
+                'id' => $estimateId,
+                'entry_type' => $entryData->id,
                 'from_entry_type' => $result->entry_type,
                 'ref_id' => $result->id,
-                'trans_prefix' => $result->trans_prefix,
-                'trans_no' => $result->trans_no,
+                /* 'trans_prefix' => $result->trans_prefix,
+                'trans_no' => $result->trans_no, */
                 'trans_date' => $result->trans_date,
                 'trans_number' => $result->trans_number,
                 'memo_type' => $result->memo_type,
-                'gst_type' => $result->gst_type,
+                'gst_type' => 3,
                 'vou_acc_id' => $result->vou_acc_id,
                 'opp_acc_id' => $result->opp_acc_id,
                 'party_id' => $result->party_id,
@@ -263,13 +302,15 @@ class SalesInvoiceModel extends MasterModel{
                 'taxable_amount' => $totalNetAmount,
                 'disc_amount' => $titalDiscAmount,
                 'net_amount' => $totalNetAmount,
+                'vou_name_l' => $entryData->vou_name_long,
+                'vou_name_s' => $entryData->vou_name_short
             ];
 
-            $save = $this->store('trans_main_cash',$masterData);
+            $save = $this->store($this->transMain,$masterData);
 
             foreach($itemData as $row):
                 $row['trans_main_id'] = $save['id'];
-                $this->store('trans_child_cash',$row);
+                $this->store($this->transChild,$row);
             endforeach;
 
             if ($this->db->trans_status() !== FALSE):
@@ -343,6 +384,26 @@ class SalesInvoiceModel extends MasterModel{
             $this->db->trans_begin();
 
             $dataRow = $this->getSalesInvoice(['id'=>$id,'itemList'=>1]);
+
+            if($dataRow->bill_per < 100):
+                $queryData = array();
+                $queryData['tableName'] = $this->transMain;
+                $queryData['select'] = "id,rop_amount";
+                $queryData['where']['ref_id'] = $dataRow->id;
+                $queryData['where']['from_entry_type'] = $dataRow->entry_type;
+                $estimateId = $this->row($queryData);
+
+                //Remove Estimate Recoreds
+                if(!empty($estimateId->id)):
+                    if(floatVal($estimateId->rop_amount) > 0):
+                        $this->db->trans_rollback();
+                        return ['status'=>0,'message'=>"Estimate Amount is received. You can not delete this invoice."];
+                    else:
+                        $this->trash($this->transMain,['id'=>$estimateId]);
+                        $this->trash($this->transChild,['trans_main_id'=>$estimateId]);
+                    endif;
+                endif;
+            endif;
             
             foreach($dataRow->itemList as $row):
                 if(!empty($row->ref_id)):

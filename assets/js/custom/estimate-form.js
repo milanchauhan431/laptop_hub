@@ -1,4 +1,9 @@
 $(document).ready(function(){
+    $(".ledgerColumn").hide();
+	$(".summary_desc").attr('style','width: 60%;');
+    $(".cgstCol").hide();$(".sgstCol").hide();$(".igstCol").hide();
+	$(".amountCol").show();$(".netAmtCol").hide();
+
 	$(document).on('click','.getPendingOrders',function(){
 		var party_id = $('#party_id').val();
 		var party_name = $('#party_idc').val();
@@ -91,9 +96,6 @@ $(document).ready(function(){
             var gst_amount = 0; var cgst_amt = 0; var sgst_amt = 0; var net_amount = 0; 
             var gst_per = 0; var cgst_per = 0; var sgst_per = 0; var igst_per = 0;
 
-			formData.org_price = (formData.org_price != "" || parseFloat(formData.org_price) > 0)?formData.org_price:0;
-			formData.price = parseFloat((parseFloat(formData.org_price) * parseFloat(($("#master_i_col_1").val() || 0)) / 100)).toFixed(0);
-
             if (formData.disc_per == "" && formData.disc_per == "0") {
                 taxable_amount = amount = parseFloat(parseFloat(formData.qty) * parseFloat(formData.price)).toFixed(2);
             } else {
@@ -102,14 +104,15 @@ $(document).ready(function(){
                 taxable_amount = parseFloat(amount - disc_amt).toFixed(2);
             }
 
-            formData.gst_per = igst_per = parseFloat(formData.gst_per).toFixed(0);
+            formData.gst_per = formData.gst_amount = 0;
+            /* formData.gst_per = igst_per = parseFloat(formData.gst_per).toFixed(0);
             formData.gst_amount = igst_amt = parseFloat((igst_per * taxable_amount) / 100).toFixed(2);
 
             cgst_per = parseFloat(parseFloat(igst_per) / 2).toFixed(2);
             sgst_per = parseFloat(parseFloat(igst_per) / 2).toFixed(2);
 
             cgst_amt = parseFloat((cgst_per * taxable_amount) / 100).toFixed(2);
-            sgst_amt = parseFloat((sgst_per * taxable_amount) / 100).toFixed(2);
+            sgst_amt = parseFloat((sgst_per * taxable_amount) / 100).toFixed(2); */
 
             net_amount = parseFloat(parseFloat(taxable_amount) + parseFloat(igst_amt)).toFixed(2);
 
@@ -154,81 +157,6 @@ $(document).ready(function(){
 	$(document).on('change','#hsn_code',function(){
 		$("#gst_per").val(($("#hsn_code :selected").data('gst_per') || 0));
 		$("#gst_per").comboSelect();
-	});
-
-	//on change Bill Per.
-	$(document).on('keyup change','#master_i_col_1',function(){
-		var billPer = $(this).val();
-		billPer = (parseFloat(billPer) > 0)?billPer:0;
-		var rowCount = $('#salesInvoiceItems tbody tr').length;
-		var countRow = 0;
-		for(var i=0;i<rowCount;i++){
-			countRow = i + 1;
-			if($("#salesInvoiceItems tbody tr:eq("+i+") input[name='itemData["+countRow+"][org_price]']").val()){				
-				formData = {};				
-
-				formData.id = $("#salesInvoiceItems tbody tr:eq("+i+") input[name='itemData["+countRow+"][id]']").val();
-				formData.item_id = $("#salesInvoiceItems tbody tr:eq("+i+") input[name='itemData["+countRow+"][item_id]']").val();
-				formData.item_name = $("#salesInvoiceItems tbody tr:eq("+i+") input[name='itemData["+countRow+"][item_name]']").val();
-				formData.from_entry_type = $("#salesInvoiceItems tbody tr:eq("+i+") input[name='itemData["+countRow+"][from_entry_type]']").val();
-				formData.ref_id = $("#salesInvoiceItems tbody tr:eq("+i+") input[name='itemData["+countRow+"][ref_id]']").val();
-				formData.item_code = $("#salesInvoiceItems tbody tr:eq("+i+") input[name='itemData["+countRow+"][item_code]']").val();
-				formData.item_type = $("#salesInvoiceItems tbody tr:eq("+i+") input[name='itemData["+countRow+"][item_type]']").val();
-				formData.stock_eff = $("#salesInvoiceItems tbody tr:eq("+i+") input[name='itemData["+countRow+"][stock_eff]']").val();
-				formData.p_or_m = $("#salesInvoiceItems tbody tr:eq("+i+") input[name='itemData["+countRow+"][p_or_m]']").val();
-				formData.hsn_code = $("#salesInvoiceItems tbody tr:eq("+i+") input[name='itemData["+countRow+"][hsn_code]']").val();
-				formData.qty = $("#salesInvoiceItems tbody tr:eq("+i+") input[name='itemData["+countRow+"][qty]']").val();
-				formData.packing_qty = $("#salesInvoiceItems tbody tr:eq("+i+") input[name='itemData["+countRow+"][packing_qty]']").val();
-				formData.unit_id = $("#salesInvoiceItems tbody tr:eq("+i+") input[name='itemData["+countRow+"][unit_id]']").val();
-				formData.unit_name = $("#salesInvoiceItems tbody tr:eq("+i+") input[name='itemData["+countRow+"][unit_name]']").val();
-
-				var org_price = $("#salesInvoiceItems tbody tr:eq("+i+") input[name='itemData["+countRow+"][org_price]']").val();
-				formData.org_price = (org_price != "" || parseFloat(org_price) > 0)?org_price:0;
-				formData.price = parseFloat((parseFloat(org_price) * parseFloat(billPer) / 100)).toFixed(0);
-				
-				formData.disc_per = $("#salesInvoiceItems tbody tr:eq("+i+") input[name='itemData["+countRow+"][disc_per]']").val();
-				formData.gst_per = $("#salesInvoiceItems tbody tr:eq("+i+") input[name='itemData["+countRow+"][gst_per]']").val();
-				formData.item_remark = $("#salesInvoiceItems tbody tr:eq("+i+") input[name='itemData["+countRow+"][item_remark]']").val();
-				
-				
-				var cgst_amt = 0;var sgst_amt = 0;var igst_amt = 0;
-				var cgst_per = 0;var sgst_per = 0;var igst_per = 0;
-				var amount = 0;var disc_amt = 0;var total = 0;var net_amount = 0;
-				if (formData.disc_per == "" && formData.disc_per == "0") {
-					taxable_amount = amount = parseFloat(parseFloat(formData.qty) * parseFloat(formData.price)).toFixed(2);
-				} else {
-					amount = parseFloat(parseFloat(formData.qty) * parseFloat(formData.price)).toFixed(2);
-					disc_amt = parseFloat((amount * parseFloat(formData.disc_per)) / 100).toFixed(2);
-					taxable_amount = parseFloat(amount - disc_amt).toFixed(2);
-				}
-				
-				cgst_per = parseFloat(parseFloat(formData.gst_per)/2).toFixed(2);
-				sgst_per = parseFloat(parseFloat(formData.gst_per)/2).toFixed(2);
-				
-				cgst_amt = parseFloat((cgst_per * taxable_amount )/100).toFixed(2);
-				sgst_amt = parseFloat((sgst_per * taxable_amount )/100).toFixed(2);
-				
-				formData.gst_per = igst_per = parseFloat(formData.gst_per).toFixed(2);
-				formData.gst_amount = igst_amt = parseFloat((igst_per * taxable_amount )/100).toFixed(2);
-				
-				net_amount = parseFloat(parseFloat(taxable_amount) + parseFloat(igst_amt)).toFixed(2);
-
-				formData.gst_type = $('#gst_type').val();
-				formData.qty = parseFloat(formData.qty).toFixed(2);
-				formData.cgst_per = cgst_per;
-				formData.cgst_amount = cgst_amt;
-				formData.sgst_per = sgst_per;
-				formData.sgst_amount = sgst_amt;
-				formData.igst_per = igst_per;
-				formData.igst_amount = igst_amt;
-				formData.disc_amount = disc_amt;
-				formData.amount = amount;
-				formData.taxable_amount = taxable_amount;
-				formData.net_amount = net_amount;
-				formData.row_index = ""+i+"";
-				AddRow(formData); 				
-			}
-		}
 	});
 });
 
@@ -302,8 +230,8 @@ function AddRow(data) {
     cell.append(pormInput);
 
     var hsnCodeInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][hsn_code]", value: data.hsn_code });
-	cell = $(row.insertCell(-1));
-	cell.html(data.hsn_code);
+	/* cell = $(row.insertCell(-1));
+	cell.html(data.hsn_code); */
 	cell.append(hsnCodeInput);
 
     var qtyInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][qty]", class:"item_qty", value: data.qty });
@@ -470,7 +398,7 @@ function resPartyDetail(response = ""){
         $("#master_t_col_2").val("");
         $("#master_t_col_3").val("");
     }
-    $("#gstin").html(html);$("#gstin").comboSelect();gstin();
+    $("#gst_no").html(html);$("#gst_no").comboSelect();//gstin();
 }
 
 function resItemDetail(response = ""){
@@ -485,8 +413,6 @@ function resItemDetail(response = ""){
 		$("#itemForm #price").val(itemDetail.price);
 		$("#itemForm #org_price").val(itemDetail.price);
 		$("#itemForm #packing_qty").val(itemDetail.packing_standard);
-        $("#itemForm #hsn_code").val(itemDetail.hsn_code);$("#itemForm #hsn_code").comboSelect();
-        $("#itemForm #gst_per").val(parseFloat(itemDetail.gst_per).toFixed(0));$("#itemForm #gst_per").comboSelect();
     }else{
         $("#itemForm #item_code").val("");
         $("#itemForm #item_name").val("");
@@ -497,12 +423,10 @@ function resItemDetail(response = ""){
 		$("#itemForm #price").val("");
 		$("#itemForm #org_price").val("");
 		$("#itemForm #packing_qty").val("");
-        $("#itemForm #hsn_code").val("");$("#itemForm #hsn_code").comboSelect();
-        $("#itemForm #gst_per").val(0);$("#itemForm #gst_per").comboSelect(); 
     }
 }
 
-function resSaveInvoice(data,formId){
+function resEstimate(data,formId){
     if(data.status==1){
         $('#'+formId)[0].reset();
         toastr.success(data.message, 'Success', { "showMethod": "slideDown", "hideMethod": "slideUp", "closeButton": true, positionClass: 'toastr toast-bottom-center', containerId: 'toast-bottom-center', "progressBar": true });
