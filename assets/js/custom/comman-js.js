@@ -330,7 +330,7 @@ $(document).ready(function(){
 		}
 	});
 
-	$(document).on('change',".itemDetails",function(){
+	$(document).on('change click',".itemDetails",function(){
 		var item_id = $(this).val();
 		var resFunctionName = $(this).data('res_function') || "";
 		
