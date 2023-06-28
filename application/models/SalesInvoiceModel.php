@@ -97,8 +97,8 @@ class SalesInvoiceModel extends MasterModel{
                             return ['status'=>2,'message'=>"Estimate Amount is received. You can not change bill per."];
                         else:
                             if($data['masterDetails']['i_col_1'] == 100):
-                                $this->trash($this->transMain,['id'=>$estimateId]);
-                                $this->trash($this->transChild,['trans_main_id'=>$estimateId]);
+                                $this->trash($this->transMain,['id'=>$estimateId->id]);
+                                $this->trash($this->transChild,['trans_main_id'=>$estimateId->id]);
                             endif;
                         endif;
                     endif;
@@ -399,8 +399,8 @@ class SalesInvoiceModel extends MasterModel{
                         $this->db->trans_rollback();
                         return ['status'=>0,'message'=>"Estimate Amount is received. You can not delete this invoice."];
                     else:
-                        $this->trash($this->transMain,['id'=>$estimateId]);
-                        $this->trash($this->transChild,['trans_main_id'=>$estimateId]);
+                        $this->trash($this->transMain,['id'=>$estimateId->id]);
+                        $this->trash($this->transChild,['trans_main_id'=>$estimateId->id]);
                     endif;
                 endif;
             endif;
