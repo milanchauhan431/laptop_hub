@@ -243,9 +243,12 @@ class SalesInvoiceModel extends MasterModel{
                 $queryData['select'] = "id";
                 $queryData['where']['ref_id'] = $id;
                 $queryData['where']['from_entry_type'] = $result->entry_type;
-                $estimateId = $this->row($queryData)->id;
+                $estimate = $this->row($queryData);
 
-                $this->trash($this->transChild,['trans_main_id'=>$estimateId]);
+                if(!empty($estimate->id)):
+                    $estimateId = $estimate->id;
+                    $this->trash($this->transChild,['trans_main_id'=>$estimateId]);
+                endif;
             endif;            
 
             $itemData = array();
