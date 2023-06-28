@@ -9,6 +9,8 @@ class ExpenseMasterModel extends MasterModel{
         (CASE WHEN expense_master.add_or_deduct = 1 THEN "Add" WHEN expense_master.add_or_deduct = -1 THEN "Deduct" ELSE "" END) as add_or_deduct_name';
         $data['leftJoin']['party_master'] = 'party_master.id = expense_master.acc_id';
 
+        $data['searchCol'][] = "";
+        $data['searchCol'][] = "";
         $data['searchCol'][] = "exp_name";
         $data['searchCol'][] = "entry_name";
         $data['searchCol'][] = "seq";
@@ -17,9 +19,10 @@ class ExpenseMasterModel extends MasterModel{
         $data['searchCol'][] = "(CASE WHEN expense_master.is_active =1 THEN 'Active' WHEN expense_master.is_active =0 THEN 'Inactive' ELSE '' END)";
         $data['searchCol'][] = "(CASE WHEN expense_master.add_or_deduct = 1 THEN 'Add' WHEN expense_master.add_or_deduct = -1 THEN 'Deduct' ELSE '' END)";
        
-		$columns =array('','','exp_name','entry_type','seq','','','','','');
+		$columns =array(); foreach($data['searchCol'] as $row): $columns[] = $row; endforeach;
+
 		if(isset($data['order'])){$data['order_by'][$columns[$data['order'][0]['column']]] = $data['order'][0]['dir'];}
-        return $this->pagingRows($data);
+		return $this->pagingRows($data);
     }
 
     public function getExpenseMaster($id){
@@ -54,7 +57,7 @@ class ExpenseMasterModel extends MasterModel{
             endif;
 
             if($this->checkDuplicate($data) > 0):
-                $errorMessage['exp_name'] = "Expense Name is duplicate.";
+                $errorMessage['exp_name'] = "Expense Name is duplicate.".$this->checkDuplicate($data);
                 $result = ['status'=>0,'message'=>$errorMessage];
             else:
                 $result = $this->store($this->expenseMaster,$data,'Expense Master');
@@ -70,21 +73,23 @@ class ExpenseMasterModel extends MasterModel{
     }
 
     public function checkDuplicate($data){
-        $data['tableName'] = $this->expenseMaster;
-        $data['where']['exp_name'] = $data['exp_name'];        
-        $data['where']['entry_type'] = $data['entry_type'];  
+        $queryData['tableName'] = $this->expenseMaster;
+        $queryData['where']['exp_name'] = $data['exp_name'];        
+        $queryData['where']['entry_type'] = $data['entry_type'];  
               
-        if(!empty($id))
-            $data['where']['id !='] = $data['id'];
+        if(!empty($data['id']))
+            $queryData['where']['id !='] = $data['id'];
 
         $queryData['resultType'] = "numRows";
-        return $this->specificRow($queryData);
+        return $this->specificRow($queryData); //$this->printQuery();
     }
 
     public function expenseLimit($entryType){
-        $data['tableName'] = $this->expenseMaster;
-        $data['where']['entry_type'] = $entryType;
-        return $this->numRows($data);
+        $queryData['tableName'] = $this->expenseMaster;
+        $queryData['where']['entry_type'] = $entryType;
+
+        $queryData['resultType'] = "numRows";
+        return $this->specificRow($queryData);
     }
 
     public function delete($id){

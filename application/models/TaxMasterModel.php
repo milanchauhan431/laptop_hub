@@ -12,12 +12,15 @@ class TaxMasterModel extends MasterModel{
 
         $data['leftJoin']['party_master'] = 'party_master.id = tax_master.acc_id';
 
+        $data['searchCol'][] = "";
+        $data['searchCol'][] = "";
         $data['searchCol'][] = "name";
         $data['searchCol'][] = "acc_name";
        
-		$columns =array('','','name','tax_type','','','','','');
+		$columns =array(); foreach($data['searchCol'] as $row): $columns[] = $row; endforeach;
+
 		if(isset($data['order'])){$data['order_by'][$columns[$data['order'][0]['column']]] = $data['order'][0]['dir'];}
-        return $this->pagingRows($data);
+		return $this->pagingRows($data);
     }
 
     public function getTaxMaster($id){
@@ -30,12 +33,13 @@ class TaxMasterModel extends MasterModel{
         try{
             $this->db->trans_begin();
 
-            if($this->checkDuplicate($data['name'],$data['tax_type'],$data['id']) > 0):
+            if($this->checkDuplicate($data) > 0):
                 $errorMessage['name'] = "Tax Name is duplicate.";
-                $result = ['status'=>0,'message'=>$errorMessage];
-            else:
-                $result = $this->store($this->taxMaster,$data,'Tax Master');
+                return ['status'=>0,'message'=>$errorMessage];
             endif;
+            
+            $result = $this->store($this->taxMaster,$data,'Tax Master');            
+
             if ($this->db->trans_status() !== FALSE):
                 $this->db->trans_commit();
                 return $result;
@@ -46,19 +50,23 @@ class TaxMasterModel extends MasterModel{
         }	
     }
 
-    public function checkDuplicate($name,$entryType,$id=""){
-        $data['tableName'] = $this->taxMaster;
-        $data['where']['name'] = $name;        
-        $data['where']['tax_type'] = $entryType;        
-        if(!empty($id))
-            $data['where']['id !='] = $id;
-        return $this->numRows($data);
+    public function checkDuplicate($data){
+        $queryData['tableName'] = $this->taxMaster;
+        $queryData['where']['name'] = $data['name'];        
+        $queryData['where']['tax_type'] = $data['tax_type'];        
+        if(!empty($data['id']))
+            $queryData['where']['id !='] = $data['id'];
+
+        $queryData['resultType'] = "numRows";
+        return $this->specificRow($queryData);
     }
 
     public function delete($id){
         try{
             $this->db->trans_begin();
+
             $result = $this->trash($this->taxMaster,['id'=>$id],'Tax Master');
+
             if ($this->db->trans_status() !== FALSE):
                 $this->db->trans_commit();
                 return $result;

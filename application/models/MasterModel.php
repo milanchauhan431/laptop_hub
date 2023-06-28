@@ -625,6 +625,7 @@ class MasterModel extends CI_Model{
                 endforeach;
             endif;            
         endif;
+
         if(isset($data['customWhere'])):
             if(!empty($data['customWhere'])):
                 foreach($data['customWhere'] as $value):
@@ -632,6 +633,7 @@ class MasterModel extends CI_Model{
                 endforeach;
             endif;
         endif;
+        
         $this->db->where($data['tableName'].'.is_delete',0);
 
         if(isset($data['where_in'])):
