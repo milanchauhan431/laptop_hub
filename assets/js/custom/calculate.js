@@ -2,6 +2,18 @@ $(document).ready(function(){
 	$(".cgstCol").show();$(".sgstCol").show();$(".igstCol").hide();
 	$(".amountCol").hide();$(".netAmtCol").show();
 
+	var gst_type = $("#gst_type").val() || 1;
+	if (gst_type == 1) {
+		$(".cgstCol").show(); $(".sgstCol").show(); $(".igstCol").hide();
+		$(".amountCol").hide(); $(".netAmtCol").show();
+	} else if (gst_type == 2) {
+		$(".cgstCol").hide(); $(".sgstCol").hide(); $(".igstCol").show();
+		$(".amountCol").hide(); $(".netAmtCol").show();
+	} else {
+		$(".cgstCol").hide(); $(".sgstCol").hide(); $(".igstCol").hide();
+		$(".amountCol").show(); $(".netAmtCol").hide();
+	}
+
 	var numberOfChecked = $('.termCheck:checkbox:checked').length;
 	$("#termsCounter").html(numberOfChecked);
 	$(document).on("click", ".termCheck", function () {
