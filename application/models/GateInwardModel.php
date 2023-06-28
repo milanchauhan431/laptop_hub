@@ -14,6 +14,7 @@ class GateInwardModel extends masterModel{
             $data['select'] = "mir.id,mir.trans_number,DATE_FORMAT(mir.trans_date,'%d-%m-%Y') as trans_date,mir.qty as no_of_items,party_master.party_name,mir.inv_no,ifnull(DATE_FORMAT(mir.inv_date,'%d-%m-%Y'),'') as inv_date,mir.doc_no,ifnull(DATE_FORMAT(mir.doc_date,'%d-%m-%Y'),'') as doc_date,mir.qty_kg,mir.inward_qty,mir.trans_status,mir.trans_type";
 
             $data['where']['mir.trans_status'] = $data['trans_status'];
+            $data['where']['mir.entry_type'] = $this->data['entryData']->id;
         else:
             $data['tableName'] = $this->mirTrans;
 
@@ -24,6 +25,7 @@ class GateInwardModel extends masterModel{
             $data['leftJoin']['trans_main'] = "trans_main.id = mir_transaction.po_id";
 
             $data['where']['mir_transaction.trans_status'] = $data['trans_status'];
+            $data['where']['mir_transaction.entry_type'] = $this->data['entryData']->id;
         endif;
 
         $data['leftJoin']['party_master'] = "party_master.id = mir.party_id";
@@ -99,7 +101,7 @@ class GateInwardModel extends masterModel{
 
             $itemData = $data['batchData'];unset($data['batchData']);
 
-            $data['trans_type'] = 2;
+            $data['trans_type'] = 2;$data['entry_type'] = $this->data['entryData']->id;
             $result = $this->store($this->mir,$data,'Gate Inward');
 
             foreach($itemData as $row):         
@@ -107,6 +109,7 @@ class GateInwardModel extends masterModel{
 
                 $row['mir_id'] = $result['id'];
                 $row['location_id'] = $this->RTD_STORE->id;
+                $row['entry_type'] = $this->data['entryData']->id;
                 $row['type'] = 1;
                 $row['is_delete'] = 0;
 
@@ -347,6 +350,19 @@ class GateInwardModel extends masterModel{
             $this->db->trans_rollback();
             return ['status'=>2,'message'=>"somthing is wrong. Error : ".$e->getMessage()];
         }	
+    }
+
+    public function getPendingInwardItems($data){
+        $queryData = array();
+        $queryData['tableName'] = $this->mirTrans;
+        $queryData['select'] = "mir_transaction.*,(mir_transaction.qty - mir_transaction.inv_qty) as pending_qty,mir.entry_type as main_entry_type,mir.trans_number,mir.trans_date,mir.inv_no,mir.inv_date,mir.doc_no,mir.doc_date,item_master.item_code,item_master.item_name,item_master.item_type,item_master.hsn_code,item_master.gst_per,unit_master.id as unit_id,unit_master.unit_name,'0' as stock_eff";
+        $queryData['leftJoin']['mir'] = "mir_transaction.mir_id = mir.id";
+        $queryData['leftJoin']['item_master'] = "item_master.id = mir_transaction.item_id";
+        $queryData['leftJoin']['unit_master'] = "item_master.unit_id = unit_master.id";
+        $queryData['where']['mir.party_id'] = $data['party_id'];
+        $queryData['where']['mir_transaction.entry_type'] = $this->data['entryData']->id;
+        $queryData['where']['(mir_transaction.qty - mir_transaction.inv_qty) >'] = 0;
+        return $this->rows($queryData);
     }
 }
 ?>

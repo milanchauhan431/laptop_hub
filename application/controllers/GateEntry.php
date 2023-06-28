@@ -81,6 +81,7 @@ class GateEntry extends MY_Controller{
             $data['vehicle_no'] = (!empty($data['vehicle_no']))?strtoupper($data['vehicle_no']):"";
             $data['inv_date'] = (!empty($data['inv_date']))?$data['inv_date']:null;
             $data['doc_date'] = (!empty($data['doc_date']))?$data['doc_date']:null;
+            $data['entry_type'] = $this->data['entryData']->id;
             $this->printJson($this->gateEntry->save($data));
         endif;
     }

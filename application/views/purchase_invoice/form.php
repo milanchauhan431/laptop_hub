@@ -8,7 +8,7 @@
                         <h4><u>Purchase Invoice</u></h4>
                     </div>
                     <div class="card-body">
-                        <form autocomplete="off" id="saveSalesOrder" data-res_function="resPurchaseInvoice" enctype="multipart/form-data">
+                        <form autocomplete="off" id="savePurchaseInvoice" data-res_function="resPurchaseInvoice" enctype="multipart/form-data">
                             <div class="col-md-12">
                                 <div class="row">
 
@@ -52,6 +52,10 @@
 													
 												</div>
 											</span>
+
+                                            <span class="float-right m-r-10">
+                                                <a class="text-primary font-bold waves-effect waves-dark getPendingOrders" href="javascript:void(0)">+ Gate Inward</a>
+                                            </span>
 										</div>
                                         <select name="party_id" id="party_id" class="form-control single-select partyDetails partyOptions req" data-res_function="resPartyDetail" data-party_category="1">
 											<option value="">Select Party</option>
@@ -172,7 +176,7 @@
                     </div>
                     <div class="card-footer">
                         <div class="col-md-12">
-                            <button type="button" class="btn waves-effect waves-light btn-outline-success float-right save-form" onclick="customStore({'formId':'saveSalesOrder'});" ><i class="fa fa-check"></i> Save</button>
+                            <button type="button" class="btn waves-effect waves-light btn-outline-success float-right save-form" onclick="customStore({'formId':'savePurchaseInvoice'});" ><i class="fa fa-check"></i> Save</button>
                             <a href="javascript:void(0)" onclick="window.location.href='<?=base_url($headData->controller)?>'" class="btn waves-effect waves-light btn-outline-secondary float-right btn-close press-close-btn save-form" style="margin-right:10px;"><i class="fa fa-times"></i> Cancel</a>
                         </div>
                     </div>

@@ -21,8 +21,7 @@ $(document).ready(function(){
 			});
 		} else {
 			$('.party_id').html("Party is required.");
-		}
-	
+		}	
 	});
 
     $(document).on('click', '.add-item', function () {

@@ -11,6 +11,7 @@ class GateEntryModel extends MasterModel{
         
         $data['where']['mir.trans_status'] = $data['status'];
         $data['where']['mir.trans_type'] = 1;
+        $data['where']['mir.entry_type'] = $this->data['entryData']->id;
         
         $data['order_by']['mir.id'] = "DESC";
 

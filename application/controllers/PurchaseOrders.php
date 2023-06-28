@@ -8,7 +8,7 @@ class PurchaseOrders extends MY_Controller{
 		$this->data['headData']->pageTitle = "Purchase Order";
 		$this->data['headData']->controller = "purchaseOrders";        
         $this->data['headData']->pageUrl = "purchaseOrders";
-        $this->data['entry_type'] = $this->transMainModel->getEntryType(['controller'=>'purchaseOrders'])->id;
+        $this->data['entryData'] = $this->transMainModel->getEntryType(['controller'=>'purchaseOrders']);
 	}
 
     public function index(){
@@ -18,7 +18,7 @@ class PurchaseOrders extends MY_Controller{
 
     public function getDTRows($status = 0){
         $data = $this->input->post();$data['status'] = $status;
-        $data['entry_type'] = $this->data['entry_type'];
+        $data['entry_type'] = $this->data['entryData']->id;
         $result = $this->purchaseOrder->getDTRows($data);
         $sendData = array();$i=($data['start']+1);
         foreach($result['data'] as $row):
@@ -29,9 +29,10 @@ class PurchaseOrders extends MY_Controller{
         $this->printJson($result);
     }
 
-    public function createOrder($ids){
-        $this->data['trans_prefix'] = $this->transMainModel->getTransPrefix($this->data['entry_type']);
-        $this->data['trans_no'] = $this->transMainModel->nextTransNo($this->data['entry_type']);
+    public function createOrder($ids){  
+        $this->data['entry_type'] = $this->data['entryData']->id;
+        $this->data['trans_prefix'] = $this->data['entryData']->trans_prefix;
+        $this->data['trans_no'] = $this->data['entryData']->trans_no;
         $this->data['trans_number'] = $this->data['trans_prefix'].$this->data['trans_no'];
         $this->data['partyList'] = $this->party->getPartyList(['party_category'=>"2,3"]);
         $this->data['itemList'] = $this->item->getItemList(['item_type'=>"2,3"]);
@@ -47,8 +48,9 @@ class PurchaseOrders extends MY_Controller{
     }
 
     public function addOrder(){
-        $this->data['trans_prefix'] = $this->transMainModel->getTransPrefix($this->data['entry_type']);
-        $this->data['trans_no'] = $this->transMainModel->nextTransNo($this->data['entry_type']);
+        $this->data['entry_type'] = $this->data['entryData']->id;
+        $this->data['trans_prefix'] = $this->data['entryData']->trans_prefix;
+        $this->data['trans_no'] = $this->data['entryData']->trans_no;
         $this->data['trans_number'] = $this->data['trans_prefix'].$this->data['trans_no'];
         $this->data['partyList'] = $this->party->getPartyList(['party_category'=>"2,3"]);
         $this->data['itemList'] = $this->item->getItemList(['item_type'=>"2,3"]);
@@ -74,6 +76,8 @@ class PurchaseOrders extends MY_Controller{
         if(!empty($errorMessage)):
             $this->printJson(['status'=>0,'message'=>$errorMessage]);
         else:
+            $data['vou_name_l'] = $this->data['entryData']->vou_name_long;
+            $data['vou_name_s'] = $this->data['entryData']->vou_name_short;
             $this->printJson($this->purchaseOrder->save($data));
         endif;
     }

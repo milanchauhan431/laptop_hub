@@ -208,5 +208,11 @@ class GateInward extends MY_Controller{
         $data = $this->input->post();
         $this->printJson($this->gateInward->saveInspectedMaterial($data));
     }
+
+    public function getPartyInwards(){
+        $data = $this->input->post();
+        $this->data['orderItems'] = $this->gateInward->getPendingInwardItems($data);
+        $this->load->view('purchase_invoice/create_invoice',$this->data);
+    }
 }
 ?>
