@@ -567,6 +567,14 @@ class MasterModel extends CI_Model{
             endif;
         endif;
 
+        if (isset($data['having'])) :
+            if (!empty($data['having'])) :
+                foreach ($data['having'] as $value) :
+                    $this->db->having($value);
+                endforeach;
+            endif;
+        endif;
+
         if(isset($data['order_by'])):
             if(!empty($data['order_by'])):
                 foreach($data['order_by'] as $key=>$value):
@@ -665,6 +673,14 @@ class MasterModel extends CI_Model{
                     $i++;
                 endforeach;
                 $this->db->group_end();
+            endif;
+        endif;
+
+        if (isset($data['having'])) :
+            if (!empty($data['having'])) :
+                foreach ($data['having'] as $value) :
+                    $this->db->having($value);
+                endforeach;
             endif;
         endif;
 
