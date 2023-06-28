@@ -42,6 +42,14 @@ class StockTrans extends MY_Controller{
 			$errorMessage['item_id'] = "Item Name is required.";
         if(empty(floatVal($data['qty'])))
 			$errorMessage['qty'] = "Qty is required.";
+        if(empty($data['size']))
+            $errorMessage['size'] = "Packing Standard is required.";
+
+        if(!empty(floatVal($data['qty'])) && !empty($data['size'])):
+            if(is_int(($data['qty'] / $data['size'])) == false):
+                $errorMessage['qty'] = "Invalid qty against packing standard.";
+            endif;
+        endif;
 
         if(!empty($errorMessage)):
             $this->printJson(['status'=>0,'message'=>$errorMessage]);

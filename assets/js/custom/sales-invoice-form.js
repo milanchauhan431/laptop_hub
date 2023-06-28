@@ -68,10 +68,21 @@ $(document).ready(function(){
             $(".price").html("Price is required.");
         }
 
+		if(formData.packing_qty == "" || parseInt(formData.packing_qty) == 0){
+			$(".packing_qty").html("Packing standard is required.");
+		}
+
         /* var item_ids = $(".item_id").map(function () { return $(this).val(); }).get();
         if ($.inArray(formData.item_id, item_ids) >= 0 && formData.row_index == "") {
             $(".item_name").html("Item already added.");
         } */
+
+		if(parseFloat(formData.qty) > 0 && parseInt(formData.packing_qty) > 0){
+			var totalBox = parseFloat(parseFloat(formData.qty) / parseFloat(formData.packing_qty));
+			if(!Number.isInteger(totalBox)){
+				$(".qty").html("Invalid qty against packing standard.");
+			}
+		}
 
         var errorCount = $('#itemForm .error:not(:empty)').length;
 
@@ -168,6 +179,7 @@ $(document).ready(function(){
 				formData.p_or_m = $("#salesInvoiceItems tbody tr:eq("+i+") input[name='itemData["+countRow+"][p_or_m]']").val();
 				formData.hsn_code = $("#salesInvoiceItems tbody tr:eq("+i+") input[name='itemData["+countRow+"][hsn_code]']").val();
 				formData.qty = $("#salesInvoiceItems tbody tr:eq("+i+") input[name='itemData["+countRow+"][qty]']").val();
+				formData.packing_qty = $("#salesInvoiceItems tbody tr:eq("+i+") input[name='itemData["+countRow+"][packing_qty]']").val();
 				formData.unit_id = $("#salesInvoiceItems tbody tr:eq("+i+") input[name='itemData["+countRow+"][unit_id]']").val();
 				formData.unit_name = $("#salesInvoiceItems tbody tr:eq("+i+") input[name='itemData["+countRow+"][unit_name]']").val();
 
@@ -296,10 +308,12 @@ function AddRow(data) {
 	cell.append(hsnCodeInput);
 
     var qtyInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][qty]", class:"item_qty", value: data.qty });
+    var psInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][packing_qty]", value: data.packing_qty });
 	var qtyErrorDiv = $("<div></div>", { class: "error qty" + countRow });
 	cell = $(row.insertCell(-1));
 	cell.html(data.qty);
 	cell.append(qtyInput);
+	cell.append(psInput);
 	cell.append(qtyErrorDiv);
 
     var unitIdInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][unit_id]", value: data.unit_id });
@@ -471,6 +485,7 @@ function resItemDetail(response = ""){
 		$("#itemForm #disc_per").val(itemDetail.defualt_disc);
 		$("#itemForm #price").val(itemDetail.price);
 		$("#itemForm #org_price").val(itemDetail.price);
+		$("#itemForm #packing_qty").val(itemDetail.packing_standard);
         $("#itemForm #hsn_code").val(itemDetail.hsn_code);$("#itemForm #hsn_code").comboSelect();
         $("#itemForm #gst_per").val(parseFloat(itemDetail.gst_per).toFixed(0));$("#itemForm #gst_per").comboSelect();
     }else{
@@ -482,6 +497,7 @@ function resItemDetail(response = ""){
 		$("#itemForm #disc_per").val("");
 		$("#itemForm #price").val("");
 		$("#itemForm #org_price").val("");
+		$("#itemForm #packing_qty").val("");
         $("#itemForm #hsn_code").val("");$("#itemForm #hsn_code").comboSelect();
         $("#itemForm #gst_per").val(0);$("#itemForm #gst_per").comboSelect(); 
     }

@@ -34,15 +34,14 @@ class SizeMaster extends MY_Controller{
     public function save(){
         $data = $this->input->post();
 		$errorMessage = array();		
-        if(empty($data['width']))
-			$errorMessage['width'] = "Width is required.";
-        if(empty($data['height']))
-			$errorMessage['height'] = "Height is required.";
+        if(empty($data['size']))
+			$errorMessage['size'] = "Size is required.";
+        if(empty($data['shape']))
+			$errorMessage['shape'] = "Shape is required.";
         
         if(!empty($errorMessage)):
             $this->printJson(['status'=>0,'message'=>$errorMessage]);
         else:
-            $data['size'] = $data['width']."x".$data['height'];
             $this->printJson($this->sizeMaster->save($data));
         endif;
     }

@@ -47,8 +47,8 @@ class Items extends MY_Controller{
         $data = $this->input->post();
         $errorMessage = array();
         
-        if(empty($data['item_code']))
-            $errorMessage['item_code'] = "CAT No. is required.";
+        /* if(empty($data['item_code']))
+            $errorMessage['item_code'] = "Item Code is required."; */
 
         if(empty($data['item_name']) && $data['item_type'] != 1)
             $errorMessage['item_name'] = "Item Name is required.";
@@ -65,6 +65,9 @@ class Items extends MY_Controller{
             if(!empty($item_name_error)):
                 $errorMessage['item_name'] = $item_name_error;
             endif;
+
+            if(empty($data['packing_standard']))
+                $errorMessage['packing_standard'] = "Packing Standard is Required.";
         endif;
 
         if(empty($data['unit_id']))

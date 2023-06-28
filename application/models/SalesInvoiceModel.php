@@ -157,6 +157,7 @@ class SalesInvoiceModel extends MasterModel{
                         'item_id' => $row['item_id'],
                         'p_or_m' => -1,
                         'qty' => $row['qty'],
+                        'size' => $row['packing_qty'],
                         'price' => $row['price']
                     ];
 

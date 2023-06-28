@@ -245,15 +245,19 @@
                                     <?=getItemListOption($itemList)?>
                                 </select>
                             </div>
-                            <div class="col-md-4 form-group">
+                            <div class="col-md-3 form-group">
                                 <label for="qty">Quantity</label>
                                 <input type="text" name="qty" id="qty" class="form-control floatOnly req" value="0">
                             </div>
-                            <div class="col-md-4 form-group">
+                            <div class="col-md-3 form-group">
+                                <label for="packing_qty">Packing Standard</label>
+                                <input type="text" name="packing_qty" id="packing_qty" class="form-control" value="" readonly>
+                            </div>
+                            <div class="col-md-3 form-group">
                                 <label for="disc_per">Disc. (%)</label>
                                 <input type="text" name="disc_per" id="disc_per" class="form-control floatOnly" value="0">
                             </div>
-                            <div class="col-md-4 form-group">
+                            <div class="col-md-3 form-group">
                                 <label for="price">Price</label>
                                 <input type="text" name="price" id="price" class="form-control floatOnly req" value="0" readonly />
                             </div>

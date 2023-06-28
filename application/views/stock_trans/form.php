@@ -11,7 +11,7 @@
 
             <div class="col-md-8 form-group">
                 <label for="item_id">Item Name</label>
-                <select name="item_id" id="item_id" class="form-control single-select">
+                <select name="item_id" id="item_id" class="form-control single-select itemDetails" data-res_function="resItemDetail">
                     <option value="">Select Item</option>
                     <?=getItemListOption($itemList)?>
                 </select>
@@ -23,8 +23,8 @@
             </div>
 
             <div class="col-md-6 form-group">
-                <label for="size">Box Capacity</label>
-                <input type="text" name="size" id="size" class="form-control numericOnly" value="">
+                <label for="size">Packing Standard</label>
+                <input type="text" name="size" id="size" class="form-control numericOnly" value="" readonly />
             </div>
 
             <div class="col-md-12 form-group">
@@ -34,3 +34,13 @@
         </div>
     </div>
 </form>
+<script>
+function resItemDetail(response){
+    if(response != ""){
+        var itemDetail = response.data.itemDetail;
+        $("#size").val(itemDetail.packing_standard);
+    }else{
+        $("#size").val("");
+    }
+}
+</script>

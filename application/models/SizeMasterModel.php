@@ -7,9 +7,9 @@ class SizeMasterModel extends MasterModel{
 
         $data['searchCol'][] = "";
         $data['searchCol'][] = "";
+        $data['searchCol'][] = "shape";
         $data['searchCol'][] = "size";
-        $data['searchCol'][] = "width";
-        $data['searchCol'][] = "height";
+        $data['searchCol'][] = "size_mm";
         $data['searchCol'][] = "remark";
 
 		$columns =array(); foreach($data['searchCol'] as $row): $columns[] = $row; endforeach;
@@ -47,8 +47,11 @@ class SizeMasterModel extends MasterModel{
     public function checkDuplicate($data){
         $queryData['tableName'] = $this->sizeMaster;
 
+        if(!empty($data['shape']))
+            $queryData['where']['shape'] = $data['shape'];
         if(!empty($data['size']))
             $queryData['where']['size'] = $data['size'];
+
         if(!empty($data['id']))
             $queryData['where']['id !='] = $data['id'];
 

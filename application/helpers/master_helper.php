@@ -55,9 +55,9 @@ function getMasterDtHeader($page){
     /* Size Master Header */
     $data['sizeMaster'][] = ["name"=>"Action","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"];
     $data['sizeMaster'][] = ["name"=>"#","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"]; 
-    $data['sizeMaster'][] = ["name"=>"Size"];
-    $data['sizeMaster'][] = ["name"=>"Width"];
-    $data['sizeMaster'][] = ["name"=>"Height"];
+    $data['sizeMaster'][] = ["name"=>"Shape"];
+    $data['sizeMaster'][] = ["name"=>"Size (Inch)"];
+    $data['sizeMaster'][] = ["name"=>"Size (mm)"];
     $data['sizeMaster'][] = ["name"=>"Remark"];
 
     /* Finish Goods Header */
@@ -187,7 +187,7 @@ function getSizeData($data){
 
     $action = getActionButton($editButton.$deleteButton);
 
-    return [$action,$data->sr_no,$data->size,$data->width,$data->height,$data->remark];
+    return [$action,$data->sr_no,$data->shape,$data->size,$data->size_mm,$data->remark];
 }
 
 function getProductData($data){

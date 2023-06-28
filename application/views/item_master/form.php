@@ -139,7 +139,12 @@
                 <input type="text" name="wkg" class="form-control floatOnly" value="<?= (!empty($dataRow->wkg)) ? $dataRow->wkg : "" ?>" />
             </div>
 
-            <div class="col-md-8 form-group">
+            <div class="col-md-2 form-group <?=(!empty($dataRow->item_type) && $dataRow->item_type != 1 || $item_type != 1)?"hideen":""?>">
+                <label for="packing_standard">Packing Standard</label>
+                <input type="text" name="packing_standard" id="packing_standard" class="form-control numericOnly req" value="<?=(!empty($dataRow->packing_standard))?$dataRow->packing_standard:""?>">
+            </div>
+
+            <div class="<?=(!empty($dataRow->item_type) && $dataRow->item_type != 1 || $item_type != 1)?"col-md-8":"col-md-6"?> form-group">
                 <label for="description">Product Description</label>
                 <textarea name="note" id="note" class="form-control" rows="1"><?=(!empty($dataRow->note))?$dataRow->note:""?></textarea>
             </div>
