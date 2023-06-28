@@ -72,11 +72,13 @@ class SalesOrderModel extends MasterModel{
 
             $result = $this->store($this->transMain,$data,'Sales Order');
 
-            $masterDetails['id'] = "";
-            $masterDetails['main_ref_id'] = $result['id'];
-            $masterDetails['table_name'] = $this->transMain;
-            $masterDetails['description'] = "SO MASTER DETAILS";
-            $this->store($this->transDetails,$masterDetails);
+            if(!empty($masterDetails)):
+                $masterDetails['id'] = "";
+                $masterDetails['main_ref_id'] = $result['id'];
+                $masterDetails['table_name'] = $this->transMain;
+                $masterDetails['description'] = "SO MASTER DETAILS";
+                $this->store($this->transDetails,$masterDetails);
+            endif;
 
             $expenseData = array();
             if($expAmount <> 0):				
