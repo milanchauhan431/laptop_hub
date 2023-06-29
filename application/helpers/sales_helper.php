@@ -22,6 +22,18 @@ function getSalesDtHeader($page){
 	$data['estimate'][] = ["name"=>"Taxable Amount"];
     $data['estimate'][] = ["name"=>"Net Amount"];
 
+    /* Lead Header  */
+    $data['lead'][] = ["name"=>"Action","style"=>"width:5%;"];
+	$data['lead'][] = ["name"=>"#","style"=>"width:5%;","textAlign"=>"center"]; 
+	$data['lead'][] = ["name"=>"Approach Date"];
+	$data['lead'][] = ["name"=>"Approach No"];
+	$data['lead'][] = ["name"=>"Party Name"];
+    $data['lead'][] = ["name"=>"Contact No."];
+    $data['lead'][] = ["name"=>"Sales Executive"];
+    $data['lead'][] = ["name"=>"Appointmens","textAlign"=>"center"];
+    $data['lead'][] = ["name"=>"Followup Date"];
+    $data['lead'][] = ["name"=>"Followup Remark"];
+
     return tableHeader($data[$page]);
 }
 
@@ -58,4 +70,30 @@ function getEstimateData($data){
 
     return [$action,$data->sr_no,$data->trans_number,$data->trans_date,$data->party_name,$data->taxable_amount,$data->net_amount];
 }
+
+/* Lead Table Data */
+function getLeadData($data){
+
+    $followupBtn = '';$appointmentBtn ='';$enqBtn='';$editButton="";$deleteButton="";
+       
+    if(in_array($data->lead_status,[0,4])){
+        //$followupBtn = '<a class="btn btn-primary leadAction" href="javascript:void(0)" data-id="'.$data->id.'"  datatip="Followup" data-modal_id="modal-lg" data-form_title="Follow up" data-entry_type="1"  data-fnsave="saveFollowup" data-function="getFollowup" flow="down"><i class="fas fa-clipboard-check"></i></a>';
+
+        //$appointmentBtn = '<a class="btn btn-info leadAction" href="javascript:void(0)" data-id="'.$data->id.'"  datatip="Appointment" data-modal_id="modal-lg" data-form_title="Appointments" data-button="close"  data-fnsave="setAppointment" data-function="getAppointments" flow="down"><i class="far fa-calendar-check"></i></a>';
+    }
+
+    if($data->lead_status == 0 && empty($data->enq_id)){
+        //$enqBtn = '<a href="'.base_url('salesEnquiry/addEnquiry/'.$data->id).'" class="btn btn-info permission-write" datatip="Move To  Enquiry" flow="down"><i class="fa fa-file-alt"></i></a>';        
+        $editParam = "{'postData' : {'id' : ".$data->id."}, 'modal_id' : 'modal-xl', 'form_id' : 'editLead', 'title' : 'Update Approch'}";
+    
+        $editButton = '<a class="btn btn-success btn-edit permission-modify" href="javascript:void(0)" datatip="Edit" flow="down" onclick="edit('.$editParam.');"><i class="ti-pencil-alt"></i></a>';
+    }
+
+    $action = getActionButton($enqBtn.$appointmentBtn.$followupBtn.$editButton.$deleteButton);
+
+    $responseData = [$action,$data->sr_no,formatDate($data->lead_date),sprintf("%04d",$data->lead_no),$data->party_name,$data->party_phone,$data->emp_name,$data->appointments,$data->followupDate,$data->followupNote];
+
+    return $responseData;
+}
+
 ?>

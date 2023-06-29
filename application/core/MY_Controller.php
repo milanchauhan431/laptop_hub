@@ -24,6 +24,12 @@ class MY_Controller extends CI_Controller{
 	public $stockTypes = [0=>"None",1=>'Batch Wise',2=>"Serial Wise"];
 	public $fgColorCode = ["White","Grey"];
 	public $fgCapacity = ["3 Ton","5 Ton"];
+
+	//Crm Status
+	public $leadStatus = ["Initited", "Appointment Fixed", "Qualified", "Enquiry Generated", "Proposal", "In Negotiation", "Confirm", "Close"];
+	public $appointmentMode = [1 => "Phone", 2 => "Email", 3 => "Visit", 4 => "Other"];
+	//public $followupStage = [0 => 'Open', 1 => "Confirmed", 2 => "Hold", 3 => "Won", 4 => "Lost", 5 => "Enquiry" , 6 => "Quatation"];
+	public $followupStage = [0 => 'Open', 1 => "Confirmed", 4 => "Lost"];
 	
 	public function __construct(){
 		parent::__construct();
@@ -62,6 +68,7 @@ class MY_Controller extends CI_Controller{
 		$this->load->model('TransactionMainModel','transMainModel');
 		$this->load->model('TaxMasterModel','taxMaster');
 		$this->load->model('ExpenseMasterModel','expenseMaster');
+		$this->load->model('LeadModel','leads');
 		$this->load->model('SalesOrderModel','salesOrder');
 
 		/* Purchase Model */
@@ -87,7 +94,7 @@ class MY_Controller extends CI_Controller{
 		/* Estimation Model [Cash Entry] */
 		$this->load->model("EstimateModel",'estimate');
 
-		$this->setSessionVariables(["masterModel","dashboard","permission","terms","transport","hsnModel","materialGrade","itemCategory","brandMaster","sizeMaster","item","department","designation","employeeCategory","shiftModel","employee","party","transMainModel","taxMaster","expenseMaster","salesOrder","purchaseOrder","purchaseIndent","vehicleType","storeLocation","gateEntry","gateInward","salesInvoice","estimate","paymentVoucher"]);
+		$this->setSessionVariables(["masterModel","dashboard","permission","terms","transport","hsnModel","materialGrade","itemCategory","brandMaster","sizeMaster","item","department","designation","employeeCategory","shiftModel","employee","party","transMainModel","taxMaster","expenseMaster","salesOrder","purchaseOrder","purchaseIndent","vehicleType","storeLocation","gateEntry","gateInward","salesInvoice","estimate","paymentVoucher","leads"]);
 	}
 
 	public function setSessionVariables($modelNames){
