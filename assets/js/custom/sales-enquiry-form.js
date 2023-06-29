@@ -51,6 +51,8 @@ $(document).ready(function(){
         var errorCount = $('#itemForm .error:not(:empty)').length;
 
 		if (errorCount == 0) {
+            
+            formData.disc_amount = 0;
             AddRow(formData);
             $('#itemForm')[0].reset();
             $("#itemForm input:hidden").val('')
@@ -148,7 +150,7 @@ function AddRow(data) {
     var discPerInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][disc_per]", value: data.disc_per});
 	var discAmtInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][disc_amount]", value: data.disc_amount });
 	cell = $(row.insertCell(-1));
-	cell.html(data.disc_amount + '(' + data.disc_per + '%)');
+	cell.html(data.disc_per);
 	cell.append(discPerInput);
 	cell.append(discAmtInput);
 
