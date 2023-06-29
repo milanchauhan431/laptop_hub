@@ -69,6 +69,12 @@ class PartyModel extends MasterModel{
             $queryData['where_in']['group_code'] = $data['group_code'];
         endif;
 
+        if(!empty($data['party_type'])):
+            $queryData['where_in']['party_type'] = $data['party_type'];
+        else:
+            $queryData['where']['party_type'] = 1;
+        endif;
+
         return $this->rows($queryData);
     }
 

@@ -3,15 +3,15 @@
         <div class="row">
             <input type="hidden" name="id" id="id" value="<?=(!empty($dataRow->id))?$dataRow->id:""; ?>" />
 			<input type="hidden" name="disc_per" value="<?=(!empty($dataRow->disc_per))?$dataRow->disc_per:""?>" />
-			<input type="hidden" name="party_type" value="<?=(!empty($dataRow->party_type))?$dataRow->party_type:"1"?>" />
+			<input type="hidden" name="party_type" value="<?=(!empty($dataRow->party_type))?$dataRow->party_type:$party_type?>" />
 			<input type="hidden" name="supplied_types" value="<?=(!empty($dataRow->supplied_types))?$dataRow->supplied_types:"1"?>" />
 
-            <div class="col-md-4 form-group">
+            <div class="col-md-6 form-group">
                 <label for="party_name">Company Name</label>
                 <input type="text" name="party_name" class="form-control text-capitalize req" value="<?=(!empty($dataRow->party_name))?$dataRow->party_name:""; ?>" />
             </div>
 
-			<div class="col-md-2 form-group">
+			<div class="col-md-2 form-group hidden">
                 <label for="party_category">Party Category</label>
                 <select name="party_category" id="party_category" class="form-control single-select req">
                     <?php

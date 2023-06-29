@@ -38,6 +38,7 @@ class Parties extends MY_Controller{
     public function addParty(){
         $data = $this->input->post();
         $this->data['party_category'] = $data['party_category'];
+        $this->data['party_type'] = (!empty($data['party_type']))?$data['party_type']:1;
         if($data['party_category'] != 4):            
             $this->data['currencyData'] = $this->party->getCurrencyList();
             $this->data['countryData'] = $this->party->getCountries();
