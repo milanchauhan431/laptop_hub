@@ -95,6 +95,24 @@ class LeadModel extends MasterModel{
         }	
     }
 
+    public function setAppointment($data){
+        try{
+            $this->db->trans_begin();
+
+            $result = $this->store($this->appointmentTable,$data,'Appointment');
+            
+            if ($this->db->trans_status() !== FALSE):
+                $this->db->trans_commit();
+                return $result;
+            endif;
+        }catch(\Exception $e){
+            $this->db->trans_rollback();
+        return ['status'=>2,'message'=>"somthing is wrong. Error : ".$e->getMessage()];
+        }	
+		
+    }
+
+
     public function getLead($id){
         $data['select'] = "lead_managment.*,party_master.party_name,employee_master.emp_name as sales_executive_name";
         $data['leftJoin']['party_master'] = "party_master.id = lead_managment.party_id";

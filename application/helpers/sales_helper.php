@@ -77,9 +77,11 @@ function getLeadData($data){
     $followupBtn = '';$appointmentBtn ='';$enqBtn='';$editButton="";$deleteButton="";
        
     if(in_array($data->lead_status,[0,4])){
-        //$followupBtn = '<a class="btn btn-primary leadAction" href="javascript:void(0)" data-id="'.$data->id.'"  datatip="Followup" data-modal_id="modal-lg" data-form_title="Follow up" data-entry_type="1"  data-fnsave="saveFollowup" data-function="getFollowup" flow="down"><i class="fas fa-clipboard-check"></i></a>';
+        $followupParam = "{'postData': {'id' : ".$data->id.",'entry_type':1}, 'modal_id' : 'modal-lg', 'form_id' : 'followUp', 'title' : 'Follow up', 'fnedit' : 'addFollowup', 'fnsave' : 'saveFollowup','res_function' : 'resFollowup', 'button' : 'close'}";
+        $followupBtn = '<a class="btn btn-primary" href="javascript:void(0)" datatip="Followup" flow="down" onclick="edit('.$followupParam.');" ><i class="fas fa-clipboard-check"></i></a>';
 
-        //$appointmentBtn = '<a class="btn btn-info leadAction" href="javascript:void(0)" data-id="'.$data->id.'"  datatip="Appointment" data-modal_id="modal-lg" data-form_title="Appointments" data-button="close"  data-fnsave="setAppointment" data-function="getAppointments" flow="down"><i class="far fa-calendar-check"></i></a>';
+        $appointmentParam = "{'postData': {'id' : ".$data->id.",'entry_type':1}, 'modal_id' : 'modal-lg', 'form_id' : 'appointment', 'title' : 'Appointments', 'fnedit' : 'addAppointment', 'fnsave' : 'saveAppointment','res_function' : 'resAppointments', 'button' : 'close'}";
+        $appointmentBtn = '<a class="btn btn-info leadAction" href="javascript:void(0)" datatip="Appointment" flow="down" onclick="edit('.$appointmentParam.');"><i class="far fa-calendar-check"></i></a>';
     }
 
     if($data->lead_status == 0 && empty($data->enq_id)){

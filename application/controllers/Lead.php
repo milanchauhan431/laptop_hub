@@ -2,6 +2,7 @@
 class Lead extends MY_Controller{
 	private $indexPage = "lead/index";
 	private $leadForm = "lead/lead_form";
+    private $followupFrom = "lead/followup_form";
 
     public function __construct()
 	{
@@ -30,8 +31,7 @@ class Lead extends MY_Controller{
 			$row->followupDate = '';
 			$row->followupNote = '';
 			$followupData = $this->leads->getFollowupData(['entry_type' => 1, 'lead_id' => $row->id]);
-			if(!empty($followupData))
-			{
+			if(!empty($followupData)){
 				$row->followupDate = formatDate($followupData->appointment_date) ;
 				$row->followupNote =$followupData->notes;
 			}
@@ -103,5 +103,146 @@ class Lead extends MY_Controller{
 		$this->data['dataRow'] = $leadData;
 		$this->load->view($this->leadForm, $this->data);
 	}
+
+    public function addFollowup(){
+        $data = $this->input->post();
+		$this->data['lead_id'] = $data['id'];
+		$this->data['entry_type'] = $data['entry_type'];
+	
+		$stage = $this->followupStage;
+		
+		if($data['entry_type'] == 1){
+			$this->data['leadData'] = $leadData = $this->leads->getLead($data['id']);
+			if($leadData->lead_status == 0 || $leadData->lead_status == 4){ $stage = array(0 => 'Open', 4 => "Lost");  }
+			elseif($leadData->lead_status == 1){ $stage = array(2 => "Hold", 5 => "Enquiry"); }
+			elseif($leadData->lead_status == 2){ $stage = array(0 => 'Open', 1 => "Confirmed", 2 => "Hold", 5 => "Enquiry"); }
+			elseif($leadData->lead_status == 5 && !empty($leadData->enq_id)){ $stage = array(  3 => "Won", 4 => "Lost"); }
+		}else{
+			$this->data['leadData'] = $leadData = $this->salesEnquiry->getTransChildDetail($data['id']);
+			$stage = array(4 => "Won", 5 => "Lost");
+		}
+
+        $this->data['followupStage'] = $stage;
+		$this->data['salesExecutives'] = $this->employee->getEmployeeList();
+		
+		$this->load->view($this->followupFrom, $this->data);
+    }
+
+    public function followupListHtml($data=array())	{
+        $data = $this->input->post();
+		$stage = $this->followupStage;
+		if($data['entry_type'] == 3){
+			$stage = array(0 => 'Open', 3 => "Hold", 4 => "Won", 5 => "Lost");
+		}
+
+		$appintmentData = $this->leads->getAppointments($data);
+		$html = '';
+
+		if (!empty($appintmentData)) {
+			$i = 1;
+			foreach ($appintmentData as $row) {
+				$deleteParam = $row->id . ",'deleteAppointment','Appointment'";
+				$deleteBtn = '';
+				//$deleteBtn = '<button type="button" onclick="trashAppointment(' . $deleteParam . ');"  class="btn btn-outline-danger waves-effect waves-light" style="padding:2px 8px;"><i class="ti-trash"></i></button>';
+				$html.='<tr>
+							<td clas="text-center">'.$i++.'</td>
+							<td clas="text-center">'.formatDate($row->appointment_date,'d-m-Y ').'</td>
+							<td>'.$this->appointmentMode[$row->mode].'</td>
+							<td>'.$row->executive_name.'</td>
+							<td>'.$stage[$row->status].'</td>
+							<td>'.$row->notes.'</td>
+							<td >'.$deleteBtn.'</td>
+						</tr>';
+			}
+		} else {
+			$html = '<tr><th colspan="7" class="text-center">No data available.</th></tr>';
+		}
+
+		$this->printJson(['status'=>1,"tbodyData"=>$html]);
+	}
+
+    public function saveFollowup()
+	{
+		$data = $this->input->post();
+		$errorMessage = array();
+		if (empty($data['appointment_date'])) {
+			$errorMessage['appointment_date'] = "Date is required.";
+		}
+		if (empty($data['mode'])) {
+			$errorMessage['mode'] = "Mode is required.";
+		}
+		if (empty($data['sales_executive'])) {
+			$errorMessage['sales_executive'] = "Sales Executive is required.";
+		}
+		if (!empty($errorMessage)):
+			$this->printJson(['status' => 0, 'message' => $errorMessage]);
+		else:
+			$result = $this->leads->saveFollowup($data);
+			$this->printJson($result);
+		endif;
+	}
+
+    public function addAppointment(){
+        $data = $this->input->post();
+		$data['entry_type'] = 2;
+		$this->data['lead_id'] = $data['id'];
+		$this->data['appointmentMode'] = $this->appointmentMode;
+		$this->load->view('lead/appointment_form', $this->data);
+    }
+
+    public function saveAppointment()	{
+		$data = $this->input->post();
+		$errorMessage = array();
+		if (empty($data['appointment_date']))
+			$errorMessage['appointment_date'] = "Date is required.";
+		if (empty($data['appointment_time']))
+			$errorMessage['appointment_time'] = "Time is required.";
+		if (empty($data['contact_person']))
+			$errorMessage['contact_person'] = "Contact Person is required.";
+		if (empty($data['mode']))
+			$errorMessage['mode'] = "Mode is required.";
+
+		if (!empty($errorMessage)):
+			$this->printJson(['status' => 0, 'message' => $errorMessage]);
+		else:
+			$leadData = $this->leads->getLead($data['lead_id']); 
+			$data['sales_executive'] = $leadData->sales_executive;
+			$data['contact_person'] = ucwords($data['contact_person']);
+			$data['appointment_date'] = formatDate($data['appointment_date'], 'Y-m-d');
+			$data['appointment_time'] = formatDate($data['appointment_time'], 'H:i:s');
+			$result = $this->leads->setAppointment($data);
+			$this->printJson($result);
+		endif;
+	}
+
+
+    public function appointmentListHtml($data=array())	{
+		$data = $this->input->post();
+        $this->leads->getAppointments($data);
+		$appintmentData = $this->leads->getAppointments($data);
+		$html = '';
+		if (!empty($appintmentData)) {
+			$i = 1;
+			foreach ($appintmentData as $row) {
+				$deleteParam = $row->id . ",'deleteAppointment','Appointment'";
+				$deleteBtn = '';
+				/* if (empty($row->status)) {
+					$deleteBtn = '<button type="button" onclick="trashAppointment(' . $deleteParam . ');"  class="btn btn-outline-danger waves-effect waves-light" style="padding:2px 8px;"><i class="ti-trash"></i></button>';
+				} */
+				$html .= '<tr>
+							<td clas="text-center">' . $i++ . '</td>
+							<td clas="text-center">' . formatDate($row->appointment_date, 'd-m-Y ') . formatDate($row->appointment_time, 'H:i A') . '</td>
+							<td>' . $this->appointmentMode[$row->mode] . '</td>
+							<td>' . $row->contact_person . '</td>
+							<td>' . $row->purpose . '</td>
+							<td clas="text-center">' . $deleteBtn . '</td>
+						</tr>';
+			}
+		} else {
+			$html = '<tr><th colspan="6" class="text-center">No data available.</th></tr>';
+		}
+		$this->printJson(['status'=>1,"tbodyData"=>$html]);
+	}
+
 }
 ?>
