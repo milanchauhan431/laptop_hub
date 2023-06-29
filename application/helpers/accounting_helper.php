@@ -22,6 +22,18 @@ function getAccountingDtHeader($page){
 	$data['purchaseInvoice'][] = ["name"=>"GST Amount"];
     $data['purchaseInvoice'][] = ["name"=>"Net Amount"];
 
+    /* Payment Voucher  */
+    $data['paymentVoucher'][] = ["name" => "Action", "style" => "width:5%;"];
+    $data['paymentVoucher'][] = ["name" => "#", "style" => "width:5%;", "textAlign" => "center"];
+    $data['paymentVoucher'][] = ["name" => "Voucher No."];
+    $data['paymentVoucher'][] = ["name" => "Voucher Date"];
+    $data['paymentVoucher'][] = ["name" => "Party Name"];
+    $data['paymentVoucher'][] = ["name" => "Bank/Cash"];
+    $data['paymentVoucher'][] = ["name" => "Amount", "style" => "width:5%;", "textAlign" => "center"];
+    $data['paymentVoucher'][] = ["name" => "Doc. No."];
+    $data['paymentVoucher'][] = ["name" => "Doc. Date"];
+    $data['paymentVoucher'][] = ["name" => "Note"];
+
     return tableHeader($data[$page]);
 }
 
@@ -49,5 +61,26 @@ function getPurchaseInvoiceData($data){
     $action = getActionButton($editButton.$deleteButton);
 
     return [$action,$data->sr_no,$data->trans_number,$data->trans_date,$data->party_name,$data->taxable_amount,$data->gst_amount,$data->net_amount];
+}
+
+/* Payment Voucher Data */
+function getPaymentVoucher($data){
+    $editButton = '';$deleteButton = '';
+
+    $deleteParam = "{'postData':{'id' : ".$data->id."},'message' : 'Voucher'}";
+    $editParam = "{'postData':{'id' : ".$data->id."}, 'modal_id' : 'modal-lg', 'form_id' : 'editVoucher', 'title' : 'Update Voucher'}";
+    
+    if($data->trans_status == 0): 
+        $editButton = '<a class="btn btn-success btn-edit permission-modify" href="javascript:void(0)" datatip="Edit" flow="down" onclick="edit('.$editParam.');"><i class="ti-pencil-alt" ></i></a>';
+        
+        $deleteButton = '<a class="btn btn-danger btn-delete permission-remove" href="javascript:void(0)" onclick="trash('.$deleteParam.');" datatip="Remove" flow="down"><i class="ti-trash"></i></a>';
+    endif;
+
+    $printVoucher = '';
+    /* if($data->vou_name_s == "BCRct"){
+        $printVoucher = '<a href="javascript:void(0)" class="btn btn-info btn-edit printPaymentVoucher" datatip="Print Voucher" flow="down" data-id="'.$data->id.'" data-function="voucher_pdf"><i class="fa fa-print"></i></a>';
+    } */
+    $action = getActionButton($printVoucher.$editButton.$deleteButton);
+    return [$action,$data->sr_no,$data->trans_number,$data->trans_date,$data->opp_acc_name,$data->vou_acc_name,$data->net_amount,$data->doc_no,$data->doc_date,$data->remark];
 }
 ?>

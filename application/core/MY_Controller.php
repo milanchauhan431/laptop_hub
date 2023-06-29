@@ -11,7 +11,8 @@ class MY_Controller extends CI_Controller{
 	public $maritalStatus = ["Married","UnMarried","Widow"];
 	public $empType = [1=>"Permanent (Fix)",2=>"Permanent (Hourly)",3=>"Temporary"];
 	public $empGrade = ["Grade A","Grade B","Grade C","Grade D"];
-	public $paymentMode = ['CASH','CHEQUE','NEFT','UPI'];
+	//public $paymentMode = ['CASH','CHEQUE','NEFT','UPI'];
+	public $paymentMode = ['CASH','CHEQUE','NEFT/RTGS/IMPS ','CARD','UPI'];
 
 	public $partyCategory = [1=>'Customer',2=>'Supplier',3=>'Vendor',4=>'Ledger'];
 	public $suppliedType = [1=>'Goods',2=>'Services',3=>'Goods & Services'];
@@ -75,6 +76,7 @@ class MY_Controller extends CI_Controller{
 		/* Accounting Model */
 		$this->load->model("SalesInvoiceModel","salesInvoice");
 		$this->load->model("PurchaseInvoiceModel","purchaseInvoice");
+		$this->load->model("PaymentVoucherModel","paymentVoucher");
 
 		/* Store Report Model */
 		$this->load->model('report/StoreReportModel','storeReport');
@@ -85,7 +87,7 @@ class MY_Controller extends CI_Controller{
 		/* Estimation Model [Cash Entry] */
 		$this->load->model("EstimateModel",'estimate');
 
-		$this->setSessionVariables(["masterModel","dashboard","permission","terms","transport","hsnModel","materialGrade","itemCategory","brandMaster","sizeMaster","item","department","designation","employeeCategory","shiftModel","employee","party","transMainModel","taxMaster","expenseMaster","salesOrder","purchaseOrder","purchaseIndent","vehicleType","storeLocation","gateEntry","gateInward","salesInvoice","estimate"]);
+		$this->setSessionVariables(["masterModel","dashboard","permission","terms","transport","hsnModel","materialGrade","itemCategory","brandMaster","sizeMaster","item","department","designation","employeeCategory","shiftModel","employee","party","transMainModel","taxMaster","expenseMaster","salesOrder","purchaseOrder","purchaseIndent","vehicleType","storeLocation","gateEntry","gateInward","salesInvoice","estimate","paymentVoucher"]);
 	}
 
 	public function setSessionVariables($modelNames){

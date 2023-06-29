@@ -9,7 +9,7 @@ class TransactionMainModel extends MasterModel{
 		$queryData['where']['sub_controller_name'] = $data['controller'];
 		$result = $this->row($queryData);
 
-		$nextNo = $this->nextTransNo($result->id,1);
+		$nextNo = $this->nextTransNo($result->id,1,$result->vou_name_short);
 		$nextNo = (!empty($nextNo))?($nextNo + 1):$result->auto_start_no;
 
 		$result->trans_no = $nextNo;
@@ -18,9 +18,12 @@ class TransactionMainModel extends MasterModel{
 		return $result;
 	}
 
-    public function nextTransNo($entry_type,$last_no = 0){
+    public function nextTransNo($entry_type,$last_no = 0,$vouNameS = ""){
         $data['select'] = "MAX(trans_no) as trans_no";
         $data['where']['entry_type'] = $entry_type;
+		if(!empty($vouNameS)):
+			$data['where']['vou_name_s'] = $vouNameS;
+		endif;
 		$data['where']['trans_main.trans_date >='] = $this->startYearDate;
 		$data['where']['trans_main.trans_date <='] = $this->endYearDate;
         $data['tableName'] = $this->transMain;
@@ -107,7 +110,7 @@ class TransactionMainModel extends MasterModel{
 			if(in_array($transMainData['vou_name_s'],["BCRct","BCPmt","AdSal","EmpLoan"])):
 				$cord = getCrDrEff($transMainData['vou_name_s']);
 				//Save Party Account Detail
-				$transLedgerData = ['id'=>"",'entry_type'=>$transMainData['entry_type'],'trans_main_id'=>$transMainData['id'],'trans_date'=>$transMainData['trans_date'],'trans_number'=>$transMainData['trans_number'],'doc_date'=>$transMainData['doc_date'],'doc_no'=>$transMainData['doc_no'],'vou_acc_id'=>$transMainData['opp_acc_id'],'opp_acc_id'=>$transMainData['vou_acc_id'],'amount'=>$transMainData['net_amount'],'c_or_d'=>$cord['opp_type'],'remark'=>$transMainData['remark'],'trans_mode'=>$transMainData['trans_mode'],'vou_name_l'=>$transMainData['vou_name_l'],'vou_name_s'=>$transMainData['vou_name_s']];
+				$transLedgerData = ['id'=>"",'entry_type'=>$transMainData['entry_type'],'trans_main_id'=>$transMainData['id'],'trans_date'=>$transMainData['trans_date'],'trans_number'=>$transMainData['trans_number'],'doc_date'=>$transMainData['doc_date'],'doc_no'=>$transMainData['doc_no'],'vou_acc_id'=>$transMainData['opp_acc_id'],'opp_acc_id'=>$transMainData['vou_acc_id'],'amount'=>$transMainData['net_amount'],'c_or_d'=>$cord['opp_type'],'remark'=>$transMainData['remark'],'trans_mode'=>$transMainData['payment_mode'],'vou_name_l'=>$transMainData['vou_name_l'],'vou_name_s'=>$transMainData['vou_name_s']];
 				$this->storeTransLedger($transLedgerData);
 
 				//Save BankCash Account Detail
