@@ -2,6 +2,16 @@
 if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 function getSalesDtHeader($page){
+    /* Sales Enquiry Header */
+    $data['salesEnquiry'][] = ["name"=>"Action","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"];
+	$data['salesEnquiry'][] = ["name"=>"#","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"]; 
+	$data['salesEnquiry'][] = ["name"=>"SE. No."];
+	$data['salesEnquiry'][] = ["name"=>"SE. Date"];
+	$data['salesEnquiry'][] = ["name"=>"Customer Name"];
+	$data['salesEnquiry'][] = ["name"=>"Item Name"];
+    $data['salesEnquiry'][] = ["name"=>"Qty"];
+    $data['salesEnquiry'][] = ["name"=>"Price"];
+
     /* Sales Order Header */
     $data['salesOrders'][] = ["name"=>"Action","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"];
 	$data['salesOrders'][] = ["name"=>"#","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"]; 
@@ -13,7 +23,7 @@ function getSalesDtHeader($page){
     $data['salesOrders'][] = ["name"=>"Dispatch Qty"];
     $data['salesOrders'][] = ["name"=>"Pending Qty"];
 
-    /* Sales Order Header */
+    /* Estimate [Cash] Header */
     $data['estimate'][] = ["name"=>"Action","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"];
 	$data['estimate'][] = ["name"=>"#","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"]; 
 	$data['estimate'][] = ["name"=>"Inv No."];
@@ -38,6 +48,23 @@ function getSalesDtHeader($page){
     return tableHeader($data[$page]);
 }
 
+/* Sales Enquiry Table data */
+function getSalesEnquiryData($data){
+    $editButton = '<a class="btn btn-success btn-edit permission-modify" href="'.base_url('salesOrders/edit/'.$data->id).'" datatip="Edit" flow="down" ><i class="ti-pencil-alt"></i></a>';
+
+    $deleteParam = "{'postData':{'id' : ".$data->id."},'message' : 'Sales Order'}";
+    $deleteButton = '<a class="btn btn-danger btn-delete permission-remove" href="javascript:void(0)" onclick="trash('.$deleteParam.');" datatip="Remove" flow="down"><i class="ti-trash"></i></a>';
+
+    if($data->trans_status > 0):
+        $editButton = $deleteButton = "";
+    endif;
+
+    $action = getActionButton($editButton.$deleteButton);
+
+    return [$action,$data->sr_no,$data->trans_number,$data->trans_date,$data->party_name,$data->item_name,$data->qty,$data->price];
+}
+
+/* Sales Order Table data */
 function getSalesOrderData($data){
     $editButton = '<a class="btn btn-success btn-edit permission-modify" href="'.base_url('salesOrders/edit/'.$data->id).'" datatip="Edit" flow="down" ><i class="ti-pencil-alt"></i></a>';
 
@@ -53,7 +80,7 @@ function getSalesOrderData($data){
     return [$action,$data->sr_no,$data->trans_number,$data->trans_date,$data->party_name,$data->item_name,$data->qty,$data->dispatch_qty,$data->pending_qty];
 }
 
-/* Sales Invoice Table Data */
+/* Estimate [Cash] Table Data */
 function getEstimateData($data){
     $editButton = '<a class="btn btn-success btn-edit permission-modify" href="'.base_url('estimate/edit/'.$data->id).'" datatip="Edit" flow="down" ><i class="ti-pencil-alt"></i></a>';
 
