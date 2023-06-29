@@ -59,7 +59,7 @@ class SalesEnquiry extends MY_Controller{
     }
 
     public function edit($id){
-        $this->data['dataRow'] = $dataRow = $this->salesEnquiry->getSalesOrder(['id'=>$id,'itemList'=>1]);
+        $this->data['dataRow'] = $dataRow = $this->salesEnquiry->getSalesEnquiry(['id'=>$id,'itemList'=>1]);
         $this->data['gstinList'] = $this->party->getPartyGSTDetail(['party_id' => $dataRow->party_id]);
         $this->data['partyList'] = $this->party->getPartyList(['party_category' => 1]);
         $this->data['itemList'] = $this->item->getItemList(['item_type'=>1]);
