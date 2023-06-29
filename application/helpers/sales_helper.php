@@ -27,6 +27,7 @@ function getSalesDtHeader($page){
 	$data['lead'][] = ["name"=>"#","style"=>"width:5%;","textAlign"=>"center"]; 
 	$data['lead'][] = ["name"=>"Approach Date"];
 	$data['lead'][] = ["name"=>"Approach No"];
+	$data['lead'][] = ["name"=>"Lead From"];
 	$data['lead'][] = ["name"=>"Party Name"];
     $data['lead'][] = ["name"=>"Contact No."];
     $data['lead'][] = ["name"=>"Sales Executive"];
@@ -93,7 +94,7 @@ function getLeadData($data){
 
     $action = getActionButton($enqBtn.$appointmentBtn.$followupBtn.$editButton.$deleteButton);
 
-    $responseData = [$action,$data->sr_no,formatDate($data->lead_date),sprintf("%04d",$data->lead_no),$data->party_name,$data->party_phone,$data->emp_name,$data->appointments,$data->followupDate,$data->followupNote];
+    $responseData = [$action,$data->sr_no,formatDate($data->lead_date),sprintf("%04d",$data->lead_no),$data->lead_from,$data->party_name,$data->party_phone,$data->emp_name,$data->appointments,$data->followupDate,$data->followupNote];
 
     return $responseData;
 }

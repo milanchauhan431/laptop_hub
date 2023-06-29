@@ -22,9 +22,14 @@
                 </select>
             </div>
 
-            <div class="col-md-6 form-group">
+            <div class="col-md-3 form-group">
                 <label for="lead_date">Approch Date</label>
                 <input type="date" name="lead_date" id="lead_date" max="<?=date("Y-m-d")?>" class="form-control req" value="<?=(!empty($dataRow->lead_date))?$dataRow->lead_date:date("Y-m-d")?>" />
+            </div>
+
+            <div class="col-md-3 form-group">
+                <label for="lead_from">Lead From</label>
+                <input type="text" name="lead_from" id="lead_from" class="form-control" value="<?=(!empty($dataRow->lead_from))?$dataRow->lead_from:""?>">
             </div>
 
             <div class="col-md-4 form-group">
