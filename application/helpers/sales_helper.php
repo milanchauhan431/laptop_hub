@@ -12,6 +12,16 @@ function getSalesDtHeader($page){
     $data['salesEnquiry'][] = ["name"=>"Qty"];
     $data['salesEnquiry'][] = ["name"=>"Price"];
 
+    /* Sales Quotation Header */
+    $data['salesQuotation'][] = ["name"=>"Action","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"];
+	$data['salesQuotation'][] = ["name"=>"#","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"]; 
+	$data['salesQuotation'][] = ["name"=>"SQ. No."];
+	$data['salesQuotation'][] = ["name"=>"SQ. Date"];
+	$data['salesQuotation'][] = ["name"=>"Customer Name"];
+	$data['salesQuotation'][] = ["name"=>"Item Name"];
+    $data['salesQuotation'][] = ["name"=>"Qty"];
+    $data['salesQuotation'][] = ["name"=>"Price"];
+
     /* Sales Order Header */
     $data['salesOrders'][] = ["name"=>"Action","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"];
 	$data['salesOrders'][] = ["name"=>"#","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"]; 
@@ -52,7 +62,23 @@ function getSalesDtHeader($page){
 function getSalesEnquiryData($data){
     $editButton = '<a class="btn btn-success btn-edit permission-modify" href="'.base_url('salesEnquiry/edit/'.$data->id).'" datatip="Edit" flow="down" ><i class="ti-pencil-alt"></i></a>';
 
-    $deleteParam = "{'postData':{'id' : ".$data->id."},'message' : 'Sales Order'}";
+    $deleteParam = "{'postData':{'id' : ".$data->id."},'message' : 'Sales Enquiry'}";
+    $deleteButton = '<a class="btn btn-danger btn-delete permission-remove" href="javascript:void(0)" onclick="trash('.$deleteParam.');" datatip="Remove" flow="down"><i class="ti-trash"></i></a>';
+
+    if($data->trans_status > 0):
+        $editButton = $deleteButton = "";
+    endif;
+
+    $action = getActionButton($editButton.$deleteButton);
+
+    return [$action,$data->sr_no,$data->trans_number,$data->trans_date,$data->party_name,$data->item_name,$data->qty,$data->price];
+}
+
+/* Sales Quotation Table data */
+function getSalesQuotationData($data){
+    $editButton = '<a class="btn btn-success btn-edit permission-modify" href="'.base_url('salesQuotation/edit/'.$data->id).'" datatip="Edit" flow="down" ><i class="ti-pencil-alt"></i></a>';
+
+    $deleteParam = "{'postData':{'id' : ".$data->id."},'message' : 'Sales Quotation'}";
     $deleteButton = '<a class="btn btn-danger btn-delete permission-remove" href="javascript:void(0)" onclick="trash('.$deleteParam.');" datatip="Remove" flow="down"><i class="ti-trash"></i></a>';
 
     if($data->trans_status > 0):
