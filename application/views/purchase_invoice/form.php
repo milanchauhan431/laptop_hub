@@ -206,7 +206,6 @@
                                 
 								<input type="hidden" name="row_index" id="row_index" value="">
 								<input type="hidden" name="item_code" id="item_code" value="" />
-                                <input type="hidden" name="item_id" id="item_id" value="0" />
                                 <input type="hidden" name="item_type" id="item_type" value="1" />
                                 <input type="hidden" name="stock_eff" id="stock_eff" value="1" />
                             </div>                            
