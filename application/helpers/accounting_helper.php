@@ -22,6 +22,16 @@ function getAccountingDtHeader($page){
 	$data['purchaseInvoice'][] = ["name"=>"GST Amount"];
     $data['purchaseInvoice'][] = ["name"=>"Net Amount"];
 
+    /* GST Expense Header */
+    $data['gstExpense'][] = ["name"=>"Action","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"];
+	$data['gstExpense'][] = ["name"=>"#","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"]; 
+	$data['gstExpense'][] = ["name"=>"Inv No."];
+	$data['gstExpense'][] = ["name"=>"Inv Date"];
+	$data['gstExpense'][] = ["name"=>"Party Name"];
+	$data['gstExpense'][] = ["name"=>"Taxable Amount"];
+	$data['gstExpense'][] = ["name"=>"GST Amount"];
+    $data['gstExpense'][] = ["name"=>"Net Amount"];
+
     /* Payment Voucher  */
     $data['paymentVoucher'][] = ["name" => "Action", "style" => "width:5%;"];
     $data['paymentVoucher'][] = ["name" => "#", "style" => "width:5%;", "textAlign" => "center"];
@@ -48,7 +58,7 @@ function getSalesInvoiceData($data){
 
     $action = getActionButton($print.$editButton.$deleteButton);
 
-    return [$action,$data->sr_no,$data->trans_number,$data->trans_date,$data->party_name,$data->taxable_amount,$data->gst_amount,$data->net_amount];
+    return [$action,$data->sr_no,$data->trans_number,formatDate($data->trans_date),$data->party_name,$data->taxable_amount,$data->gst_amount,$data->net_amount];
 }
 
 /* Purchase Invoice Table Data */
@@ -60,7 +70,19 @@ function getPurchaseInvoiceData($data){
 
     $action = getActionButton($editButton.$deleteButton);
 
-    return [$action,$data->sr_no,$data->trans_number,$data->trans_date,$data->party_name,$data->taxable_amount,$data->gst_amount,$data->net_amount];
+    return [$action,$data->sr_no,$data->trans_number,formatDate($data->trans_date),$data->party_name,$data->taxable_amount,$data->gst_amount,$data->net_amount];
+}
+
+/* GST Expense Table Data */
+function getGstExpenseData($data){
+    $editButton = '<a class="btn btn-success btn-edit permission-modify" href="'.base_url('gstExpense/edit/'.$data->id).'" datatip="Edit" flow="down" ><i class="ti-pencil-alt"></i></a>';
+
+    $deleteParam = "{'postData':{'id' : ".$data->id."},'message' : 'Expese'}";
+    $deleteButton = '<a class="btn btn-danger btn-delete permission-remove" href="javascript:void(0)" onclick="trash('.$deleteParam.');" datatip="Remove" flow="down"><i class="ti-trash"></i></a>';
+
+    $action = getActionButton($editButton.$deleteButton);
+
+    return [$action,$data->sr_no,$data->trans_number,formatDate($data->trans_date),$data->party_name,$data->taxable_amount,$data->gst_amount,$data->net_amount];
 }
 
 /* Payment Voucher Data */
@@ -81,6 +103,6 @@ function getPaymentVoucher($data){
         $printVoucher = '<a href="javascript:void(0)" class="btn btn-info btn-edit printPaymentVoucher" datatip="Print Voucher" flow="down" data-id="'.$data->id.'" data-function="voucher_pdf"><i class="fa fa-print"></i></a>';
     } */
     $action = getActionButton($printVoucher.$editButton.$deleteButton);
-    return [$action,$data->sr_no,$data->trans_number,$data->trans_date,$data->opp_acc_name,$data->vou_acc_name,$data->net_amount,$data->doc_no,$data->doc_date,$data->remark];
+    return [$action,$data->sr_no,$data->trans_number,formatDate($data->trans_date),$data->opp_acc_name,$data->vou_acc_name,$data->net_amount,$data->doc_no,$data->doc_date,$data->remark];
 }
 ?>

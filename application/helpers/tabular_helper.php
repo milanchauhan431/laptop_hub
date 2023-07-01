@@ -165,6 +165,12 @@ function getSystemCode($type,$isChild,$gstType=0){
 			case "D.N.": // Debit Note
 				$retVal = "PURACC";
 				break;
+            case "GExp": // GST Expense
+                $retVal = "PURACC";
+                break;
+            case "GInc": // GST Income
+                $retVal = "SALESACC";
+                break;
 		}
 	}else{
 		switch($type){	

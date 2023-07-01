@@ -134,7 +134,7 @@ class TransactionMainModel extends MasterModel{
 					$this->storeTransLedger($transLedgerData);
 
 					//Save Sale/Purc Account Detail
-					if($transMainData['vou_name_s'] != "GExp"  || $transMainData['vou_name_s'] != "GInc"):
+					if(!in_array($transMainData['vou_name_s'],["GExp","GInc"])):
 						if(!isset($transMainData['sp_acc_id'])):
 							//$accType = getSystemCode($transMainData['entry_type'],true,$transMainData['gst_type']);
 							$accType = getSPAccCode($transMainData['vou_name_s'],$transMainData['gst_type'],$transMainData['sales_type']);
@@ -152,7 +152,7 @@ class TransactionMainModel extends MasterModel{
 						$transLedgerData['c_or_d'] = $cord['opp_type'];
 						$this->storeTransLedger($transLedgerData);
 					else:
-						$gstExpenseTrans = $this->gstExpense->gstExpenseTransaction($transMainData['id']);
+						$gstExpenseTrans = $this->gstExpense->getGstExpenseItems(['id'=>$transMainData['id']]);
 						foreach($gstExpenseTrans as $row):
 							$transLedgerData['vou_acc_id'] = $row->item_id;
 							$transLedgerData['opp_acc_id'] = $transMainData['opp_acc_id'];
@@ -239,7 +239,7 @@ class TransactionMainModel extends MasterModel{
 						$transLedgerData['vou_acc_id'] = $transMainData["round_off_acc_id"];
 						$transLedgerData['opp_acc_id'] = $transMainData['opp_acc_id'];
 						$transLedgerData['amount'] = abs($transMainData['round_off_amount']);
-						$transLedgerData['c_or_d'] = (in_array($transMainData['vou_name_s'],["Purc","C.N."]))?(($transMainData['round_off_amount'] > 0)?"DR":"CR"):(($transMainData['round_off_amount'] > 0)?"CR":"DR");
+						$transLedgerData['c_or_d'] = (in_array($transMainData['vou_name_s'],["Purc","C.N.","GExp"]))?(($transMainData['round_off_amount'] > 0)?"DR":"CR"):(($transMainData['round_off_amount'] > 0)?"CR":"DR");
 						$this->storeTransLedger($transLedgerData);
 					endif;
 				endif;
