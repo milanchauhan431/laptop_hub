@@ -186,6 +186,12 @@ function getSystemCode($type,$isChild,$gstType=0){
 			case "D.N.": // Debit Note
 				$retVal = ($gstType == 3)?"PURTFACC":"PURGSTACC";
 				break;
+            case "GExp": // GST Expense
+                $retVal = ($gstType == 3)?"PURTFACC":"PURGSTACC";
+                break;
+            case "GInc": // GST Income
+                $retVal = ($gstType == 3)?"SALESTFACC":"SALESGSTACC";
+                break;
 		}
 	}
 	return $retVal;
@@ -242,6 +248,29 @@ function getSPAccCode($entryType,$gstType,$spType){
             break;
         /* Debit Note Case End */
 
+        /* GST Expense Case Start */
+        case $entryType == "GExp" && $gstType == 1 && $spType == 1:
+            $retVal = "PURGSTACC";    
+            break;
+        case $entryType == "GExp" && $gstType == 2 && $spType == 1:
+            $retVal = "PURIGSTACC";    
+            break;
+        case $entryType == "GExp" && $gstType == 2 && $spType == 2:
+            $retVal = "IMPORTGSTACC";    
+            break;
+        case $entryType == "GExp" && $gstType == 3 && $spType == 2:
+            $retVal = "IMPORTTFACC";    
+            break;
+        case $entryType == "GExp" && $gstType == 1 && $spType == 3:
+            $retVal = "PURJOBGSTACC";    
+            break;
+        case $entryType == "GExp" && $gstType == 2 && $spType == 3:
+            $retVal = "PURJOBIGSTACC";    
+            break;
+        case $entryType == "GExp" && $gstType == 3:
+            $retVal = "PURTFACC";    
+            break;
+        /* GST Expense Case End */
 
         /* Sales Invoice Case Start */
         case $entryType == "Sale" && $gstType == 1 && $spType == 1:
@@ -291,6 +320,30 @@ function getSPAccCode($entryType,$gstType,$spType){
             break;
         /* Credit Note Case End */
 
+        /* GST Income Case Start */
+        case $entryType == "GInc" && $gstType == 1 && $spType == 1:
+            $retVal = "SALESGSTACC";    
+            break;
+        case $entryType == "GInc" && $gstType == 2 && $spType == 1:
+            $retVal = "SALESIGSTACC";    
+            break;
+        case $entryType == "GInc" && $gstType == 2 && $spType == 2:
+            $retVal = "EXPORTGSTACC";    
+            break;
+        case $entryType == "GInc" && $gstType == 3 && $spType == 2:
+            $retVal = "EXPORTTFACC";    
+            break;
+        case $entryType == "GInc" && $gstType == 1 && $spType == 3:
+            $retVal = "SALESJOBGSTACC";    
+            break;
+        case $entryType == "GInc" && $gstType == 2 && $spType == 3:
+            $retVal = "SALESJOBIGSTACC";    
+            break;
+        case $entryType == "GInc" && $gstType == 3:
+            $retVal = "SALESTFACC";    
+            break;
+        /* GST Income Case End */
+
         default: 
             $retVal = "";
             break;
@@ -314,31 +367,38 @@ function getCrDrEff($type){
 		case "C.N.": //Credit Note
 			$result['vou_type'] = "CR";
 			$result['opp_type'] = "DR";		
-			break;	
+			break;
+            
 		case "D.N.": //Debit Note
 			$result['vou_type'] = "DR";
 			$result['opp_type'] = "CR";	
 			break;
+
 		case "BCRct": //Bank/Cash Receipt
 			$result['vou_type'] = "DR";
 			$result['opp_type'] = "CR";	
 			break;
+
 		case "BCPmt": //Bank/Cash Payment
 			$result['vou_type'] = "CR";
 			$result['opp_type'] = "DR";	
 			break;
+
 		case "GExp": //GST Expense
 			$result['vou_type'] = "CR";
 			$result['opp_type'] = "DR";	
 			break;
+
         case "GInc": //GST Income
             $result['vou_type'] = "DR";
             $result['opp_type'] = "CR";	
             break;
+
         case "AdSal": //Advance Salary Payment
             $result['vou_type'] = "CR";
             $result['opp_type'] = "DR";	
             break;
+
         case "EmpLoan": //Employee Loan Payment
             $result['vou_type'] = "CR";
             $result['opp_type'] = "DR";	
