@@ -55,11 +55,14 @@ class Items extends MY_Controller{
 
         if($data['item_type'] == 1):
             $item_name_error = "";
-            if(empty($data['size_id'])):
-                $item_name_error = "Size is required.";
-            endif;
             if(empty($data['brand_id'])):
                 $item_name_error .= " Brand is required.";
+            endif;
+            if(empty($data['category_id'])):
+                $item_name_error .= " Category is required.";
+            endif;
+            if(empty($data['size_id'])):
+                $item_name_error .= " Size is required.";
             endif;
 
             if(!empty($item_name_error)):
@@ -72,16 +75,18 @@ class Items extends MY_Controller{
 
         if(empty($data['unit_id']))
             $errorMessage['unit_id'] = "Unit is required.";
-        if(empty($data['category_id']))
+        if(empty($data['category_id']) && $data['item_type'] != 1)
             $errorMessage['category_id'] = "Category is required.";
             
         if(!empty($errorMessage)):
             $this->printJson(['status'=>0,'message'=>$errorMessage]);
         else:
             if($data['item_type'] == 1):
+                $categoryData = $this->itemCategory->getCategory(['id'=>$data['category_id']]);
                 $sizeData = $this->sizeMaster->getSize(['id'=>$data['size_id']]);
                 $brandData = $this->brandMaster->getBrand(['id'=>$data['brand_id']]);
-                $data['item_name'] = $sizeData->size." ".$data['capacity']." ".$data['color']." ".$brandData->brand_name;
+
+                $data['item_name'] = $brandData->brand_name." ".$categoryData->category_name." ".$sizeData->size." ".$this->fgCapacity[$data['capacity']].$this->fgColorCode[$data['color']];
             endif;
 
             $fname = Array();
