@@ -17,7 +17,7 @@ $(document).ready(function(){
 			$("#itemModel .btn-close").show();
 			$("#itemModel .btn-save").show();		
 		}else{ 
-            $(".party_id").html("Party name is required."); $(".modal").modal('hide'); 
+            $(".party_id").html("Party name is required."); $("#itemModel").modal('hide'); 
         }
 	});
 

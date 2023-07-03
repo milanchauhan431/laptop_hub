@@ -93,7 +93,7 @@ function resPermission(data,formId){
 function resCopyPermission(data,formId){
     if(data.status==1){
         $('#'+formId)[0].reset();
-        $(".modal").modal('hide');
+        colseModal(formId);
 
         toastr.success(data.message, 'Success', { "showMethod": "slideDown", "hideMethod": "slideUp", "closeButton": true, positionClass: 'toastr toast-bottom-center', containerId: 'toast-bottom-center', "progressBar": true });
     }else{

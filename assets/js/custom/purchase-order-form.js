@@ -19,7 +19,7 @@ $(document).ready(function(){
 			$(".btn-save").show();
 			$("#itemForm .single-select").comboSelect();					
 		}else{ 
-            $(".party_id").html("Party name is required."); $(".modal").modal('hide'); 
+            $(".party_id").html("Party name is required."); $("#itemModel").modal('hide'); 
         }
 	});
 
