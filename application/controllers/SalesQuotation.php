@@ -56,6 +56,8 @@ class SalesQuotation extends MY_Controller{
         if(!empty($errorMessage)):
             $this->printJson(['status'=>0,'message'=>$errorMessage]);
         else:
+            $data['vou_name_l'] = $this->data['entryData']->vou_name_long;
+            $data['vou_name_s'] = $this->data['entryData']->vou_name_short;
             $this->printJson($this->salesQuotation->save($data));
         endif;
     }

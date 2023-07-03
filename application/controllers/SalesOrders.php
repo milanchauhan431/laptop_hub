@@ -98,7 +98,8 @@ class SalesOrders extends MY_Controller{
                 $itemData[] = $row;
             endforeach;
             $data['itemData'] = $itemData; */
-
+            $data['vou_name_l'] = $this->data['entryData']->vou_name_long;
+            $data['vou_name_s'] = $this->data['entryData']->vou_name_short;
             $this->printJson($this->salesOrder->save($data));
         endif;
     }
