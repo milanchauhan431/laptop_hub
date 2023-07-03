@@ -11,9 +11,9 @@ function getSalesDtHeader($page){
 	$data['lead'][] = ["name"=>"Party Name"];
     $data['lead'][] = ["name"=>"Contact No."];
     $data['lead'][] = ["name"=>"Sales Executive"];
-    $data['lead'][] = ["name"=>"Appointmens","textAlign"=>"center"];
-    $data['lead'][] = ["name"=>"Followup Date"];
-    $data['lead'][] = ["name"=>"Followup Remark"];
+    $data['lead'][] = ["name"=>"Appointmens","textAlign"=>"center","sortable"=>"FALSE"];
+    $data['lead'][] = ["name"=>"Followup Date","sortable"=>"FALSE"];
+    $data['lead'][] = ["name"=>"Followup Remark","sortable"=>"FALSE"];
 
     /* Sales Enquiry Header */
     $data['salesEnquiry'][] = ["name"=>"Action","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"];
