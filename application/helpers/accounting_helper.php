@@ -99,7 +99,7 @@ function getGstExpenseData($data){
 function getGstIncomeData($data){
     $editButton = '<a class="btn btn-success btn-edit permission-modify" href="'.base_url('gstIncome/edit/'.$data->id).'" datatip="Edit" flow="down" ><i class="ti-pencil-alt"></i></a>';
 
-    $deleteParam = "{'postData':{'id' : ".$data->id."},'message' : 'Expese'}";
+    $deleteParam = "{'postData':{'id' : ".$data->id."},'message' : 'Income'}";
     $deleteButton = '<a class="btn btn-danger btn-delete permission-remove" href="javascript:void(0)" onclick="trash('.$deleteParam.');" datatip="Remove" flow="down"><i class="ti-trash"></i></a>';
 
     $action = getActionButton($editButton.$deleteButton);
