@@ -110,7 +110,7 @@ class SalesEnquiryModel extends MasterModel{
     public function getSalesEnquiry($data){
         $queryData = array();
         $queryData['tableName'] = $this->transMain;
-        $queryData['select'] = "trans_main.*,trans_details.t_col_1 as contact_person,trans_details.t_col_2 as contact_no,trans_details.t_col_3 as ship_address";
+        $queryData['select'] = "trans_main.*,trans_details.t_col_1 as contact_person,trans_details.t_col_2 as contact_no,trans_details.t_col_3 as contact_email,trans_details.t_col_4 as ship_address,trans_details.t_col_5 as ship_pincode";
         $queryData['leftJoin']['trans_details'] = "trans_main.id = trans_details.main_ref_id AND trans_details.description = 'SE MASTER DETAILS' AND trans_details.table_name = '".$this->transMain."'";
         $queryData['where']['trans_main.id'] = $data['id'];
         $result = $this->row($queryData);

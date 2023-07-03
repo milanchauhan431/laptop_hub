@@ -30,12 +30,12 @@
                                     </div>
 
                                     <div class="col-md-2 form-group">
-                                        <label for="trans_number">So. No.</label>
+                                        <label for="trans_number">Enquiry No.</label>
                                         <input type="text" name="trans_number" id="trans_number" class="form-control" value="<?=(!empty($dataRow->trans_number))?$dataRow->trans_number:((!empty($trans_number))?$trans_number:"")?>" readonly>
                                     </div>
 
                                     <div class="col-md-2 form-group">
-                                        <label for="trans_date">So. Date</label>
+                                        <label for="trans_date">Enquiry Date</label>
                                         <input type="date" name="trans_date" id="trans_date" class="form-control" value="<?=(!empty($dataRow->trans_date))?$dataRow->trans_date:getFyDate()?>">
                                     </div>
 
@@ -74,16 +74,6 @@
                                             ?>
                                         </select>
                                     </div>
-
-                                    <div class="col-md-3 form-group">
-                                        <label for="doc_no">Cust. PO. No.</label>
-                                        <input type="text" name="doc_no" id="doc_no" class="form-control" value="<?=(!empty($dataRow->doc_no))?$dataRow->doc_no:""?>">
-                                    </div>
-
-                                    <div class="col-md-3 form-group">
-                                        <label for="doc_date">Cust. PO. Date</label>
-                                        <input type="date" name="doc_date" id="doc_date" class="form-control" value="<?=(!empty($dataRow->doc_date))?$dataRow->doc_date:getFyDate()?>">
-                                    </div>
                                     
                                     <div class="col-md-3 form-group">
                                         <label for="master_t_col_1">Contact Person</label>
@@ -95,9 +85,24 @@
                                         <input type="text" name="masterDetails[t_col_2]" id="master_t_col_2" class="form-control numericOnly" value="<?=(!empty($dataRow->contact_no))?$dataRow->contact_no:""?>">
                                     </div>
 
-                                    <div class="col-md-12 form-group">
-                                        <label for="master_t_col_3">Ship To</label>
-                                        <input type="text" name="masterDetails[t_col_3]" id="master_t_col_3" class="form-control" value="<?=(!empty($dataRow->ship_address))?$dataRow->ship_address:""?>">
+                                    <div class="col-md-3 form-group">
+                                        <label for="master_t_col_3">Contact Email</label>
+                                        <input type="email" name="masterDetails[t_col_3]" id="master_t_col_3" class="form-control" value="<?=(!empty($dataRow->contact_email))?$dataRow->contact_email:""?>">
+                                    </div>
+
+                                    <div class="col-md-3 form-group">
+                                        <label for="ref_by">Referance By</label>
+                                        <input type="text" name="ref_by" id="ref_by" class="form-control" value="<?=(!empty($dataRow->ref_by))?$dataRow->ref_by:""?>">
+                                    </div>
+
+                                    <div class="col-md-9 form-group">
+                                        <label for="master_t_col_4">Address</label>
+                                        <input type="text" name="masterDetails[t_col_4]" id="master_t_col_4" class="form-control" value="<?=(!empty($dataRow->ship_address))?$dataRow->ship_address:""?>">
+                                    </div>
+
+                                    <div class="col-md-3 form-group">
+                                        <label for="master_t_col_5">Pincode</label>
+                                        <input type="text" name="masterDetails[t_col_5]" id="master_t_col_5" class="form-control" value="<?=(!empty($dataRow->ship_pincode))?$dataRow->ship_pincode:""?>">
                                     </div>
                                 </div>
 
@@ -183,8 +188,21 @@
 
                             <div class="col-md-12 form-group">
 								<label for="item_id">Product Name</label>
+                                <div class="float-right">	
+                                    <span class="dropdown float-right">
+                                        <a class="text-primary font-bold waves-effect waves-dark" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" datatip="Progress" flow="down">+ Add New</a>
+
+                                        <div class="dropdown-menu dropdown-menu-left user-dd animated flipInY" x-placement="start-left">
+                                            <div class="d-flex no-block align-items-center p-10 bg-primary text-white">ACTION</div>
+                                            
+                                            <a class="dropdown-item addNew" href="javascript:void(0)" data-button="both" data-modal_id="modal-xl" data-function="addItem" data-controller="items" data-postdata='{"item_type" : 1 }' data-res_function="resItemMaster" data-js_store_fn="customStore" data-form_title="Add Finish Goods">+ Finish Good</a>
+                                            
+                                        </div>
+                                    </span>
+                                </div>
+
                                 <input type="hidden" name="item_name" id="item_name" class="form-control" value="" />
-                                <select name="item_id" id="item_id" class="form-control single-select itemDetails itemOptions" data-res_function="resItemDetail">
+                                <select name="item_id" id="item_id" class="form-control single-select itemDetails itemOptions" data-res_function="resItemDetail" data-item_type="1">
                                     <option value="">Select Product Name</option>
                                     <?=getItemListOption($itemList)?>
                                 </select>

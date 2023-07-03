@@ -17,7 +17,7 @@ $(document).ready(function(){
 			$("#itemModel .btn-close").show();
 			$("#itemModel .btn-save").show();		
 		}else{ 
-            $(".party_id").html("Party name is required."); $(".modal").modal('hide'); 
+            $(".party_id").html("Party name is required."); $("#itemModel").modal('hide'); 
         }
 	});
 
@@ -215,9 +215,11 @@ function resPartyDetail(response = ""){
     if(response != ""){
         var partyDetail = response.data.partyDetail;
         $("#party_name").val(partyDetail.party_name);
-        $("#master_t_col_1").val(partyDetail.delivery_contact_person);
-        $("#master_t_col_2").val(partyDetail.delivery_contact_no);
-        $("#master_t_col_3").val(partyDetail.delivery_address);
+        $("#master_t_col_1").val(partyDetail.contact_person);
+        $("#master_t_col_2").val(partyDetail.party_mobile);
+        $("#master_t_col_3").val(partyDetail.party_email);
+        $("#master_t_col_4").val(partyDetail.party_address);
+        $("#master_t_col_5").val(partyDetail.party_pincode);
 
         var gstDetails = response.data.gstDetails; var i = 1;
         $.each(gstDetails,function(index,row){  
@@ -231,6 +233,8 @@ function resPartyDetail(response = ""){
 		$("#master_t_col_1").val("");
         $("#master_t_col_2").val("");
         $("#master_t_col_3").val("");
+        $("#master_t_col_4").val("");
+        $("#master_t_col_5").val("");
     }
     $("#gstin").html(html);$("#gstin").comboSelect(); //gstin();
 }
