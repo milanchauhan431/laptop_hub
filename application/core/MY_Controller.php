@@ -22,8 +22,8 @@ class MY_Controller extends CI_Controller{
 
 	public $itemTypes = [1 => "Finish Goods", 2 => "Consumable", 3 => "Raw Material"/* , 4 => "Capital Goods", 5 => "Machineries", 6 => "Instruments", 7 => "Gauges", 8 => "Services", 9 => "Packing Material", 10 => "Scrap" */];
 	public $stockTypes = [0=>"None",1=>'Batch Wise',2=>"Serial Wise"];
-	public $fgColorCode = ["White","Grey"];
-	public $fgCapacity = ["3 Ton","5 Ton"];
+	public $fgColorCode = ["WHITE"=>"W","GREY"=>"G"];
+	public $fgCapacity = ["3 Ton"=>"3T","5 Ton"=>"5T"];
 
 	//Crm Status
 	public $leadStatus = ["Initited", "Appointment Fixed", "Qualified", "Enquiry Generated", "Proposal", "In Negotiation", "Confirm", "Close"];
