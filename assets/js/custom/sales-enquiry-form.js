@@ -39,9 +39,9 @@ $(document).ready(function(){
         if (formData.qty == "" || parseFloat(formData.qty) == 0) {
             $(".qty").html("Qty is required.");
         }
-        if (formData.price == "" || parseFloat(formData.price) == 0) {
+        /* if (formData.price == "" || parseFloat(formData.price) == 0) {
             $(".price").html("Price is required.");
-        }
+        } */
 
         /* var item_ids = $(".item_id").map(function () { return $(this).val(); }).get();
         if ($.inArray(formData.item_id, item_ids) >= 0 && formData.row_index == "") {
@@ -146,6 +146,7 @@ function AddRow(data) {
 	cell.html(data.price);
 	cell.append(priceInput);
 	cell.append(priceErrorDiv);
+	cell.attr("class","hidden");
 
     var discPerInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][disc_per]", value: data.disc_per});
 	var discAmtInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][disc_amount]", value: data.disc_amount });
@@ -153,6 +154,7 @@ function AddRow(data) {
 	cell.html(data.disc_per);
 	cell.append(discPerInput);
 	cell.append(discAmtInput);
+	cell.attr("class","hidden");
 
     var itemRemarkInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][item_remark]", value: data.item_remark});
 	cell = $(row.insertCell(-1));
@@ -233,7 +235,7 @@ function resPartyDetail(response = ""){
     $("#gstin").html(html);$("#gstin").comboSelect(); //gstin();
 }
 
-/* function resItemDetail(response = ""){
+function resItemDetail(response = ""){
     if(response != ""){
         var itemDetail = response.data.itemDetail;
         $("#itemForm #item_code").val(itemDetail.item_code);
@@ -241,8 +243,8 @@ function resPartyDetail(response = ""){
         $("#itemForm #item_type").val(itemDetail.item_type);
         $("#itemForm #unit_id").val(itemDetail.unit_id);$("#itemForm #unit_id").comboSelect();
         $("#itemForm #unit_name").val(itemDetail.unit_name);
-		$("#itemForm #disc_per").val(itemDetail.defualt_disc);
-		$("#itemForm #price").val(itemDetail.price);
+		/* $("#itemForm #disc_per").val(itemDetail.defualt_disc);
+		$("#itemForm #price").val(itemDetail.price); */
         $("#itemForm #hsn_code").val(itemDetail.hsn_code);$("#itemForm #hsn_code").comboSelect();
         $("#itemForm #gst_per").val(parseFloat(itemDetail.gst_per).toFixed(0));$("#itemForm #gst_per").comboSelect();
     }else{
@@ -256,7 +258,7 @@ function resPartyDetail(response = ""){
         $("#itemForm #hsn_code").val("");$("#itemForm #hsn_code").comboSelect();
         $("#itemForm #gst_per").val(0);$("#itemForm #gst_per").comboSelect(); 
     }
-} */
+}
 
 function resSaveOrder(data,formId){
     if(data.status==1){

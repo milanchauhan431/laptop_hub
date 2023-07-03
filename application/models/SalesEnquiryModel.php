@@ -34,7 +34,6 @@ class SalesEnquiryModel extends MasterModel{
         $data['searchCol'][] = "trans_main.party_name";
         $data['searchCol'][] = "trans_child.item_name";
         $data['searchCol'][] = "trans_child.qty";
-        $data['searchCol'][] = "trans_child.price";
 
         $columns =array(); foreach($data['searchCol'] as $row): $columns[] = $row; endforeach;
         if(isset($data['order'])){$data['order_by'][$columns[$data['order'][0]['column']]] = $data['order'][0]['dir'];}

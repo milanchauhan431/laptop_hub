@@ -121,8 +121,6 @@
                                                         <th>Item Name</th>
                                                         <th>Qty.</th>
                                                         <th>Unit</th>
-                                                        <th>Price</th>
-                                                        <th>Disc.</th>
                                                         <th>Remark</th>
                                                         <th class="text-center" style="width:10%;">Action</th>
                                                     </tr>
@@ -163,7 +161,7 @@
 </div>
 
 <div class="modal fade" id="itemModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel1" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog modal-md" role="document">
         <div class="modal-content animated slideDown">
             <div class="modal-header" style="display:block;"><h4 class="modal-title">Add or Update Item</h4></div>
             <div class="modal-body">
@@ -178,7 +176,6 @@
                                 
 								<input type="hidden" name="row_index" id="row_index" value="">
 								<input type="hidden" name="item_code" id="item_code" value="" />
-                                <input type="hidden" name="item_id" id="item_id" value="0" />
                                 <input type="hidden" name="item_type" id="item_type" value="1" />
                                 <!-- <input type="hidden" name="attachment" id="attachment" value=""> -->
                             </div>
@@ -186,25 +183,25 @@
 
                             <div class="col-md-12 form-group">
 								<label for="item_id">Product Name</label>
-                                <input type="text" name="item_name" id="item_name" class="form-control" value="" />
-                                <!-- <select name="item_id" id="item_id" class="form-control single-select itemDetails itemOptions" data-res_function="resItemDetail">
+                                <input type="hidden" name="item_name" id="item_name" class="form-control" value="" />
+                                <select name="item_id" id="item_id" class="form-control single-select itemDetails itemOptions" data-res_function="resItemDetail">
                                     <option value="">Select Product Name</option>
-                                    <?php//getItemListOption($itemList)?>
-                                </select> -->
+                                    <?=getItemListOption($itemList)?>
+                                </select>
                             </div>
-                            <div class="col-md-3 form-group">
+                            <div class="col-md-6 form-group">
                                 <label for="qty">Quantity</label>
                                 <input type="text" name="qty" id="qty" class="form-control floatOnly req" value="0">
                             </div>
-                            <div class="col-md-3 form-group">
+                            <div class="col-md-3 form-group hidden">
                                 <label for="disc_per">Disc. (%)</label>
                                 <input type="text" name="disc_per" id="disc_per" class="form-control floatOnly" value="0">
                             </div>
-                            <div class="col-md-3 form-group">
+                            <div class="col-md-3 form-group hidden">
                                 <label for="price">Price</label>
                                 <input type="text" name="price" id="price" class="form-control floatOnly req" value="0" />
                             </div>
-                            <div class="col-md-3 form-group">
+                            <div class="col-md-6 form-group">
                                 <label for="unit_id">Unit</label>        
                                 <select name="unit_id" id="unit_id" class="form-control single-select">
                                     <option value="">Select Unit</option>

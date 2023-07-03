@@ -10,7 +10,6 @@ function getSalesDtHeader($page){
 	$data['salesEnquiry'][] = ["name"=>"Customer Name"];
 	$data['salesEnquiry'][] = ["name"=>"Item Name"];
     $data['salesEnquiry'][] = ["name"=>"Qty"];
-    $data['salesEnquiry'][] = ["name"=>"Price"];
 
     /* Sales Quotation Header */
     $data['salesQuotation'][] = ["name"=>"Action","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"];
@@ -71,7 +70,7 @@ function getSalesEnquiryData($data){
 
     $action = getActionButton($editButton.$deleteButton);
 
-    return [$action,$data->sr_no,$data->trans_number,$data->trans_date,$data->party_name,$data->item_name,$data->qty,$data->price];
+    return [$action,$data->sr_no,$data->trans_number,$data->trans_date,$data->party_name,$data->item_name,floatVal($data->qty)];
 }
 
 /* Sales Quotation Table data */
