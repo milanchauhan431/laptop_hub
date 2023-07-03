@@ -2,12 +2,6 @@
 class LeadModel extends MasterModel{
     private $appointmentTable = "crm_appointments";
     private $partyMaster = "party_master";
-    private $transMain = "trans_main";
-    private $transChild = "trans_child";
-    private $itemMaster = "item_master";
-    private $countries = "countries";
-    private $states = "states";
-    private $cities = "cities";
     private $lead_managment='lead_managment';
 
     public function getDTRows($data){
@@ -75,25 +69,40 @@ class LeadModel extends MasterModel{
         }
     }
 
-    public function saveFollowup($data){ 
+    public function saveApproachStatus($data){
         try{
             $this->db->trans_begin();
 
-            $result = $this->store($this->appointmentTable,$data,'Followup');
+            $result = $this->store($this->lead_managment,$data,'Status');
 
-            if($data['entry_type'] == 1){
-                $this->store($this->lead_managment,['id'=>$data['lead_id'],'lead_status'=>$data['status']]);
-            }else{
-                $this->store($this->transChild,['id'=>$data['lead_id'],'trans_status'=>$data['status']]);
-            }
-          
+            if($data['lead_status'] == 3):
+                $leadData = $this->getLead($data['id']);
+                $this->edit($this->partyMaster,['id'=>$leadData->party_id],['party_type'=>1]);
+            endif;
+
             if ($this->db->trans_status() !== FALSE):
                 $this->db->trans_commit();
                 return $result;
             endif;
         }catch(\Exception $e){
             $this->db->trans_rollback();
-        return ['status'=>2,'message'=>"somthing is wrong. Error : ".$e->getMessage()];
+            return ['status'=>2,'message'=>"somthing is wrong. Error : ".$e->getMessage()];
+        }
+    }
+
+    public function saveFollowup($data){ 
+        try{
+            $this->db->trans_begin();
+
+            $result = $this->store($this->appointmentTable,$data,'Followup');
+
+            if ($this->db->trans_status() !== FALSE):
+                $this->db->trans_commit();
+                return $result;
+            endif;
+        }catch(\Exception $e){
+            $this->db->trans_rollback();
+            return ['status'=>2,'message'=>"somthing is wrong. Error : ".$e->getMessage()];
         }	
     }
 
@@ -109,11 +118,25 @@ class LeadModel extends MasterModel{
             endif;
         }catch(\Exception $e){
             $this->db->trans_rollback();
-        return ['status'=>2,'message'=>"somthing is wrong. Error : ".$e->getMessage()];
-        }	
-		
+            return ['status'=>2,'message'=>"somthing is wrong. Error : ".$e->getMessage()];
+        }			
     }
 
+    public function deleteApproachTans($id){
+        try{
+            $this->db->trans_begin();
+            
+            $result = $this->trash($this->appointmentTable,['id'=>$id]);
+
+            if ($this->db->trans_status() !== FALSE):
+                $this->db->trans_commit();
+                return $result;
+            endif;
+        }catch(\Exception $e){
+            $this->db->trans_rollback();
+            return ['status'=>2,'message'=>"somthing is wrong. Error : ".$e->getMessage()];
+        }	
+    }
 
     public function getLead($id){
         $data['select'] = "lead_managment.*,party_master.party_name,employee_master.emp_name as sales_executive_name";
@@ -130,6 +153,7 @@ class LeadModel extends MasterModel{
         $data['where']['crm_appointments.lead_id'] = $postData['lead_id'];
         $data['limit'] = 1;
         $data['order_by']['crm_appointments.appointment_date'] = "DESC";
+        $data['order_by']['crm_appointments.id'] = "DESC";
         return $this->row($data);
     }
 
@@ -145,5 +169,14 @@ class LeadModel extends MasterModel{
         return $this->rows($data);
     }
 
+    public function getAppointmentDetail($id){
+        $data['tableName'] = $this->appointmentTable;
+        $data['select']='crm_appointments.*,employee_master.emp_name as executive_name,lead_managment.lead_no,lead_managment.lead_status,party_master.party_name';
+        $data['leftJoin']['employee_master'] = 'employee_master.id = crm_appointments.sales_executive';
+        $data['leftJoin']['lead_managment'] = "lead_managment.id = crm_appointments.lead_id";
+        $data['leftJoin']['party_master'] = "party_master.id = lead_managment.party_id";
+        $data['where']['crm_appointments.id'] = $id;
+        return $this->row($data);
+    }
 }
 ?>

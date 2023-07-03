@@ -17,7 +17,7 @@ class PartyModel extends MasterModel{
 
     public function getDTRows($data){
         $data['tableName'] = $this->partyMaster;
-        $data['select'] = "";
+        //$data['select'] = "";
 
         if($data['party_category'] != 4):
             $data['where']['party_master.party_category'] = $data['party_category'];
@@ -26,6 +26,8 @@ class PartyModel extends MasterModel{
         $data['searchCol'][] = "";
 		$data['searchCol'][] = "";
         if($data['party_category'] == 1):
+            $data['where']['party_master.party_type'] = 1;
+
             $data['searchCol'][] = "party_master.party_name";
 			$data['searchCol'][] = "party_master.contact_person";
 			$data['searchCol'][] = "party_master.party_mobile";

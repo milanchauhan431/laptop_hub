@@ -3,6 +3,7 @@
         <div class="row">
             <input type="hidden" name="id" id="id" value="<?=!empty($dataRow->id)?$dataRow->id:''?>">
             <input type="hidden" name="entry_type" id="entry_type" value="1">
+            <input type="hidden" name="status" id="status" value="<?=(!empty($dataRow->status))?$dataRow->status:0?>">
 
             <div class="col-md-6 form-group">
                 <label for="party_id">Customer</label>
@@ -12,7 +13,7 @@
                     <div class="dropdown-menu dropdown-menu-left user-dd animated flipInY" x-placement="start-left">
                         <div class="d-flex no-block align-items-center p-10 bg-primary text-white">ACTION</div>
                         
-                        <a class="dropdown-item addNew" href="javascript:void(0)" data-button="both" data-modal_id="modal-xl" data-function="addParty" data-controller="parties" data-postdata='{"party_category" : 1 }' data-res_function="resPartyMaster" data-js_store_fn="customStore" data-form_title="Add Customer">+ Customer</a>
+                        <a class="dropdown-item addNew" href="javascript:void(0)" data-button="both" data-modal_id="modal-xl" data-function="addParty" data-controller="parties" data-postdata='{"party_category" : 1,"party_type":0 }' data-res_function="resPartyMaster" data-js_store_fn="customStore" data-form_title="Add Customer">+ Customer</a>
                         
                     </div>
                 </span>
@@ -59,16 +60,10 @@
                     ?>
                 </select>
             </div>
+            
             <div class="col-md-4 form-group">
-                <label for="status">Stage</label>
-                <select class="form-control " name="status" id="status">
-                    <?php
-                        foreach($this->followupStage as $key=>$row):
-							$selected = (!empty($dataRow->status) and $dataRow->status == $row)?"selected":"";
-                            echo '<option value="'.$key.'" '.$selected .'>'.$row.'</option>';
-                        endforeach;
-                    ?>
-                </select>
+                <label for="contact_person">Contact Person</label>
+                <input type="text" name="contact_person" id="contact_person" class="form-control" value="<?=(!empty($dataRow->contact_person))?$dataRow->contact_person:""?>">
             </div>
 
             <div class="col-md-12 form-group">

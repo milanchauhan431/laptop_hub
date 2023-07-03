@@ -13,7 +13,7 @@
                                     </li>
 
                                     <li class="nav-item"> 
-                                        <button onclick="statusTab('leadTable',1);" id="lead_won" class="nav-tab btn waves-effect waves-light btn-outline-success" style="outline:0px" data-toggle="tab" aria-expanded="false">Won</button> 
+                                        <button onclick="statusTab('leadTable',3);" id="lead_won" class="nav-tab btn waves-effect waves-light btn-outline-success" style="outline:0px" data-toggle="tab" aria-expanded="false">Won</button> 
                                     </li>
 
                                     <li class="nav-item"> 
@@ -22,9 +22,8 @@
                                 </ul>
                             </div>
 							<div class="col-md-4">
-									<button type="button" class="btn waves-effect waves-light btn-outline-info float-right addNew press-add-btn permission-write" data-button="both" data-modal_id="modal-lg" data-function="addLead" data-form_title="Add Approach"><i class="fa fa-plus"></i> New Approach</button>
-							</div>
-                            
+								<button type="button" class="btn waves-effect waves-light btn-outline-info float-right addNew press-add-btn permission-write" data-button="both" data-modal_id="modal-lg" data-function="addLead" data-form_title="Add Approach"><i class="fa fa-plus"></i> New Approach</button>
+							</div>                            
                         </div>
                     </div>
                     <div class="card-body">
