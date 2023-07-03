@@ -32,6 +32,16 @@ function getAccountingDtHeader($page){
 	$data['gstExpense'][] = ["name"=>"GST Amount"];
     $data['gstExpense'][] = ["name"=>"Net Amount"];
 
+    /* GST Income Header */
+    $data['gstIncome'][] = ["name"=>"Action","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"];
+	$data['gstIncome'][] = ["name"=>"#","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"]; 
+	$data['gstIncome'][] = ["name"=>"Inv No."];
+	$data['gstIncome'][] = ["name"=>"Inv Date"];
+	$data['gstIncome'][] = ["name"=>"Party Name"];
+	$data['gstIncome'][] = ["name"=>"Taxable Amount"];
+	$data['gstIncome'][] = ["name"=>"GST Amount"];
+    $data['gstIncome'][] = ["name"=>"Net Amount"];
+
     /* Payment Voucher  */
     $data['paymentVoucher'][] = ["name" => "Action", "style" => "width:5%;"];
     $data['paymentVoucher'][] = ["name" => "#", "style" => "width:5%;", "textAlign" => "center"];
@@ -76,6 +86,18 @@ function getPurchaseInvoiceData($data){
 /* GST Expense Table Data */
 function getGstExpenseData($data){
     $editButton = '<a class="btn btn-success btn-edit permission-modify" href="'.base_url('gstExpense/edit/'.$data->id).'" datatip="Edit" flow="down" ><i class="ti-pencil-alt"></i></a>';
+
+    $deleteParam = "{'postData':{'id' : ".$data->id."},'message' : 'Expese'}";
+    $deleteButton = '<a class="btn btn-danger btn-delete permission-remove" href="javascript:void(0)" onclick="trash('.$deleteParam.');" datatip="Remove" flow="down"><i class="ti-trash"></i></a>';
+
+    $action = getActionButton($editButton.$deleteButton);
+
+    return [$action,$data->sr_no,$data->trans_number,formatDate($data->trans_date),$data->party_name,$data->taxable_amount,$data->gst_amount,$data->net_amount];
+}
+
+/* GST Income Table Data */
+function getGstIncomeData($data){
+    $editButton = '<a class="btn btn-success btn-edit permission-modify" href="'.base_url('gstIncome/edit/'.$data->id).'" datatip="Edit" flow="down" ><i class="ti-pencil-alt"></i></a>';
 
     $deleteParam = "{'postData':{'id' : ".$data->id."},'message' : 'Expese'}";
     $deleteButton = '<a class="btn btn-danger btn-delete permission-remove" href="javascript:void(0)" onclick="trash('.$deleteParam.');" datatip="Remove" flow="down"><i class="ti-trash"></i></a>';

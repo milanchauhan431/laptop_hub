@@ -5,10 +5,10 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header text-center">
-                        <h4><u>GST Expense</u></h4>
+                        <h4><u>GST Income</u></h4>
                     </div>
                     <div class="card-body">
-                        <form autocomplete="off" id="saveGstExpense" data-res_function="resGstExpense" enctype="multipart/form-data">
+                        <form autocomplete="off" id="saveGstIncome" data-res_function="resGstIncome" enctype="multipart/form-data">
                             <div class="col-md-12">
                                 <div class="row">
 
@@ -20,7 +20,6 @@
 
                                         <input type="hidden" name="trans_prefix" id="trans_prefix" value="<?=(!empty($dataRow->trans_prefix))?$dataRow->trans_prefix:((!empty($trans_prefix))?$trans_prefix:"")?>">
                                         <input type="hidden" name="trans_no" id="trans_no" value="<?=(!empty($dataRow->trans_no))?$dataRow->trans_no:((!empty($trans_no))?$trans_no:"")?>">
-                                        <input type="hidden" name="doc_no" id="doc_no" class="form-control" value="<?=(!empty($dataRow->doc_no))?$dataRow->doc_no:((!empty($trans_number))?$trans_number:"")?>">
 
                                         <input type="hidden" name="party_name" id="party_name" value="<?=(!empty($dataRow->party_name))?$dataRow->party_name:""?>">
                                         <input type="hidden" name="gst_type" id="gst_type" value="<?=(!empty($dataRow->gst_type))?$dataRow->gst_type:""?>">
@@ -31,7 +30,7 @@
 
                                     <div class="col-md-2 form-group">
                                         <label for="trans_number">Inv. No.</label>
-                                        <input type="text" name="trans_number" id="trans_number" class="form-control req" value="<?=(!empty($dataRow->trans_number))?$dataRow->trans_number:""?>">
+                                        <input type="text" name="trans_number" id="trans_number" class="form-control req" value="<?=(!empty($dataRow->trans_number))?$dataRow->trans_number:((!empty($trans_number))?$trans_number:"")?>" readonly>
                                     </div>
 
                                     <div class="col-md-2 form-group">
@@ -98,8 +97,8 @@
 									</div>
 
                                     <div class="col-md-3 form-group">
-										<label for="challan_no">PO. No./Challan No.</label>
-										<input type="text" name="challan_no" class="form-control" placeholder="Enter Challan No." value="<?= (!empty($dataRow->challan_no)) ? $dataRow->challan_no : "" ?>" />
+										<label for="doc_no">PO. No./Challan No.</label>
+										<input type="text" name="doc_no" class="form-control" placeholder="Enter Challan No." value="<?= (!empty($dataRow->doc_no)) ? $dataRow->doc_no : "" ?>" />
 									</div>
                                     
                                     <div class="col-md-3 form-group">
@@ -176,7 +175,7 @@
                     </div>
                     <div class="card-footer">
                         <div class="col-md-12">
-                            <button type="button" class="btn waves-effect waves-light btn-outline-success float-right save-form" onclick="customStore({'formId':'saveGstExpense'});" ><i class="fa fa-check"></i> Save</button>
+                            <button type="button" class="btn waves-effect waves-light btn-outline-success float-right save-form" onclick="customStore({'formId':'saveGstIncome'});" ><i class="fa fa-check"></i> Save</button>
                             <a href="javascript:void(0)" onclick="window.location.href='<?=base_url($headData->controller)?>'" class="btn waves-effect waves-light btn-outline-secondary float-right btn-close press-close-btn save-form" style="margin-right:10px;"><i class="fa fa-times"></i> Cancel</a>
                         </div>
                     </div>
@@ -270,7 +269,7 @@
 
 
 <?php $this->load->view('includes/footer'); ?>
-<script src="<?php echo base_url(); ?>assets/js/custom/gst-expense-form.js?v=<?= time() ?>"></script>
+<script src="<?php echo base_url(); ?>assets/js/custom/gst-income-form.js?v=<?= time() ?>"></script>
 <script src="<?php echo base_url(); ?>assets/js/custom/calculate.js?v=<?= time() ?>"></script>
 
 <?php
