@@ -25,6 +25,7 @@
 				var permissionWrite = "'.$empPermission['is_write'].'";
 				var permissionModify = "'.$empPermission['is_modify'].'";
 				var permissionRemove = "'.$empPermission['is_remove'].'";
+				var permissionApprove = "'.$empPermission['is_approve'].'";
 			</script>';
 			echo $script;
 		else:
@@ -33,6 +34,7 @@
 				var permissionWrite = "1";
 				var permissionModify = "1";
 				var permissionRemove = "1";
+				var permissionApprove = "1";
 			</script>';
 			echo $script;
 		endif;
@@ -42,6 +44,7 @@
 				var permissionWrite = "";
 				var permissionModify = "";
 				var permissionRemove = "";
+				var permissionApprove = "";
 			</script>';
 		echo $script;
 	endif;

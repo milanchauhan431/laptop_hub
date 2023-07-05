@@ -27,12 +27,15 @@ function getSalesDtHeader($page){
     /* Sales Quotation Header */
     $data['salesQuotation'][] = ["name"=>"Action","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"];
 	$data['salesQuotation'][] = ["name"=>"#","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"]; 
+	$data['salesQuotation'][] = ["name"=>"Rev. No.","textAlign"=>"center"];
 	$data['salesQuotation'][] = ["name"=>"SQ. No."];
 	$data['salesQuotation'][] = ["name"=>"SQ. Date"];
 	$data['salesQuotation'][] = ["name"=>"Customer Name"];
 	$data['salesQuotation'][] = ["name"=>"Item Name"];
     $data['salesQuotation'][] = ["name"=>"Qty"];
     $data['salesQuotation'][] = ["name"=>"Price"];
+    $data['salesQuotation'][] = ["name"=>"Confirmed BY"];
+    $data['salesQuotation'][] = ["name"=>"Confirmed Date"];
 
     /* Sales Order Header */
     $data['salesOrders'][] = ["name"=>"Action","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"];
@@ -63,10 +66,10 @@ function getLeadData($data){
     $followupBtn = '';$appointmentBtn ='';$enqBtn='';$editButton="";$deleteButton="";$leadStatusButton = "";
        
     if(in_array($data->lead_status,[0,4])):
-        $followupParam = "{'postData': {'id' : ".$data->id.",'entry_type':1}, 'modal_id' : 'modal-lg', 'form_id' : 'followUp', 'title' : 'Follow up', 'fnedit' : 'addFollowup', 'fnsave' : 'saveFollowup','res_function' : 'resFollowup', 'button' : 'close'}";
+        $followupParam = "{'postData': {'id' : ".$data->id.",'party_id':".$data->party_id.",'sales_executive':".$data->sales_executive.",'entry_type':1}, 'modal_id' : 'modal-lg', 'form_id' : 'followUp', 'title' : 'Follow up', 'fnedit' : 'addFollowup', 'fnsave' : 'saveFollowup','res_function' : 'resFollowup', 'button' : 'close'}";
         $followupBtn = '<a class="btn btn-primary" href="javascript:void(0)" datatip="Followup" flow="down" onclick="edit('.$followupParam.');" ><i class="fas fa-clipboard-check"></i></a>';
 
-        $appointmentParam = "{'postData': {'id' : ".$data->id.",'entry_type':1}, 'modal_id' : 'modal-lg', 'form_id' : 'appointment', 'title' : 'Appointments', 'fnedit' : 'addAppointment', 'fnsave' : 'saveAppointment','res_function' : 'resAppointments', 'button' : 'close'}";
+        $appointmentParam = "{'postData': {'id' : ".$data->id.",'party_id':".$data->party_id.",'entry_type':2}, 'modal_id' : 'modal-lg', 'form_id' : 'appointment', 'title' : 'Appointments', 'fnedit' : 'addAppointment', 'fnsave' : 'saveAppointment','res_function' : 'resAppointments', 'button' : 'close'}";
         $appointmentBtn = '<a class="btn btn-info leadAction" href="javascript:void(0)" datatip="Appointment" flow="down" onclick="edit('.$appointmentParam.');"><i class="far fa-calendar-check"></i></a>';
     endif;
 
@@ -109,13 +112,33 @@ function getSalesQuotationData($data){
     $deleteParam = "{'postData':{'id' : ".$data->id."},'message' : 'Sales Quotation'}";
     $deleteButton = '<a class="btn btn-danger btn-delete permission-remove" href="javascript:void(0)" onclick="trash('.$deleteParam.');" datatip="Remove" flow="down"><i class="ti-trash"></i></a>';
 
+    $revision = '<a href="'.base_url('salesQuotation/reviseQuotation/'.$data->id).'" class="btn btn-primary btn-edit permission-modify" datatip="Revision" flow="down"><i class="fa fa-retweet"></i></a>';
+
+    $followupParam = "{'postData': {'id' : ".$data->id.",'party_id':".$data->party_id.",'sales_executive':".$data->sales_executive.",'entry_type':4}, 'modal_id' : 'modal-lg', 'form_id' : 'followUp', 'title' : 'Follow up', 'fnedit' : 'addFollowup', 'fnsave' : 'saveFollowup','res_function' : 'resFollowup', 'button' : 'close','controller':'lead'}";
+    $followupBtn = '<a class="btn btn-info" href="javascript:void(0)" datatip="Followup" flow="down" onclick="edit('.$followupParam.');" ><i class="fas fa-clipboard-check"></i></a>';
+
+    $quoteParam = "{'postData' : {'id' : ".$data->id.",'entry_type':4}, 'modal_id' : 'modal-md', 'form_id' : 'approachStatus', 'title' : 'Update Quotation Status','fnedit':'approachStatus','fnsave':'saveApproachStatus','controller':'lead'}";
+    $quoteStatusButton = '<a class="btn btn-success btn-edit permission-approve" href="javascript:void(0)" datatip="Quotation Status" flow="down" onclick="edit('.$quoteParam.');"><i class="fa fa-check"></i></a>';
+
+    $printBtn = '<a class="btn btn-success btn-edit permission-approve" href="'.base_url('salesQuotation/printQuotation/'.$data->id).'" target="_blank" datatip="Print" flow="down"><i class="fas fa-print" ></i></a>';
+
     if($data->trans_status > 0):
-        $editButton = $deleteButton = "";
+        $revision = $editButton = $deleteButton = "";
     endif;
 
-    $action = getActionButton($editButton.$deleteButton);
+    if(!empty($data->is_approve)):
+        $followupBtn = $revision = $editButton = $deleteButton = $quoteStatusButton = "";
+    endif;
 
-    return [$action,$data->sr_no,$data->trans_number,$data->trans_date,$data->party_name,$data->item_name,$data->qty,$data->price];
+    $action = getActionButton($printBtn.$followupBtn.$quoteStatusButton.$revision.$editButton.$deleteButton);
+
+    $rev_no = sprintf("%02d",$data->quote_rev_no);
+    if($data->quote_rev_no > 0):
+        $revParam = "{'postData' : {'trans_number' : '".$data->trans_number."'}, 'modal_id' : 'modal-md', 'form_id' : 'revisionList', 'title' : 'Quotation Revision History','fnedit':'revisionHistory','button':'close'}";
+        $rev_no = '<a href="javascript:void(0)" datatip="Revision History" flow="down" onclick="edit('.$revParam.');">'.sprintf("%02d",$data->quote_rev_no).'</a>';
+    endif;
+
+    return [$action,$data->sr_no,$rev_no,$data->trans_number,formatDate($data->trans_date),$data->party_name,$data->item_name,$data->qty,$data->price,$data->approve_by_name,((!empty($data->approve_date))?formatDate($data->approve_date):"")];
 }
 
 /* Sales Order Table data */

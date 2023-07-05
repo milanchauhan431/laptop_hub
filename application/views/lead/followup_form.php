@@ -4,8 +4,8 @@
 
             <input type="hidden" name="id" id="id" value="">
             <input type="hidden" name="lead_id" id="lead_id" value="<?=$lead_id?>">
-            <input type="hidden" name="party_id" id="party_id" value="<?=$leadData->party_id?>">
-            <input type="hidden" name="entry_type" id="entry_type" value="<?=!empty($entry_type)?$entry_type:'1'?>">
+            <input type="hidden" name="party_id" id="party_id" value="<?=$party_id?>">
+            <input type="hidden" name="entry_type" id="entry_type" value="<?=(!empty($entry_type))?$entry_type:'1'?>">
 
             <div class="col-md-3 form-group">
                 <label for="appointment_date">Followup Date</label>
@@ -16,8 +16,7 @@
                 <select name="mode" id="mode" class="form-control req single-select">
                     <?php
                         foreach($this->appointmentMode as $key=>$row):
-							$selected = (!empty($dataRow->mode) and $dataRow->mode == $row)?"selected":"";
-                            echo '<option value="'.$key.'" '.$selected .'>'.$row.'</option>';
+                            echo '<option value="'.$key.'">'.$row.'</option>';
                         endforeach;
                     ?>
                 </select>
@@ -29,7 +28,7 @@
                     <?php
                     if(!empty($salesExecutives)){
                         foreach($salesExecutives as $row){
-                            $selected = (!empty($leadData->sales_executive) && $leadData->sales_executive == $row->id)?'selected':'';
+                            $selected = (!empty($sales_executive) && $sales_executive == $row->id)?'selected':'';
                         ?>
                             <option value="<?=$row->id?>" <?=$selected?>><?=$row->emp_name?></option>
                         <?php
@@ -49,7 +48,7 @@
                 </div>
             </div>
             <div class="col-md-12 form-group float-right">
-                <button type="button" class="btn waves-effect waves-light btn-outline-success btn-save float-right mt-30" onclick="customStore({'formId':'followUp','fnsave':'saveFollowup'},);"> <i class="fa fa-check"></i> Save</button>
+                <button type="button" class="btn waves-effect waves-light btn-outline-success btn-save float-right mt-30" onclick="customStore({'formId':'followUp','fnsave':'saveFollowup','controller':'lead'},);"> <i class="fa fa-check"></i> Save</button>
             </div>
         </div>
     </div>    
@@ -82,7 +81,7 @@
 
 <script>
 $(document).ready(function(){
-    var followupTrans = {'postData':{'lead_id':$("#lead_id").val(),'entry_type':$("#entry_type").val()},'table_id':"followupTable",'tbody_id':'followupData','tfoot_id':'','fnget':'followupListHtml'};
+    var followupTrans = {'postData':{'lead_id':$("#lead_id").val(),'entry_type':$("#entry_type").val()},'table_id':"followupTable",'tbody_id':'followupData','tfoot_id':'','fnget':'followupListHtml','controller':"lead"};
     getTransHtml(followupTrans);
 });
 
@@ -90,7 +89,7 @@ function resFollowup(data){
     if(data.status==1){
         toastr.success(data.message, 'Success', { "showMethod": "slideDown", "hideMethod": "slideUp", "closeButton": true, positionClass: 'toastr toast-bottom-center', containerId: 'toast-bottom-center', "progressBar": true });
 
-        var followupTrans = {'postData':{'lead_id':$("#lead_id").val(),'entry_type':$("#entry_type").val()},'table_id':"followupTable",'tbody_id':'followupData','tfoot_id':'','fnget':'followupListHtml'};
+        var followupTrans = {'postData':{'lead_id':$("#lead_id").val(),'entry_type':$("#entry_type").val()},'table_id':"followupTable",'tbody_id':'followupData','tfoot_id':'','fnget':'followupListHtml','controller':"lead"};
         getTransHtml(followupTrans);
         initTable();
     }else{
@@ -107,7 +106,7 @@ function resTrashFollowup(data){
     if(data.status==1){
         toastr.success(data.message, 'Success', { "showMethod": "slideDown", "hideMethod": "slideUp", "closeButton": true, positionClass: 'toastr toast-bottom-center', containerId: 'toast-bottom-center', "progressBar": true });
 
-        var followupTrans = {'postData':{'lead_id':$("#lead_id").val(),'entry_type':$("#entry_type").val()},'table_id':"followupTable",'tbody_id':'followupData','tfoot_id':'','fnget':'followupListHtml'};
+        var followupTrans = {'postData':{'lead_id':$("#lead_id").val(),'entry_type':$("#entry_type").val()},'table_id':"followupTable",'tbody_id':'followupData','tfoot_id':'','fnget':'followupListHtml','controller':"lead"};
         getTransHtml(followupTrans);
         initTable();
     }else{

@@ -580,6 +580,7 @@ function colseModal(formId){
 	$("#"+modal_id).removeClass(formId+"Modal");
 	$("#"+modal_id+' .modal-body').html("");
 	$("#"+modal_id).modal('hide');	
+	$(".modal").css({'overflow':'auto'});
 }
 
 function store(postData){
@@ -741,7 +742,7 @@ function edit(data){
 	var resFunction = data.res_function || "";
 	var jsStoreFn = data.js_store_fn || 'store';
 
-	var fnJson = "{'formId':'"+data.form_id+"','fnsave':'"+fnsave+"'}";
+	var fnJson = "{'formId':'"+data.form_id+"','fnsave':'"+fnsave+"','controller':'"+controllerName+"'}";
 
 	$.ajax({ 
 		type: "POST",   
@@ -939,6 +940,7 @@ function checkPermission(){
 	$('.permission-write').show();
 	$('.permission-modify').show();
 	$('.permission-remove').show();
+	$('.permission-approve').show();
 
 	//view permission
 	if(permissionRead == "1"){ 
@@ -975,6 +977,15 @@ function checkPermission(){
 	}else{ 
 		$('.permission-remove').prop('disabled', true);
 		$('.permission-remove').hide(); 
+	}
+
+	//Approve permission
+	if(permissionApprove == "1"){ 
+		$('.permission-approve').prop('disabled', false);
+		$('.permission-approve').show(); 
+	}else{ 
+		$('.permission-approve').prop('disabled', true);
+		$('.permission-approve').hide(); 
 	}
 }
 

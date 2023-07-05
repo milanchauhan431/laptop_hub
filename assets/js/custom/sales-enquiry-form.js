@@ -28,25 +28,14 @@ $(document).ready(function(){
 		$.each(fd, function (i, v) {
 			formData[v.name] = v.value;
 		});
-        $("#itemForm .error").html();
+        $("#itemForm .error").html("");
 
-        /* if (formData.item_id == "") {
+        if (formData.item_id == "") {
 			$(".item_id").html("Item Name is required.");
-		} */
-		if (formData.item_name == "") {
-			$(".item_name").html("Item Name is required.");
 		}
         if (formData.qty == "" || parseFloat(formData.qty) == 0) {
             $(".qty").html("Qty is required.");
         }
-        /* if (formData.price == "" || parseFloat(formData.price) == 0) {
-            $(".price").html("Price is required.");
-        } */
-
-        /* var item_ids = $(".item_id").map(function () { return $(this).val(); }).get();
-        if ($.inArray(formData.item_id, item_ids) >= 0 && formData.row_index == "") {
-            $(".item_name").html("Item already added.");
-        } */
 
         var errorCount = $('#itemForm .error:not(:empty)').length;
 

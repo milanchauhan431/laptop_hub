@@ -28,14 +28,11 @@ $(document).ready(function(){
 		$.each(fd, function (i, v) {
 			formData[v.name] = v.value;
 		});
-        $("#itemForm .error").html();
+        $("#itemForm .error").html("");
 
         if (formData.item_id == "") {
 			$(".item_id").html("Item Name is required.");
 		}
-		/* if (formData.item_name == "") {
-			$(".item_name").html("Item Name is required.");
-		} */
         if (formData.qty == "" || parseFloat(formData.qty) == 0) {
             $(".qty").html("Qty is required.");
         }
@@ -93,7 +90,6 @@ $(document).ready(function(){
             } else if ($(this).data('fn') == "save_close") {
                 $("#itemModel").modal('hide');
             }
-
         }
 	});
 
@@ -236,12 +232,6 @@ function AddRow(data) {
 	cell.html(data.item_remark);
 	cell.append(itemRemarkInput);
 
-	/* cell = $(row.insertCell(-1));
-	var filePostData = {"index":countRow,"inputName":"itemData["+countRow+"][attachment]","inputStatus":"itemData["+countRow+"][attachment_status]","file":((data.attachment != "")?base_url+"assets/uploads/sales_order/"+data.attachment:""),"fileName":((data.attachment != "")?data.attachment:"")};
-	cell.html(attachmentInput(filePostData));
-	cell.append('<div class="error ba_file_'+countRow+'"></div>');
-	cell.addClass("text-center"); */
-
     //Add Button cell.
 	cell = $(row.insertCell(-1));
 	var btnRemove = $('<button><i class="ti-trash"></i></button>');
@@ -310,9 +300,11 @@ function resPartyDetail(response = ""){
     if(response != ""){
         var partyDetail = response.data.partyDetail;
         $("#party_name").val(partyDetail.party_name);
-        $("#master_t_col_1").val(partyDetail.delivery_contact_person);
-        $("#master_t_col_2").val(partyDetail.delivery_contact_no);
-        $("#master_t_col_3").val(partyDetail.delivery_address);
+        $("#master_t_col_1").val(partyDetail.contact_person);
+        $("#master_t_col_2").val(partyDetail.party_mobile);
+        $("#master_t_col_3").val(partyDetail.party_email);
+        $("#master_t_col_4").val(partyDetail.party_address);
+        $("#master_t_col_5").val(partyDetail.party_pincode);
 
         var gstDetails = response.data.gstDetails; var i = 1;
         $.each(gstDetails,function(index,row){  
@@ -326,6 +318,8 @@ function resPartyDetail(response = ""){
 		$("#master_t_col_1").val("");
         $("#master_t_col_2").val("");
         $("#master_t_col_3").val("");
+        $("#master_t_col_4").val("");
+        $("#master_t_col_5").val("");
     }
     $("#gstin").html(html);$("#gstin").comboSelect();gstin();
 }

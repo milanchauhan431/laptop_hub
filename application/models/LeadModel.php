@@ -3,6 +3,8 @@ class LeadModel extends MasterModel{
     private $appointmentTable = "crm_appointments";
     private $partyMaster = "party_master";
     private $lead_managment='lead_managment';
+    private $transMain = "trans_main";
+    private $transChild = "trans_child";
 
     public function getDTRows($data){
 		$data['tableName'] = $this->lead_managment;
@@ -73,11 +75,34 @@ class LeadModel extends MasterModel{
         try{
             $this->db->trans_begin();
 
-            $result = $this->store($this->lead_managment,$data,'Status');
+            $entry_type = $data['entry_type'];
 
-            if($data['lead_status'] == 3):
-                $leadData = $this->getLead($data['id']);
-                $this->edit($this->partyMaster,['id'=>$leadData->party_id],['party_type'=>1]);
+            if($entry_type == 4):
+                $dataRow = $this->salesQuotation->getSalesQuotation(['id'=>$data['id'],'itemList'=>1]);
+                $mainData = [
+                    'id' => $data['id'],
+                    'is_approve' => $this->loginId,
+                    'approve_date' => date("Y-m-d"),
+                    'close_reason' => $data['reason'],
+                    'trans_status' => ($data['lead_status'] == 4)?2:0,
+                ];
+                $result = $this->store($this->transMain,$mainData,'Sales Quotation');
+
+                $this->edit($this->transChild,['trans_main_id'=>$data['id']],['confirm_status'=>(($data['lead_status'] == 4)?2:1),'confirm_by'=>$this->loginId]);
+
+                if($data['lead_status'] == 3):
+                    $this->edit($this->partyMaster,['id'=>$dataRow->party_id],['party_type'=>1]);
+                endif;
+
+                $result['message'] = "Sales Quotation ".(($data['lead_status'] == 3)?"Approved":"Closed")." successfully.";
+            else:
+                if($data['lead_status'] == 3):
+                    $leadData = $this->getLead($data['id']);
+                    $this->edit($this->partyMaster,['id'=>$leadData->party_id],['party_type'=>1]);
+                endif;
+
+                $result = $this->store($this->lead_managment,$data,'Status');
+                $result['message'] = "Lead ".(($data['lead_status'] == 3)?"won":"lost")." successfully.";
             endif;
 
             if ($this->db->trans_status() !== FALSE):

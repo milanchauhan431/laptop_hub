@@ -1,42 +1,48 @@
 <html>
     <head>
-        <title>TAX INVOICE</title>
+        <title>Quotation</title>
         <!-- Favicon icon -->
         <link rel="icon" type="image/png" sizes="16x16" href="<?=base_url();?>assets/images/favicon.png">
     </head>
     <body>
         <div class="row">
             <div class="col-12">
+                <table>
+                    <tr>
+                        <td>
+                            <img src="<?=$letter_head?>" class="img">
+                        </td>
+                    </tr>
+                </table>
+
                 <table class="table bg-light-grey">
                     <tr class="" style="letter-spacing: 2px;font-weight:bold;padding:2px !important; border-bottom:1px solid #000000;">
                         <td style="width:33%;" class="fs-18 text-left">
                             GSTIN: <?=$companyData->company_gst_no?>
                         </td>
-                        <td style="width:33%;" class="fs-18 text-center">Tax Invocie</td>
-                        <td style="width:33%;" class="fs-18 text-right"><?=$printType?></td>
+                        <td style="width:33%;" class="fs-18 text-center">Quotation</td>
+                        <td style="width:33%;" class="fs-18 text-right"></td>
                     </tr>
                 </table>
                 
                 <table class="table item-list-bb fs-22" style="margin-top:5px;">
                     <tr>
                         <td style="width:60%; vertical-align:top;" rowspan="3">
-                            <b>BILL TO</b><br>
-                            <b><?=$invData->party_name?></b><br>
-                            <?=(!empty($partyData->party_address) ? $partyData->party_address : '')?><br>
-                            <b>GSTIN : <?= $invData->gstin?> | STATE CODE: <?=substr($invData->gstin, 0, 2)?> | CITY : <?=$partyData->city_name?></b>
+                            <b>M/S. <?=$dataRow->party_name?></b><br>
+                            <?=(!empty($dataRow->ship_address) ? $dataRow->ship_address ." - ".$dataRow->ship_pincode : '')?><br>
                         </td>
                         <td>
-                            <b>Invoice No. : <?=$invData->trans_prefix . $invData->trans_no?></b>
+                            <b>Qtn. No. : <?=$dataRow->trans_prefix . $dataRow->trans_no?></b>
                         </td>
                         <td>
-                            <b>Date : <?=date('d/m/Y', strtotime($invData->trans_date))?></b>
+                            Rev No. : <?=sprintf("%02d",$dataRow->quote_rev_no)?>  / <?=formatDate($dataRow->doc_date)?>
                         </td>
                     </tr>
                     <tr>
                         <td style="width:40%;" colspan="2">
-                            <b>Memo Type</b> : <?=$invData->memo_type?><br>
-                            <b>P.O. No.</b> : <?=$invData->doc_no?><br>
-                            <b>Challan No</b> : <?=$invData->challan_no?>
+                            <b>Qtn. Date</b> : <?=formatDate($dataRow->trans_date)?><br>
+                            <b>Valid till</b> : <?=formatDate($dataRow->delivery_date)?><br>
+                            <b>GSTIN</b> : <?=(!empty($partyData->gstin)) ? $partyData->gstin : ""?>
                         </td>
                     </tr>
                 </table>
@@ -57,8 +63,8 @@
                     <tbody>
                         <?php
                             $i=1;$totalQty = 0;$migst=0;$mcgst=0;$msgst=0;
-                            if(!empty($invData->itemList)):
-                                foreach($invData->itemList as $row):						
+                            if(!empty($dataRow->itemList)):
+                                foreach($dataRow->itemList as $row):						
                                     echo '<tr>';
                                         echo '<td class="text-center">'.$i++.'</td>';
                                         echo '<td>'.$row->item_name.'</td>';
@@ -69,13 +75,13 @@
                                         echo '<td class="text-center">'.$row->gst_per.'</td>';
                                         echo '<td class="text-right">'.$row->taxable_amount.'</td>';
                                     echo '</tr>';
-                                    if($maxLinePP == $i): echo "<pagebreak>"; endif;
+                                    
                                     $totalQty += $row->qty;
                                     if($row->gst_per > $migst){$migst=$row->gst_per;$mcgst=$row->cgst_per;$msgst=$row->sgst_per;}
                                 endforeach;
                             endif;
 
-                            $blankLines = ($maxLinePP - $i);
+                            $blankLines = (15 - $i);
                             if($blankLines > 0):
                                 for($j=1;$j<=$blankLines;$j++):
                                     echo '<tr>
@@ -94,7 +100,7 @@
                             $rwspan= 0; $srwspan = '';
                             $beforExp = "";
                             $afterExp = "";
-                            $invExpenseData = (!empty($invData->expenseData)) ? $invData->expenseData : array();
+                            $invExpenseData = (!empty($dataRow->expenseData)) ? $dataRow->expenseData : array();
                             foreach ($expenseList as $row) :
                                 $expAmt = 0;
                                 $amtFiledName = $row->map_code . "_amount";
@@ -126,14 +132,14 @@
                             $taxHtml = '';
                             foreach ($taxList as $taxRow) :
                                 $taxAmt = 0;
-                                $taxAmt = floatVal($invData->{$taxRow->map_code.'_amount'});
+                                $taxAmt = floatVal($dataRow->{$taxRow->map_code.'_amount'});
                                 if(!empty($taxAmt)):
                                     if($rwspan == 0):
-                                        $taxHtml .= '<th colspan="2" class="text-right">'.$taxRow->name.' @'.(($invData->gst_type == 1)?floatVal($migst/2):$migst).'%</th>
+                                        $taxHtml .= '<th colspan="2" class="text-right">'.$taxRow->name.' @'.(($dataRow->gst_type == 1)?floatVal($migst/2):$migst).'%</th>
                                         <td class="text-right">'.sprintf('%.2f',$taxAmt).'</td>';
                                     else:
                                         $taxHtml .= '<tr>
-                                            <th colspan="2" class="text-right">'.$taxRow->name.' @'.(($invData->gst_type == 1)?floatVal($migst/2):$migst).'%</th>
+                                            <th colspan="2" class="text-right">'.$taxRow->name.' @'.(($dataRow->gst_type == 1)?floatVal($migst/2):$migst).'%</th>
                                             <td class="text-right">'.sprintf('%.2f',$taxAmt).'</td>
                                         </tr>';
                                     endif;
@@ -147,7 +153,7 @@
                             <th class="text-right"><?=sprintf('%.3f',$totalQty)?></th>
                             <th></th>
                             <th colspan="2" class="text-right">Sub Total</th>
-                            <th class="text-right"><?=sprintf('%.2f',$invData->taxable_amount)?></th>
+                            <th class="text-right"><?=sprintf('%.2f',$dataRow->taxable_amount)?></th>
                         </tr>
                         <tr >
                             <th class="text-left" colspan="5" rowspan="<?=$rwspan?>">
@@ -159,31 +165,31 @@
                         </tr>
                         <!-- <tr>
                             <th class="text-left" colspan="5" rowspan="2">
-                                Notes : <br><?=$invData->remark?>
+                                Notes : <br><?=$dataRow->remark?>
                             </th>				
                         </tr> -->
                         <?=$beforExp.$taxHtml.$afterExp?>
                         <tr>
                             <th class="text-left" colspan="5" rowspan="3">
-                                Amount In Words : <br><?=numToWordEnglish(sprintf('%.2f',$invData->net_amount))?>
+                                Amount In Words : <br><?=numToWordEnglish(sprintf('%.2f',$dataRow->net_amount))?>
                             </th>				
                         </tr>
                         
                         <tr>
                             <th colspan="2" class="text-right">Round Off</th>
-                            <td class="text-right"><?=sprintf('%.2f',$invData->round_off_amount)?></td>
+                            <td class="text-right"><?=sprintf('%.2f',$dataRow->round_off_amount)?></td>
                         </tr>
                         <tr>
                             <th colspan="2" class="text-right">Grand Total</th>
-                            <th class="text-right"><?=sprintf('%.2f',$invData->net_amount)?></th>
+                            <th class="text-right"><?=sprintf('%.2f',$dataRow->net_amount)?></th>
                         </tr>
                     </tbody>
                 </table>
                 <h4>Terms & Conditions :-</h4>
                 <table class="table top-table" style="margin-top:10px;">
                     <?php
-                        if(!empty($invData->termsConditions)):
-                            foreach($invData->termsConditions as $row):
+                        if(!empty($dataRow->termsConditions)):
+                            foreach($dataRow->termsConditions as $row):
                                 echo '<tr>';
                                     /* echo '<th class="text-left fs-11" style="width:140px;">'.$row->term_title.'</th>'; */
                                     echo '<td class=" fs-11"><ul><li> '.$row->condition.' </li></ul></td>';
@@ -193,6 +199,21 @@
                     ?>
                 </table>
                 
+                <table class="table top-table" style="margin-top:10px;border-top:1px solid #545454;border-bottom:1px solid #000000;">
+                    <tr>
+                        <td style="width:50%;"></td>
+                        <td style="width:20%;"></td>
+                        <th class="text-center">For, <?=$companyData->company_name?></th>
+                    </tr>
+                    <tr>
+                        <td colspan="3" height="50"></td>
+                    </tr>
+                    <tr>
+                        <td><br>This is a computer-generated quotation.</td>
+                        <td class="text-center"><?=$dataRow->created_name?><br>Prepared By</td>
+                        <td class="text-center"><br>Authorised By</td>
+                    </tr>
+                </table>
                 
             </div>
         </div>        

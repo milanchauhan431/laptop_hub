@@ -3,6 +3,9 @@ class Lead extends MY_Controller{
 	private $indexPage = "lead/index";
 	private $leadForm = "lead/lead_form";
     private $followupFrom = "lead/followup_form";
+	private $leadStatusForm = "lead/lead_status_form";
+	private $appointmentForm = 'lead/appointment_form';
+	private $appointmentStatusForm = "lead/appointment_status";
 
     public function __construct()
 	{
@@ -102,21 +105,8 @@ class Lead extends MY_Controller{
         $data = $this->input->post();
 		$this->data['lead_id'] = $data['id'];
 		$this->data['entry_type'] = $data['entry_type'];
-	
-		$stage = $this->followupStage;
-		
-		if($data['entry_type'] == 1){
-			$this->data['leadData'] = $leadData = $this->leads->getLead($data['id']);
-			if($leadData->lead_status == 0 || $leadData->lead_status == 4){ $stage = array(0 => 'Open', 4 => "Lost");  }
-			elseif($leadData->lead_status == 1){ $stage = array(2 => "Hold", 5 => "Enquiry"); }
-			elseif($leadData->lead_status == 2){ $stage = array(0 => 'Open', 1 => "Confirmed", 2 => "Hold", 5 => "Enquiry"); }
-			elseif($leadData->lead_status == 5 && !empty($leadData->enq_id)){ $stage = array(  3 => "Won", 4 => "Lost"); }
-		}else{
-			$this->data['leadData'] = $leadData = $this->salesEnquiry->getTransChildDetail($data['id']);
-			$stage = array(4 => "Won", 5 => "Lost");
-		}
-
-        $this->data['followupStage'] = $stage;
+		$this->data['party_id'] = $data['party_id'];
+		$this->data['sales_executive'] = $data['sales_executive'];
 		$this->data['salesExecutives'] = $this->employee->getEmployeeList();
 		
 		$this->load->view($this->followupFrom, $this->data);
@@ -129,7 +119,7 @@ class Lead extends MY_Controller{
 		if (!empty($appintmentData)):
 			$i = 1;
 			foreach ($appintmentData as $row):
-				$deleteParam = "{'postData':{'id' : ".$row->id."},'message' : 'Followup','fndelete':'deleteApproachTans','res_function':'resTrashFollowup'}";
+				$deleteParam = "{'postData':{'id' : ".$row->id."},'message' : 'Followup','fndelete':'deleteApproachTans','res_function':'resTrashFollowup','controller':'lead'}";
 
 				$deleteBtn = '<button type="button" onclick="trash('.$deleteParam.');" class="btn btn-outline-danger waves-effect waves-light btn-delete permission-remove"><i class="ti-trash"></i></button>';
 				$html.='<tr>
@@ -175,7 +165,7 @@ class Lead extends MY_Controller{
 		$data['entry_type'] = 2;
 		$this->data['lead_id'] = $data['id'];
 		$this->data['appointmentMode'] = $this->appointmentMode;
-		$this->load->view('lead/appointment_form', $this->data);
+		$this->load->view($this->appointmentForm, $this->data);
     }
 
     public function saveAppointment()	{
@@ -247,7 +237,7 @@ class Lead extends MY_Controller{
 		$data = $this->input->post();
 		$this->data['appointmentMode'] = $this->appointmentMode;
 		$this->data['appointmentData'] = $this->leads->getAppointmentDetail($data['id']);
-		$this->load->view('lead/appointment_status', $this->data);
+		$this->load->view($this->appointmentStatusForm, $this->data);
 	}
 
 	public function saveAppointmentStatus(){
@@ -268,7 +258,8 @@ class Lead extends MY_Controller{
 	public function approachStatus(){
 		$data = $this->input->post();
 		$this->data['lead_id'] = $data['id'];
-		$this->load->view("lead/lead_status_form",$this->data);
+		$this->data['entry_type'] = (!empty($data['entry_type']))?$data['entry_type']:0;
+		$this->load->view($this->leadStatusForm,$this->data);
 	}
 
 	public function saveApproachStatus(){
@@ -278,7 +269,7 @@ class Lead extends MY_Controller{
 		if(empty($data['lead_status'])):
 			$errorMessage['lead_status'] = "Status is required.";
 		else:
-			if(empty($data['reason'])):
+			if(empty($data['reason']) && $data['lead_status'] == 4):
 				$errorMessage['reason'] = "Reason is required.";
 			endif;
 		endif;
