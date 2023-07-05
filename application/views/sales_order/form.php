@@ -265,7 +265,7 @@
 
 <?php $this->load->view('includes/footer'); ?>
 <script src="<?php echo base_url(); ?>assets/js/custom/sales-order-form.js?v=<?= time() ?>"></script>
-<script src="<?php echo base_url(); ?>assets/js/custom/row-attachment.js?v=<?= time() ?>"></script>
+<!-- <script src="<?php echo base_url(); ?>assets/js/custom/row-attachment.js?v=<?= time() ?>"></script> -->
 <script src="<?php echo base_url(); ?>assets/js/custom/calculate.js?v=<?= time() ?>"></script>
 
 <?php

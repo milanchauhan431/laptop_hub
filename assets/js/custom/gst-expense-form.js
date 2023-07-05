@@ -29,7 +29,7 @@ $(document).ready(function(){
 		$.each(fd, function (i, v) {
 			formData[v.name] = v.value;
 		});
-        $("#itemForm .error").html();
+        $("#itemForm .error").html("");
 
         if (formData.item_id == "") {
 			$(".item_id").html("Ledger Name is required.");
