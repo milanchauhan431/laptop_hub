@@ -42,9 +42,19 @@ function getAccountingDtHeader($page){
 	$data['gstIncome'][] = ["name"=>"GST Amount"];
     $data['gstIncome'][] = ["name"=>"Net Amount"];
 
+    /* Journal Entry Header */
+    $data['journalEntry'][] = ["name" => "Action", "style" => "width:5%;","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['journalEntry'][] = ["name" => "#", "style" => "width:5%;","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['journalEntry'][] = ["name" => "JV No."];
+    $data['journalEntry'][] = ["name" => "JV Date."];
+    $data['journalEntry'][] = ["name" => "Ledger Name"];
+    $data['journalEntry'][] = ["name" => "Debit", "textAlign" => "right"];
+    $data['journalEntry'][] = ["name" => "Credit", "textAlign" => "right"];
+    $data['journalEntry'][] = ["name" => "Note"];
+
     /* Payment Voucher  */
-    $data['paymentVoucher'][] = ["name" => "Action", "style" => "width:5%;"];
-    $data['paymentVoucher'][] = ["name" => "#", "style" => "width:5%;", "textAlign" => "center"];
+    $data['paymentVoucher'][] = ["name" => "Action", "style" => "width:5%;","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['paymentVoucher'][] = ["name" => "#", "style" => "width:5%;", "sortable"=>"FALSE","textAlign"=>"center"];
     $data['paymentVoucher'][] = ["name" => "Voucher No."];
     $data['paymentVoucher'][] = ["name" => "Voucher Date"];
     $data['paymentVoucher'][] = ["name" => "Party Name"];
@@ -106,6 +116,21 @@ function getGstIncomeData($data){
 
     return [$action,$data->sr_no,$data->trans_number,formatDate($data->trans_date),$data->party_name,$data->taxable_amount,$data->gst_amount,$data->net_amount];
 }
+
+/* Journal Entry Data */
+function getJournalEntryData($data){
+    $editButton = '<a class="btn btn-success btn-edit permission-modify" href="'.base_url('journalEntry/edit/'.$data->id).'" datatip="Edit" flow="down" ><i class="ti-pencil-alt"></i></a>';
+
+    $deleteParam = "{'postData':{'id' : ".$data->id."},'message' : 'Journal Entry'}";
+    $deleteButton = '<a class="btn btn-danger btn-delete permission-remove" href="javascript:void(0)" onclick="trash('.$deleteParam.');" datatip="Remove" flow="down"><i class="ti-trash"></i></a>';
+
+    $action = getActionButton($editButton . $deleteButton);
+	$debit = $credit = "";
+    if($data->c_or_d == 'DR'){$debit = $data->amount;}else{$credit = $data->amount;}
+
+    return [$action, $data->sr_no, $data->trans_number, formatDate($data->trans_date), $data->acc_name, $debit, $credit, $data->remark];
+}
+
 
 /* Payment Voucher Data */
 function getPaymentVoucher($data){
