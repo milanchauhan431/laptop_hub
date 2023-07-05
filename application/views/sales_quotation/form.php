@@ -29,6 +29,8 @@
 
                                         <input type="hidden" name="ledger_eff" id="ledger_eff" value="0">
                                         <input type="hidden" name="is_rev" id="is_rev" value="<?=(!empty($is_rev))?$is_rev:"0"?>">
+
+                                        <input type="hidden" name="vou_acc_id" id="vou_acc_id" value="<?=(!empty($dataRow->vou_acc_id))?$dataRow->vou_acc_id:((!empty($vou_acc_id))?$vou_acc_id:0)?>">
                                     </div>
 
                                     <div class="col-md-2 form-group">

@@ -30,13 +30,52 @@ class SalesQuotation extends MY_Controller{
         $this->printJson($result);
     }
 
+    public function create($jsonData){
+        $postData = (Array) decodeURL($jsonData);
+        $dataRow = $this->salesEnquiry->getSalesEnquiry(['id'=>$postData['enq_id'],'itemList'=>1]);
+        $this->data['gstinList'] = $this->party->getPartyGSTDetail(['party_id' => $dataRow->party_id]);
+        
+        $dataRow->from_entry_type = $dataRow->entry_type;
+        $dataRow->ref_id = $dataRow->id;
+        $dataRow->entry_type = "";
+        $dataRow->id = "";
+        $dataRow->trans_prefix = "";
+        $dataRow->trans_no = "";
+        $dataRow->trans_number = "";
+
+        $itemList = array();
+        foreach($dataRow->itemList as $row):
+            $row->from_entry_type = $row->entry_type;
+            $row->ref_id = $row->id;
+            $row->entry_type = "";
+            $row->id = "";
+            $itemList[] = $row;
+        endforeach;
+        $dataRow->itemList = $itemList;
+        
+        $this->data['dataRow'] = $dataRow;
+        $this->data['entry_type'] = $this->data['entryData']->id;
+        $this->data['trans_prefix'] = $this->data['entryData']->trans_prefix;
+        $this->data['trans_no'] = $this->data['entryData']->trans_no;
+        $this->data['trans_number'] = $this->data['trans_prefix'].$this->data['trans_no'];
+        $this->data['partyList'] = $this->party->getPartyList(['party_category' => 1,'party_type'=>"0,1"]);
+        $this->data['itemList'] = $this->item->getItemList(['item_type'=>1,'active_item'=>"1,2"]);
+        $this->data['unitList'] = $this->item->itemUnits();
+        $this->data['hsnList'] = $this->hsnModel->getHSNList();
+		$this->data['taxList'] = $this->taxMaster->getActiveTaxList(2);
+        $this->data['expenseList'] = $this->expenseMaster->getActiveExpenseList(2);
+        $this->data['termsList'] = $this->terms->getTermsList(['type'=>'Sales']);
+        $this->data['salesExecutives'] = $this->employee->getEmployeeList();
+        $this->load->view($this->form,$this->data);
+    }
+
     public function addQuotation(){
         $this->data['entry_type'] = $this->data['entryData']->id;
         $this->data['trans_prefix'] = $this->data['entryData']->trans_prefix;
         $this->data['trans_no'] = $this->data['entryData']->trans_no;
         $this->data['trans_number'] = $this->data['trans_prefix'].$this->data['trans_no'];
-        $this->data['partyList'] = $this->party->getPartyList(['party_category'=>1]);
-        $this->data['itemList'] = $this->item->getItemList(['item_type'=>1]);
+        $this->data['partyList'] = $this->party->getPartyList(['party_category' => 1,'party_type'=>"0,1"]);
+        $this->data['itemList'] = $this->item->getItemList(['item_type'=>1,'active_item'=>"1,2"]);
         $this->data['unitList'] = $this->item->itemUnits();
         $this->data['hsnList'] = $this->hsnModel->getHSNList();
 		$this->data['taxList'] = $this->taxMaster->getActiveTaxList(2);
@@ -78,8 +117,8 @@ class SalesQuotation extends MY_Controller{
     public function edit($id){
         $this->data['dataRow'] = $dataRow = $this->salesQuotation->getSalesQuotation(['id'=>$id,'itemList'=>1]);
         $this->data['gstinList'] = $this->party->getPartyGSTDetail(['party_id' => $dataRow->party_id]);
-        $this->data['partyList'] = $this->party->getPartyList(['party_category' => 1]);
-        $this->data['itemList'] = $this->item->getItemList(['item_type'=>1]);
+        $this->data['partyList'] = $this->party->getPartyList(['party_category' => 1,'party_type'=>"0,1"]);
+        $this->data['itemList'] = $this->item->getItemList(['item_type'=>1,'active_item'=>"1,2"]);
         $this->data['unitList'] = $this->item->itemUnits();
         $this->data['hsnList'] = $this->hsnModel->getHSNList();
 		$this->data['taxList'] = $this->taxMaster->getActiveTaxList(2);
@@ -93,8 +132,8 @@ class SalesQuotation extends MY_Controller{
         $this->data['is_rev'] = 1;
         $this->data['dataRow'] = $dataRow = $this->salesQuotation->getSalesQuotation(['id'=>$id,'itemList'=>1]);
         $this->data['gstinList'] = $this->party->getPartyGSTDetail(['party_id' => $dataRow->party_id]);
-        $this->data['partyList'] = $this->party->getPartyList(['party_category' => 1]);
-        $this->data['itemList'] = $this->item->getItemList(['item_type'=>1]);
+        $this->data['partyList'] = $this->party->getPartyList(['party_category' => 1,'party_type'=>"0,1"]);
+        $this->data['itemList'] = $this->item->getItemList(['item_type'=>1,'active_item'=>"1,2"]);
         $this->data['unitList'] = $this->item->itemUnits();
         $this->data['hsnList'] = $this->hsnModel->getHSNList();
 		$this->data['taxList'] = $this->taxMaster->getActiveTaxList(2);

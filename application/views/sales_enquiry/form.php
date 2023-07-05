@@ -25,6 +25,7 @@
                                         <input type="hidden" name="gst_type" id="gst_type" value="<?=(!empty($dataRow->gst_type))?$dataRow->gst_type:""?>">
                                         <input type="hidden" name="party_state_code" id="party_state_code" value="<?=(!empty($dataRow->party_state_code))?$dataRow->party_state_code:""?>">
                                         <input type="hidden" name="apply_round" id="apply_round" value="<?=(!empty($dataRow->apply_round))?$dataRow->apply_round:"1"?>">
+                                        <input type="hidden" name="vou_acc_id" id="vou_acc_id" value="<?=(!empty($dataRow->vou_acc_id))?$dataRow->vou_acc_id:((!empty($vou_acc_id))?$vou_acc_id:0)?>">
 
                                         <input type="hidden" name="ledger_eff" id="ledger_eff" value="0">
                                     </div>
@@ -55,7 +56,7 @@
 										</div>
                                         <select name="party_id" id="party_id" class="form-control single-select partyDetails partyOptions req" data-res_function="resPartyDetail" data-party_category="1">
 											<option value="">Select Party</option>
-											<?=getPartyListOption($partyList,((!empty($dataRow->party_id))?$dataRow->party_id:0))?>
+											<?=getPartyListOption($partyList,((!empty($dataRow->party_id))?$dataRow->party_id:((!empty($party_id))?$party_id:0)))?>
 										</select>
 
                                     </div>
@@ -258,5 +259,9 @@ if(!empty($dataRow->itemList)):
         //$row->attachment = (!empty($row->attachment) || $row->attachment != NULL)?$row->attachment:"";
         echo '<script>AddRow('.json_encode($row).');</script>';
     endforeach;
+endif;
+
+if(!empty($party_id)):
+    echo '<script>setTimeout(function(){$(".partyDetails").trigger("change");},500);</script>';
 endif;
 ?>

@@ -82,6 +82,12 @@ function getLeadData($data){
         $leadStatusButton = '<a class="btn btn-success btn-edit permission-modify" href="javascript:void(0)" datatip="Approach Status" flow="down" onclick="edit('.$leadParam.');"><i class="fa fa-check"></i></a>';
     endif;
 
+    if(in_array($data->lead_status,[0,4])):
+        $postData = ['party_id'=>$data->party_id,'lead_id'=>$data->id];
+        $encodedData = urlencode(base64_encode(json_encode($postData)));
+        $enqBtn = '<a class="btn btn-info" href="'.base_url('salesEnquiry/create/'.$encodedData).'" datatip="Carete Enquiry" flow="down" ><i class="fa fa-file-alt"></i></a>';
+    endif;
+
     $action = getActionButton($enqBtn.$appointmentBtn.$followupBtn.$leadStatusButton.$editButton.$deleteButton);
 
     $responseData = [$action,$data->sr_no,formatDate($data->lead_date),sprintf("%04d",$data->lead_no),$data->lead_from,$data->party_name,$data->party_phone,$data->emp_name,$data->appointments,$data->followupDate,$data->followupNote];
@@ -96,11 +102,15 @@ function getSalesEnquiryData($data){
     $deleteParam = "{'postData':{'id' : ".$data->id."},'message' : 'Sales Enquiry'}";
     $deleteButton = '<a class="btn btn-danger btn-delete permission-remove" href="javascript:void(0)" onclick="trash('.$deleteParam.');" datatip="Remove" flow="down"><i class="ti-trash"></i></a>';
 
+    $postData = ['enq_id'=>$data->id];
+    $encodedData = urlencode(base64_encode(json_encode($postData)));
+    $quotationBtn = '<a class="btn btn-info" href="'.base_url('salesQuotation/create/'.$encodedData).'" datatip="Carete Quotation" flow="down" ><i class="fa fa-file-alt"></i></a>';    
+
     if($data->trans_status > 0):
-        $editButton = $deleteButton = "";
+        $quotationBtn = $editButton = $deleteButton = "";
     endif;
 
-    $action = getActionButton($editButton.$deleteButton);
+    $action = getActionButton($quotationBtn.$editButton.$deleteButton);
 
     return [$action,$data->sr_no,$data->trans_number,$data->trans_date,$data->party_name,$data->item_name,floatVal($data->qty)];
 }
@@ -175,7 +185,4 @@ function getEstimateData($data){
 
     return [$action,$data->sr_no,$data->trans_number,$data->trans_date,$data->party_name,$data->taxable_amount,$data->net_amount];
 }
-
-
-
 ?>

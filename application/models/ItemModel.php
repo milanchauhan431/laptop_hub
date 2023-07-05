@@ -11,6 +11,7 @@ class ItemModel extends MasterModel{
         $data['leftJoin']['unit_master'] = "unit_master.id  = item_master.unit_id";
 
         $data['where']['item_master.item_type'] = $data['item_type'];
+        $data['where']['item_master.active'] = 1;
 
         $data['searchCol'][] = "";
         $data['searchCol'][] = "";
@@ -58,6 +59,12 @@ class ItemModel extends MasterModel{
         
         if(!empty($data['item_type'])):
             $queryData['where_in']['item_master.item_type'] = $data['item_type'];
+        endif;
+
+        if(!empty($data['active_item'])):
+            $queryData['where_in']['item_master.active'] = $data['active_item'];
+        else:
+            $queryData['where']['item_master.active'] = 1;
         endif;
 
         return $this->rows($queryData);

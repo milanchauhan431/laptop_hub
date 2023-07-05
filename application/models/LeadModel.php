@@ -94,6 +94,15 @@ class LeadModel extends MasterModel{
                     $this->edit($this->partyMaster,['id'=>$dataRow->party_id],['party_type'=>1]);
                 endif;
 
+                if(!empty($dataRow->vou_acc_id)):
+                    $leadData = [
+                        'id' => $dataRow->vou_acc_id,
+                        'reason' => $data['reason'],
+                        'lead_status' => $data['lead_status'],
+                    ];
+                    $this->store($this->lead_managment,$leadData,'Status');
+                endif;
+
                 $result['message'] = "Sales Quotation ".(($data['lead_status'] == 3)?"Approved":"Closed")." successfully.";
             else:
                 if($data['lead_status'] == 3):
