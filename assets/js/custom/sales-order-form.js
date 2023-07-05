@@ -2,6 +2,31 @@ $(document).ready(function(){
 	$(".ledgerColumn").hide();
 	$(".summary_desc").attr('style','width: 60%;');
 
+	$(document).on('click','.getPendingQuotation',function(){
+		var party_id = $('#party_id').val();
+		var party_name = $('#party_idc').val();
+		$('.party_id').html("");
+
+		if (party_id != "" || party_id != 0) {
+			$.ajax({
+				url: base_url + 'salesQuotation/getPartyQuotation',
+				type: 'post',
+				data: { party_id: party_id },
+				success: function (response) {
+					$("#modal-xl").modal();
+					$('#modal-xl .modal-body').html('');
+					$('#modal-xl .modal-title').html("Carete Order [ Party Name : "+party_name+" ]");
+					$('#modal-xl .modal-body').html(response);
+					$('#modal-xl .modal-body form').attr('id',"createOrderForm");
+					$('#modal-xl .modal-footer .btn-save').html('<i class="fa fa-check"></i> Create Order');
+					$("#modal-xl .modal-footer .btn-save").attr('onclick',"createOrder();");
+				}
+			});
+		} else {
+			$('.party_id').html("Party is required.");
+		}	
+	});
+
     $(document).on('click', '.add-item', function () {
 		$('#itemForm')[0].reset();
 		$("#itemForm input:hidden").val('');
@@ -118,6 +143,30 @@ $(document).ready(function(){
 		$("#gst_per").comboSelect();
 	});
 });
+
+function createOrder(){
+	var mainRefIds = []; var mainFromEntryType = [];
+	$(".orderItem:checked").map(function() {
+		row = $(this).data('row');
+		mainRefIds.push(row.trans_main_id);
+		mainFromEntryType.push(row.main_entry_type);
+		AddRow(row);
+	}).get();
+
+	mainRefIds = $.unique(mainRefIds);
+	mainFromEntryType = $.unique(mainFromEntryType);
+
+	mainRefIds = mainRefIds.join(",");
+	mainFromEntryType = mainFromEntryType.join(",");
+
+	$("#saveSalesOrder #ref_id").val("");
+	$("#saveSalesOrder #ref_id").val(mainRefIds);
+	$("#saveSalesOrder #from_entry_type").val("");
+	$("#saveSalesOrder #from_entry_type").val(mainFromEntryType);
+
+	$("#modal-xl").modal('hide');
+	$('#modal-xl .modal-body').html('');
+}
 
 function AddRow(data) {
     var tblName = "salesOrderItems";
@@ -314,9 +363,10 @@ function resPartyDetail(response = ""){
     if(response != ""){
         var partyDetail = response.data.partyDetail;
         $("#party_name").val(partyDetail.party_name);
-        $("#master_t_col_1").val(partyDetail.delivery_contact_person);
-        $("#master_t_col_2").val(partyDetail.delivery_contact_no);
-        $("#master_t_col_3").val(partyDetail.delivery_address);
+        $("#master_t_col_1").val(partyDetail.contact_person);
+        $("#master_t_col_2").val(partyDetail.party_mobile);
+        $("#master_t_col_3").val(partyDetail.party_address);
+        $("#master_t_col_4").val(partyDetail.party_pincode);
 
         var gstDetails = response.data.gstDetails; var i = 1;
         $.each(gstDetails,function(index,row){  
@@ -330,6 +380,7 @@ function resPartyDetail(response = ""){
 		$("#master_t_col_1").val("");
         $("#master_t_col_2").val("");
         $("#master_t_col_3").val("");
+        $("#master_t_col_4").val("");
     }
     $("#gstin").html(html);$("#gstin").comboSelect();gstin();
 }

@@ -126,6 +126,44 @@ class SalesOrders extends MY_Controller{
         endif;
     }
 
+    public function printOrder($id,$pdf_type=''){
+        $this->data['dataRow'] = $dataRow = $this->salesOrder->getSalesOrder(['id'=>$id,'itemList'=>1]);
+        $this->data['partyData'] = $this->party->getParty(['id'=>$dataRow->party_id]);
+        $this->data['companyData'] = $companyData = $this->masterModel->getCompanyInfo();
+        
+        $logo = base_url('assets/images/logo.png');
+        $this->data['letter_head'] =  base_url('assets/images/letterhead-top.png');
+        
+        $pdfData = $this->load->view('sales_order/print', $this->data, true);        
+        
+        $htmlFooter = '<table class="table top-table" style="margin-top:10px;border-top:1px solid #545454;">
+            <tr>
+                <td style="width:25%;">SO. No. & Date : '.$dataRow->trans_number . ' [' . formatDate($dataRow->trans_date) . ']</td>
+                <td style="width:25%;"></td>
+                <td style="width:25%;text-align:right;">Page No. {PAGENO}/{nbpg}</td>
+            </tr>
+        </table>';
+        
+		$mpdf = new \Mpdf\Mpdf();
+		$filePath = realpath(APPPATH . '../assets/uploads/sales_quotation/');
+        $pdfFileName = $filePath.'/' . str_replace(["/","-"],"_",$dataRow->trans_number) . '.pdf';
+        
+        $stylesheet = file_get_contents(base_url('assets/extra-libs/datatables.net-bs4/css/dataTables.bootstrap4.css'));
+        $stylesheet = file_get_contents(base_url('assets/css/style.css?v=' . time()));
+        $stylesheet = file_get_contents(base_url('assets/css/pdf_style.css'));
+        $mpdf->WriteHTML($stylesheet, 1);
+        $mpdf->SetDisplayMode('fullpage');
+        $mpdf->SetWatermarkImage($logo, 0.03, array(120, 120));
+        $mpdf->showWatermarkImage = true;
+        $mpdf->SetHTMLFooter($htmlFooter);
+		$mpdf->AddPage('P','','','','',5,5,5,5,3,3,'','','','','','','','','','A4-P');
+        $mpdf->WriteHTML($pdfData);
+		
+		ob_clean();
+		$mpdf->Output($pdfFileName, 'I');
+		
+    }
+
     public function getPartyOrders(){
         $data = $this->input->post();
         $this->data['orderItems'] = $this->salesOrder->getPendingOrderItems($data);

@@ -55,7 +55,20 @@ class SalesOrderModel extends MasterModel{
             endif;
 
             if(!empty($data['id'])):
-                $this->trash($this->transChild,['trans_main_id'=>$data['id']]);
+                $dataRow = $this->getSalesOrder(['id'=>$data['id'],'itemList'=>1]);
+                foreach($dataRow->itemList as $row):
+                    if(!empty($row->ref_id)):
+                        $setData = array();
+                        $setData['tableName'] = $this->transChild;
+                        $setData['where']['id'] = $row->ref_id;
+                        $setData['update']['trans_status'] = 0;
+                        $this->setValue($setData);
+                    endif;
+
+                    $this->trash($this->transChild,['id'=>$row->id]);
+                endforeach;
+
+                //$this->trash($this->transChild,['trans_main_id'=>$data['id']]);
                 $this->trash($this->transExpense,['trans_main_id'=>$data['id']]);
                 $this->remove($this->transDetails,['main_ref_id'=>$data['id'],'table_name'=>$this->transMain,'description'=>"SO TERMS"]);
                 $this->remove($this->transDetails,['main_ref_id'=>$data['id'],'table_name'=>$this->transMain,'description'=>"SO MASTER DETAILS"]);
@@ -104,8 +117,26 @@ class SalesOrderModel extends MasterModel{
                 $row['trans_main_id'] = $result['id'];
                 $row['is_delete'] = 0;
                 $this->store($this->transChild,$row);
+
+                if(!empty($row['ref_id'])):
+                    $setData = array();
+                    $setData['tableName'] = $this->transChild;
+                    $setData['where']['id'] = $row['ref_id'];
+                    $setData['update']['trans_status'] = "1";
+                    $this->setValue($setData);
+                endif;
             endforeach;
             
+            if(!empty($data['ref_id'])):
+                $refIds = explode(",",$data['ref_id']);
+                foreach($refIds as $main_id):
+                    $setData = array();
+                    $setData['tableName'] = $this->transMain;
+                    $setData['where']['id'] = $main_id;
+                    $setData['update']['trans_status'] = "(SELECT IF( COUNT(id) = SUM(IF(trans_status <> 0, 1, 0)) ,1 , 0 ) as trans_status FROM trans_child WHERE trans_main_id = ".$main_id." AND is_delete = 0)";
+                    $this->setValue($setData);
+                endforeach;
+            endif;
 
             if ($this->db->trans_status() !== FALSE):
                 $this->db->trans_commit();
@@ -131,8 +162,11 @@ class SalesOrderModel extends MasterModel{
     public function getSalesOrder($data){
         $queryData = array();
         $queryData['tableName'] = $this->transMain;
-        $queryData['select'] = "trans_main.*,trans_details.t_col_1 as contact_person,trans_details.t_col_2 as contact_no,trans_details.t_col_3 as ship_address";
+        $queryData['select'] = "trans_main.*,trans_details.t_col_1 as contact_person,trans_details.t_col_2 as contact_no,trans_details.t_col_3 as ship_address,,trans_details.t_col_4 as ship_pincode,employee_master.emp_name as created_name";
+
         $queryData['leftJoin']['trans_details'] = "trans_main.id = trans_details.main_ref_id AND trans_details.description = 'SO MASTER DETAILS' AND trans_details.table_name = '".$this->transMain."'";
+        $queryData['leftJoin']['employee_master'] = "employee_master.id = trans_main.created_by";
+
         $queryData['where']['trans_main.id'] = $data['id'];
         $result = $this->row($queryData);
 
@@ -159,7 +193,9 @@ class SalesOrderModel extends MasterModel{
     public function getSalesOrderItems($data){
         $queryData = array();
         $queryData['tableName'] = $this->transChild;
-        $queryData['select'] = "trans_child.*";
+        $queryData['select'] = "trans_child.*,tmref.trans_number as ref_number";
+        $queryData['leftJoin']['trans_child as tcref'] = "tcref.id = trans_child.ref_id";
+        $queryData['leftJoin']['trans_main as tmref'] = "tcref.trans_main_id = tmref.id";
         $queryData['where']['trans_child.trans_main_id'] = $data['id'];
         $result = $this->rows($queryData);
         return $result;
@@ -177,7 +213,31 @@ class SalesOrderModel extends MasterModel{
         try{
             $this->db->trans_begin();
 
-            $this->trash($this->transChild,['trans_main_id'=>$id]);
+            $dataRow = $this->getSalesOrder(['id'=>$id,'itemList'=>1]);
+            foreach($dataRow->itemList as $row):
+                if(!empty($row->ref_id)):
+                    $setData = array();
+                    $setData['tableName'] = $this->transChild;
+                    $setData['where']['id'] = $row->ref_id;
+                    $setData['update']['trans_status'] = 0;
+                    $this->setValue($setData);
+                endif;
+
+                $this->trash($this->transChild,['id'=>$row->id]);
+            endforeach;
+
+            if(!empty($dataRow->ref_id)):
+                $oldRefIds = explode(",",$dataRow->ref_id);
+                foreach($oldRefIds as $main_id):
+                    $setData = array();
+                    $setData['tableName'] = $this->transMain;
+                    $setData['where']['id'] = $main_id;
+                    $setData['update']['trans_status'] = "(SELECT IF( COUNT(id) = SUM(IF(trans_status <> 0, 1, 0)) ,1 , 0 ) as trans_status FROM trans_child WHERE trans_main_id = ".$main_id." AND is_delete = 0)";
+                    $this->setValue($setData);
+                endforeach;
+            endif;
+
+            //$this->trash($this->transChild,['trans_main_id'=>$id]);
             $this->trash($this->transExpense,['trans_main_id'=>$id]);
             $this->remove($this->transDetails,['main_ref_id'=>$id,'table_name'=>$this->transMain,'description'=>"SO TERMS"]);
             $this->remove($this->transDetails,['main_ref_id'=>$id,'table_name'=>$this->transMain,'description'=>"SO MASTER DETAILS"]);

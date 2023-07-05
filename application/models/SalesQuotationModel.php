@@ -123,7 +123,6 @@ class SalesQuotationModel extends MasterModel{
                     $setData = array();
                     $setData['tableName'] = $this->transChild;
                     $setData['where']['id'] = $row['ref_id'];
-                    $setData['set']['dispatch_qty'] = 'dispatch_qty, + '.$row['qty'];
                     $setData['update']['trans_status'] = "1";
                     $this->setValue($setData);
                 endif;
@@ -348,6 +347,18 @@ class SalesQuotationModel extends MasterModel{
             $this->db->trans_rollback();
             return ['status'=>2,'message'=>"somthing is wrong. Error : ".$e->getMessage()];
         }
+    }
+
+    public function getPendingQuotationItems($data){
+        $queryData = array();
+        $queryData['tableName'] = $this->transChild;
+        $queryData['select'] = "trans_child.*,trans_main.entry_type as main_entry_type,trans_main.trans_number,trans_main.trans_date,trans_main.doc_no";
+        $queryData['leftJoin']['trans_main'] = "trans_child.trans_main_id = trans_main.id";
+        $queryData['where']['trans_main.party_id'] = $data['party_id'];
+        $queryData['where']['trans_child.entry_type'] = $this->data['entryData']->id;
+        $queryData['where']['trans_child.confirm_status'] = 2;
+        $queryData['where']['trans_child.trans_status'] = 0;
+        return $this->rows($queryData);
     }
 }
 ?>

@@ -88,7 +88,7 @@ class LeadModel extends MasterModel{
                 ];
                 $result = $this->store($this->transMain,$mainData,'Sales Quotation');
 
-                $this->edit($this->transChild,['trans_main_id'=>$data['id']],['confirm_status'=>(($data['lead_status'] == 4)?2:1),'confirm_by'=>$this->loginId]);
+                $this->edit($this->transChild,['trans_main_id'=>$data['id']],['confirm_status'=>(($data['lead_status'] == 3)?2:3),'confirm_by'=>$this->loginId]);
 
                 if($data['lead_status'] == 3):
                     $this->edit($this->partyMaster,['id'=>$dataRow->party_id],['party_type'=>1]);

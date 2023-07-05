@@ -199,5 +199,10 @@ class SalesQuotation extends MY_Controller{
 		
     }
     
+    public function getPartyQuotation(){
+        $data = $this->input->post();
+        $this->data['orderItems'] = $this->salesQuotation->getPendingQuotationItems($data);
+        $this->load->view('sales_order/create_order',$this->data);
+    }
 }
 ?>

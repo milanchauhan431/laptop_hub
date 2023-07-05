@@ -32,7 +32,7 @@
                             <?=(!empty($dataRow->ship_address) ? $dataRow->ship_address ." - ".$dataRow->ship_pincode : '')?><br>
                         </td>
                         <td>
-                            <b>Qtn. No. : <?=$dataRow->trans_prefix . $dataRow->trans_no?></b>
+                            <b>Qtn. No. : <?=$dataRow->trans_number?></b>
                         </td>
                         <td>
                             Rev No. : <?=sprintf("%02d",$dataRow->quote_rev_no)?>  / <?=formatDate($dataRow->doc_date)?>

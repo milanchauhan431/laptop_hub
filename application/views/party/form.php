@@ -171,7 +171,7 @@
                 <textarea name="delivery_address" class="form-control" rows="3"><?=(!empty($dataRow->delivery_address))?$dataRow->delivery_address:""?></textarea>
             </div>
 
-            <div class="col-md-4 form-group">
+            <!-- <div class="col-md-4 form-group">
                 <label for="delivery_contact_person">Delivery Contact Person</label>
                 <input type="text" name="delivery_contact_person" id="delivery_contact_person" class="form-control text-capitalize" value="<?=(!empty($dataRow->delivery_contact_person))?$dataRow->delivery_contact_person:""?>">
             </div>  
@@ -179,7 +179,7 @@
             <div class="col-md-4 form-group">
                 <label for="delivery_contact_person">Delivery Contact No.</label>
                 <input type="text" name="delivery_contact_no" id="delivery_contact_no" class="form-control numericOnly" value="<?=(!empty($dataRow->delivery_contact_no))?$dataRow->delivery_contact_no:""?>">
-            </div>  
+            </div> -->  
         </div>        
     </div>
 </form>

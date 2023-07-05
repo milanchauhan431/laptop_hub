@@ -52,6 +52,10 @@
 													
 												</div>
 											</span>
+
+                                            <span class="float-right m-r-10">
+                                                <a class="text-primary font-bold waves-effect waves-dark getPendingQuotation" href="javascript:void(0)">+ Sales Quotation</a>
+                                            </span>
 										</div>
                                         <select name="party_id" id="party_id" class="form-control single-select partyDetails partyOptions req" data-res_function="resPartyDetail" data-party_category="1">
 											<option value="">Select Party</option>
@@ -95,9 +99,13 @@
                                         <input type="text" name="masterDetails[t_col_2]" id="master_t_col_2" class="form-control numericOnly" value="<?=(!empty($dataRow->contact_no))?$dataRow->contact_no:""?>">
                                     </div>
 
-                                    <div class="col-md-12 form-group">
+                                    <div class="col-md-9 form-group">
                                         <label for="master_t_col_3">Ship To</label>
                                         <input type="text" name="masterDetails[t_col_3]" id="master_t_col_3" class="form-control" value="<?=(!empty($dataRow->ship_address))?$dataRow->ship_address:""?>">
+                                    </div>
+                                    <div class="col-md-3 form-group">
+                                        <label for="master_t_col_4">Address</label>
+                                        <input type="text" name="masterDetails[t_col_4]" id="master_t_col_4" class="form-control" value="<?=(!empty($dataRow->ship_pincode))?$dataRow->ship_pincode:""?>">
                                     </div>
                                 </div>
 
