@@ -83,7 +83,9 @@ class MY_Controller extends CI_Controller{
 
 		/* Accounting Model */
 		$this->load->model("PurchaseInvoiceModel","purchaseInvoice");
+		$this->load->model("DebitNoteModel","debitNote");
 		$this->load->model("SalesInvoiceModel","salesInvoice");
+		$this->load->model("CreditNoteModel","creditNote");
 		$this->load->model("GstExpenseModel","gstExpense");
 		$this->load->model("GstIncomeModel","gstIncome");
 		$this->load->model("JournalEntryModel","journalEntry");
@@ -98,7 +100,7 @@ class MY_Controller extends CI_Controller{
 		/* Estimation Model [Cash Entry] */
 		$this->load->model("EstimateModel",'estimate');
 
-		$this->setSessionVariables(["masterModel","dashboard","permission","terms","transport","hsnModel","materialGrade","itemCategory","brandMaster","sizeMaster","item","department","designation","employeeCategory","shiftModel","employee","party","transMainModel","taxMaster","expenseMaster","salesOrder","purchaseOrder","purchaseIndent","vehicleType","storeLocation","gateEntry","gateInward","salesInvoice","estimate","paymentVoucher","leads","salesEnquiry","salesQuotation","gstExpense","gstIncome","journalEntry"]);
+		$this->setSessionVariables(["masterModel","dashboard","permission","terms","transport","hsnModel","materialGrade","itemCategory","brandMaster","sizeMaster","item","department","designation","employeeCategory","shiftModel","employee","party","transMainModel","taxMaster","expenseMaster","salesOrder","purchaseOrder","purchaseIndent","vehicleType","storeLocation","gateEntry","gateInward","salesInvoice","estimate","paymentVoucher","leads","salesEnquiry","salesQuotation","gstExpense","gstIncome","journalEntry","creditNote","debitNote"]);
 	}
 
 	public function setSessionVariables($modelNames){

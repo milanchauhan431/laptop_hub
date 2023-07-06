@@ -13,31 +13,57 @@
                 <td style="width:33%;" class="fs-18 text-left">
                     GSTIN: <?=$companyData->company_gst_no?>
                 </td>
-                <td style="width:33%;" class="fs-18 text-center">Tax Invocie</td>
+                <td style="width:33%;" class="fs-18 text-center">
+                    <?=($invData->order_type == "Sales Return")?"Sales Return":"Credit Note"?>
+                </td>
                 <td style="width:33%;" class="fs-18 text-right"><?=$printType?></td>
             </tr>
         </table>
         
         <table class="table item-list-bb fs-22" style="margin-top:5px;">
             <tr>
-                <td style="width:60%; vertical-align:top;" rowspan="3">
-                    <b>BILL TO</b><br>
-                    <b><?=$invData->party_name?></b><br>
+                <td style="width:60%; vertical-align:top;" rowspan="5">
+                    <b>M/S. <?=$invData->party_name?></b><br>
                     <?=(!empty($partyData->party_address) ? $partyData->party_address : '')?><br>
-                    <b>GSTIN : <?= $invData->gstin?> | STATE CODE: <?=substr($invData->gstin, 0, 2)?> | CITY : <?=$partyData->city_name?></b>
+                    <b>GSTIN : <?= $invData->gstin?> | STATE CODE: <?=$invData->party_state_code?> | CITY : <?=$partyData->city_name?></b>
                 </td>
                 <td>
-                    <b>Invoice No. : <?=$invData->trans_prefix . $invData->trans_no?></b>
+                    <b>DN No.</b>
                 </td>
                 <td>
-                    <b>Date : <?=date('d/m/Y', strtotime($invData->trans_date))?></b>
+                    <?=$invData->trans_number?>
                 </td>
             </tr>
             <tr>
-                <td style="width:40%;" colspan="2">
-                    <b>Memo Type</b> : <?=$invData->memo_type?><br>
-                    <b>P.O. No.</b> : <?=$invData->doc_no?><br>
-                    <b>Challan No</b> : <?=$invData->challan_no?>
+                <td>
+                    <b>DN Date</b>
+                </td>
+                <td>
+                    <?=date('d/m/Y', strtotime($invData->trans_date))?>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b>Memo Type</b>
+                </td>
+                <td>
+                    <?=$invData->memo_type?>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b>Inv. No.</b>
+                </td>
+                <td>
+                    <?=$invData->doc_no?>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b>Inv. Date</b>
+                </td>
+                <td>
+                    <?=$invData->doc_date?>
                 </td>
             </tr>
         </table>
@@ -73,7 +99,7 @@
                                 echo '<td class="text-center">'.$row->gst_per.'</td>';
                                 echo '<td class="text-right">'.$row->taxable_amount.'</td>';
                             echo '</tr>';
-
+                            
                             if(($rowCount == $maxLinePP && $pageCount == 1) || ($rowCount == 20 && $pageCount != 1)): 
                                 echo '
                                     </tbody></table>
@@ -86,7 +112,7 @@
                                 $pageCount++; // Increment the page count
                             endif;
                             $rowCount++;
-                            
+
                             $totalQty += $row->qty;
                             if($row->gst_per > $migst){$migst=$row->gst_per;$mcgst=$row->cgst_per;$msgst=$row->sgst_per;}
                         endforeach;
@@ -196,6 +222,7 @@
                 </tr>
             </tbody>
         </table>
+
         <h4>Terms & Conditions :-</h4>
         <table class="table top-table" style="margin-top:10px;">
             <?php
@@ -226,9 +253,8 @@
 
         <table class="table top-table" style="margin-top:10px; border-top:1px solid #545454;">
             <tr>
-                <td style="width:25%;font-size:12px;">This is computer generated Debit Note.</td>
+                <td style="width:25%;font-size:12px;">This is computer generated Credit Note.</td>
             </tr>
         </table>
     </div>
-</div>        
-    
+</div>

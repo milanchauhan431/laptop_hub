@@ -12,6 +12,17 @@ function getAccountingDtHeader($page){
 	$data['salesInvoice'][] = ["name"=>"GST Amount"];
     $data['salesInvoice'][] = ["name"=>"Net Amount"];
 
+    /* Credit Note Header */
+    $data['creditNote'][] = ["name"=>"Action","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"];
+	$data['creditNote'][] = ["name"=>"#","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"]; 
+	$data['creditNote'][] = ["name"=>"CN Type."];
+	$data['creditNote'][] = ["name"=>"CN No."];
+	$data['creditNote'][] = ["name"=>"CN Date"];
+	$data['creditNote'][] = ["name"=>"Party Name"];
+	$data['creditNote'][] = ["name"=>"Taxable Amount"];
+	$data['creditNote'][] = ["name"=>"GST Amount"];
+    $data['creditNote'][] = ["name"=>"Net Amount"];
+
     /* Purchase Invoice Header */
     $data['purchaseInvoice'][] = ["name"=>"Action","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"];
 	$data['purchaseInvoice'][] = ["name"=>"#","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"]; 
@@ -21,6 +32,17 @@ function getAccountingDtHeader($page){
 	$data['purchaseInvoice'][] = ["name"=>"Taxable Amount"];
 	$data['purchaseInvoice'][] = ["name"=>"GST Amount"];
     $data['purchaseInvoice'][] = ["name"=>"Net Amount"];
+
+    /* Debit Note Header */
+    $data['debitNote'][] = ["name"=>"Action","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"];
+	$data['debitNote'][] = ["name"=>"#","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"]; 
+	$data['debitNote'][] = ["name"=>"DN Type."];
+	$data['debitNote'][] = ["name"=>"DN No."];
+	$data['debitNote'][] = ["name"=>"DN Date"];
+	$data['debitNote'][] = ["name"=>"Party Name"];
+	$data['debitNote'][] = ["name"=>"Taxable Amount"];
+	$data['debitNote'][] = ["name"=>"GST Amount"];
+    $data['debitNote'][] = ["name"=>"Net Amount"];
 
     /* GST Expense Header */
     $data['gstExpense'][] = ["name"=>"Action","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"];
@@ -81,6 +103,20 @@ function getSalesInvoiceData($data){
     return [$action,$data->sr_no,$data->trans_number,formatDate($data->trans_date),$data->party_name,$data->taxable_amount,$data->gst_amount,$data->net_amount];
 }
 
+/* Credit Note Table Data */
+function getCreaditNoteData($data){
+    $editButton = '<a class="btn btn-success btn-edit permission-modify" href="'.base_url('creditNote/edit/'.$data->id).'" datatip="Edit" flow="down" ><i class="ti-pencil-alt"></i></a>';
+
+    $deleteParam = "{'postData':{'id' : ".$data->id."},'message' : 'Credit Note'}";
+    $deleteButton = '<a class="btn btn-danger btn-delete permission-remove" href="javascript:void(0)" onclick="trash('.$deleteParam.');" datatip="Remove" flow="down"><i class="ti-trash"></i></a>';
+
+    $print = '<a href="javascript:void(0)" class="btn btn-warning btn-edit printDialog permission-approve1" datatip="Print Invoice" flow="down" data-id="'.$data->id.'" data-fn_name="printCreditNote"><i class="fa fa-print"></i></a>';
+
+    $action = getActionButton($print.$editButton.$deleteButton);
+
+    return [$action,$data->sr_no,$data->order_type,$data->trans_number,formatDate($data->trans_date),$data->party_name,$data->taxable_amount,$data->gst_amount,$data->net_amount];
+}
+
 /* Purchase Invoice Table Data */
 function getPurchaseInvoiceData($data){
     $editButton = '<a class="btn btn-success btn-edit permission-modify" href="'.base_url('purchaseInvoice/edit/'.$data->id).'" datatip="Edit" flow="down" ><i class="ti-pencil-alt"></i></a>';
@@ -91,6 +127,20 @@ function getPurchaseInvoiceData($data){
     $action = getActionButton($editButton.$deleteButton);
 
     return [$action,$data->sr_no,$data->trans_number,formatDate($data->trans_date),$data->party_name,$data->taxable_amount,$data->gst_amount,$data->net_amount];
+}
+
+/* Debit Note Table Data */
+function getDebitNoteData($data){
+    $editButton = '<a class="btn btn-success btn-edit permission-modify" href="'.base_url('debitNote/edit/'.$data->id).'" datatip="Edit" flow="down" ><i class="ti-pencil-alt"></i></a>';
+
+    $deleteParam = "{'postData':{'id' : ".$data->id."},'message' : 'Debit Note'}";
+    $deleteButton = '<a class="btn btn-danger btn-delete permission-remove" href="javascript:void(0)" onclick="trash('.$deleteParam.');" datatip="Remove" flow="down"><i class="ti-trash"></i></a>';
+
+    $print = '<a href="javascript:void(0)" class="btn btn-warning btn-edit printDialog permission-approve1" datatip="Print Debit Note" flow="down" data-id="'.$data->id.'" data-fn_name="printDebitNote"><i class="fa fa-print"></i></a>';
+
+    $action = getActionButton($print.$editButton.$deleteButton);
+
+    return [$action,$data->sr_no,$data->order_type,$data->trans_number,formatDate($data->trans_date),$data->party_name,$data->taxable_amount,$data->gst_amount,$data->net_amount];
 }
 
 /* GST Expense Table Data */
