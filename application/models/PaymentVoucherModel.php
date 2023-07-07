@@ -1,6 +1,7 @@
 <?php 
 class PaymentVoucherModel extends MasterModel{
 	private $transMain = "trans_main";
+	private $transLedger = "trans_ledger";
 
 	public function getDtRows($data){
 		$data['tableName'] = $this->transMain;
@@ -121,5 +122,56 @@ class PaymentVoucherModel extends MasterModel{
 			return ['status'=>2,'message'=>"somthing is wrong. Error : ".$e->getMessage()];
         }
 	}
+
+    public function getBankTransactions($data){
+        $queryData = array();
+        $queryData['tableName'] = $this->transMain;
+        $queryData['select'] = "trans_main.id,trans_main.trans_number,trans_main.trans_date,opp_acc.party_name as opp_acc_name,vou_acc.party_name as vou_acc_name,trans_main.doc_no,trans_main.doc_date,trans_main.payment_mode,trans_main.net_amount,trans_main.recon_date";
+
+        $queryData['leftJoin']['party_master as opp_acc'] = "opp_acc.id = trans_main.opp_acc_id";
+        $queryData['leftJoin']['party_master as vou_acc'] = "vou_acc.id = trans_main.vou_acc_id";
+        $queryData['where']['trans_main.payment_mode !='] = "CASH";
+        $queryData['where']['trans_main.trans_date >='] = $data['from_date'];
+        $queryData['where']['trans_main.trans_date <='] = $data['to_date'];
+        $queryData['where_in']['trans_main.entry_type'] = $this->data['entryData']->id;
+        
+        if(!empty($data['acc_id'])):
+            $queryData['where']['trans_main.vou_acc_id'] = $data['acc_id'];
+        endif;
+
+        if($data['status'] != -1):
+            if($data['status'] == 0):
+                $queryData['customWhere'][] = 'trans_main.recon_date IS NULL'; 
+            else:
+                $queryData['customWhere'][] = 'trans_main.recon_date IS NOT NULL'; 
+            endif;
+        endif;
+
+        $queryData['order_by']['trans_main.trans_date'] = "ASC";
+
+        $result = $this->rows($queryData);
+        return $result;
+    }
+
+    public function saveBankReconciliation($data){
+        try{
+            $this->db->trans_begin();
+
+            foreach($data['item_data'] as $row):
+                if(!empty($row['recon_date'])):
+                    $this->edit($this->transMain,['id'=>$row['id']],['recon_date'=>$row['recon_date']]);
+                    $this->edit($this->transLedger,['trans_main_id'=>$row['id']],['recon_date'=>$row['recon_date']]);
+                endif;
+            endforeach;         
+            
+            if ($this->db->trans_status() !== FALSE):
+                $this->db->trans_commit();
+                return ['status'=>1,'message'=>"Bank Reconciliation saved successfully."];
+            endif;
+        }catch(\Exception $e){
+            $this->db->trans_rollback();
+            return ['status'=>2,'message'=>"somthing is wrong. Error : ".$e->getMessage()];
+        }	
+    }
 }
 ?>

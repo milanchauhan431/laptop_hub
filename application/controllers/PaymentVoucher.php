@@ -2,6 +2,7 @@
 class PaymentVoucher extends MY_Controller{
     private $index = "payment_voucher/index";
     private $form = "payment_voucher/form";	
+	private $bankRecon = "payment_voucher/bank_reconciliation";
 	
 	public function __construct(){
 		parent::__construct();
@@ -111,6 +112,64 @@ class PaymentVoucher extends MY_Controller{
             $this->printJson(['status'=>0,'message'=>'Somthing went wrong...Please try again.']);
         else:
             $this->printJson($this->paymentVoucher->delete($id));
+        endif;
+    }
+
+	public function bankReconciliation($acc_id="",$from_date="",$to_date=""){
+		$this->data['acc_id'] = $acc_id;
+        $this->data['from_date'] = $from_date;
+        $this->data['to_date'] = $to_date;
+        $this->data['bank_name'] = (!empty($acc_id))?$this->party->getParty(['id'=>$acc_id])->party_name:"";
+        $this->load->view($this->bankRecon,$this->data);
+	}
+
+	public function getBankTransactions(){
+		$data = $this->input->post();
+
+		$result = $this->paymentVoucher->getBankTransactions($data);
+		$tbody = "";
+
+		$i = 0;
+		foreach($result as $row):
+			$tbody .= '<tr>
+				<td>'.($i+1).'</td>
+				<td>'.formatDate($row->trans_date).'</td>
+				<td>'.$row->trans_number.'</td>
+				<td>'.$row->opp_acc_name.'</td>
+				<td>'.$row->doc_no.'</td>
+				<td>'.formatDate($row->doc_date).'</td>
+				<td>'.$row->vou_acc_name.'</td>
+				<td>'.$row->net_amount.'</td>
+				<td>
+					<input type="date" name="item_data['.$i.'][recon_date]" class="form-control" value="'.((!empty($row->recon_date))?$row->recon_date:"").'">
+					<input type="hidden" name="item_data['.$i.'][id]" value="'.$row->id.'">
+					<input type="hidden" name="item_data['.$i.'][trans_date]" value="'.$row->trans_date.'">
+					<div class="error recon_date_'.$i.'"></div>
+				</td>
+			</tr>';
+			$i++;
+		endforeach;
+		$this->printJson(['status'=>1,'tbody'=>$tbody]);
+	}
+
+	public function saveBankReconciliation(){
+        $data = $this->input->post();
+        $errorMessage = array();
+        
+        if(empty($data['item_data'])):
+            $errorMessage['general_error'] = "Bank Reconciliation data is required.";
+        else:
+            foreach($data['item_data'] as $key=>$row):
+                if(!empty($row['recon_date']) && $row['trans_date'] > $row['recon_date']):
+                    $errorMessage['recon_date_'.$key] = "Invalid Date.";
+                endif;
+            endforeach;
+        endif;
+
+        if(!empty($errorMessage)):
+            $this->printJson(['status'=>0,'message'=>$errorMessage]);
+        else:
+            $this->printJson($this->paymentVoucher->saveBankReconciliation($data));
         endif;
     }
 }

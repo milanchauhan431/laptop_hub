@@ -57,7 +57,8 @@
 										<th></th>
                                     </tr>
                                     <tr>
-                                        <th colspan="8" class="text-right">Closing Balance : <span id="cl_balance">0.00</span></th>
+                                        <th colspan="4" id="bank_cl"></th>
+                                        <th colspan="4" class="text-right">Closing Balance : <span id="cl_balance">0.00</span></th>
                                     </tr>
                                 </tfoot>                            
 							</table>
@@ -146,6 +147,8 @@ function loadData(pdf=""){
                     $("#dr_balance").html("");
                     $("#dr_balance").html(data.ledgerBalance.dr_balance);
 
+                    $("#bank_cl").html("");
+                    $("#bank_cl").html(data.ledgerBalance.bcl_balance_text);
                     reportTable('commanTableDetail',tableOption);
 
                 }
@@ -163,6 +166,6 @@ function loadReconciliation(){
 	var acc_id = $('#acc_id').val();
 	var from_date = $('#from_date').val();
 	var to_date = $('#to_date').val();
-	window.open(base_url + 'bankReconciliation/index/'+acc_id+'/'+from_date+'/'+to_date);
+	window.open(base_url + 'paymentVoucher/bankReconciliation/'+acc_id+'/'+from_date+'/'+to_date);
 }
 </script>
