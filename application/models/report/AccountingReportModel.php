@@ -67,7 +67,7 @@ class AccountingReportModel extends MasterModel{
 
     public function getRegisterData($data){
         $queryData['tableName'] = 'trans_main';
-        $queryData['select'] = 'trans_main.id,trans_main.trans_number,trans_main.doc_no,trans_main.trans_date,trans_main.party_name,trans_main.party_state_code,trans_main.doc_no,trans_main.gstin,trans_main.currency,trans_main.vou_name_s,trans_main.total_amount,trans_main.disc_amount,trans_main.taxable_amount,trans_main.cgst_amount,trans_main.sgst_amount,trans_main.igst_amount,trans_main.cess_amount,trans_main.gst_amount,(trans_main.net_amount - trans_main.taxable_amount - trans_main.gst_amount) as other_amount,trans_main.net_amount';
+        $queryData['select'] = 'trans_main.id,trans_main.trans_number,trans_main.doc_no,trans_main.trans_date,trans_main.order_type,trans_main.party_name,trans_main.party_state_code,trans_main.doc_no,trans_main.gstin,trans_main.currency,trans_main.vou_name_s,trans_main.total_amount,trans_main.disc_amount,trans_main.taxable_amount,trans_main.cgst_amount,trans_main.sgst_amount,trans_main.igst_amount,trans_main.cess_amount,trans_main.gst_amount,(trans_main.net_amount - trans_main.taxable_amount - trans_main.gst_amount) as other_amount,trans_main.net_amount';
 
 
         $queryData['where_in']['trans_main.vou_name_s'] = $data['vou_name_s'];
@@ -89,6 +89,50 @@ class AccountingReportModel extends MasterModel{
 
         $queryData['order_by']['trans_date']='ASC';
         return $this->rows($queryData);
+    }
+
+    public function getOutstandingData($postData){
+        $os_type = ($postData['os_type']=="R") ? '<' : '>';
+		$daysCondition = ',';$daysFields = '';
+		
+        if(!empty($postData['days_range'])):
+		    $i=1;$rangeLength = count($postData['days_range']);$ele=1;
+		    $daysCondition = ($rangeLength > 0) ? ',' : '';
+		    foreach($postData['days_range'] as $days):		        
+		        if($i == 1):
+                    $daysCondition .='(am.opening_balance + SUM( CASE WHEN DATEDIFF(DATE_ADD( tl.trans_date,INTERVAL am.credit_days day),NOW()) <= '.$days.' THEN (tl.amount * tl.p_or_m) ELSE 0 END )) as d'.$ele++.',';
+                endif;
+
+		        if($i == $rangeLength):
+                    $daysCondition .='(am.opening_balance + SUM( CASE WHEN DATEDIFF(DATE_ADD( tl.trans_date,INTERVAL am.credit_days day),NOW()) > '.$days.' THEN (tl.amount * tl.p_or_m) ELSE 0 END )) as d'.$ele++.',';
+                endif;
+
+		        if($i < $rangeLength):
+                    $daysCondition .='(am.opening_balance + SUM( CASE WHEN DATEDIFF(DATE_ADD( tl.trans_date,INTERVAL am.credit_days day),NOW()) BETWEEN '.($days + 1).' AND '.$postData['days_range'][$i].' THEN (tl.amount * tl.p_or_m) ELSE 0 END )) as d'.$ele++.',';
+                endif;
+		        $i++;
+            endforeach;
+		    for($x=1;$x<=($rangeLength+1);$x++): $daysFields .= ',abs(lb.d'.$x.') as d'.$x; endfor;
+		endif;
+		
+		$dueDaysBetween = "AND DATEDIFF(DATE_ADD( lb.trans_date,INTERVAL am.credit_days day),NOW()) >= 16 AND DATEDIFF(DATE_ADD( lb.trans_date,INTERVAL am.credit_days day),NOW()) <= 30";
+
+        $receivable = $this->db->query ("SELECT lb.id as id, am.party_name as account_name,am.group_name,am.contact_person, am.party_mobile, ct.name as city_name, abs(lb.cl_balance) as cl_balance ".$daysFields.", lb.trans_date,  DATE_ADD( lb.trans_date,INTERVAL am.credit_days day) as due_date, DATEDIFF(DATE_ADD( lb.trans_date,INTERVAL am.credit_days day),NOW()) as pending_days
+        FROM (
+            SELECT am.id, (am.opening_balance + SUM( CASE WHEN tl.trans_date < '".$postData['from_date']."' THEN (tl.amount * tl.p_or_m) ELSE 0 END )) as op_balance,
+            SUM( CASE WHEN tl.trans_date >= '".$postData['from_date']."' AND tl.trans_date <= '".$postData['to_date']."' THEN CASE WHEN tl.c_or_d = 'DR' THEN tl.amount ELSE 0 END ELSE 0 END) as dr_balance,
+            SUM( CASE WHEN tl.trans_date >= '".$postData['from_date']."' AND tl.trans_date <= '".$postData['to_date']."' THEN CASE WHEN tl.c_or_d = 'CR' THEN tl.amount ELSE 0 END ELSE 0 END) as cr_balance,
+            (am.opening_balance + SUM( CASE WHEN tl.trans_date <= '".$postData['to_date']."' THEN (tl.amount * tl.p_or_m) ELSE 0 END )) as cl_balance ".$daysCondition."
+            tl.trans_date           
+            FROM party_master as am 
+            LEFT JOIN trans_ledger as tl ON am.id = tl.vou_acc_id  AND tl.is_delete = 0          
+            WHERE am.group_code IN ( 'SD','SC' ) AND am.is_delete = 0 GROUP BY am.id, am.opening_balance 
+        ) as lb
+        LEFT JOIN party_master as am ON lb.id = am.id 
+        LEFT JOIN cities as ct ON ct.id = am.city_id
+        WHERE lb.cl_balance ".$os_type." 0 AND am.group_code IN ( 'SD','SC' ) AND am.is_delete = 0 ORDER BY am.party_name")->result();
+        
+        return $receivable;
     }
 }
 ?>
