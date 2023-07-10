@@ -71,6 +71,11 @@ class PartyModel extends MasterModel{
             $queryData['where_in']['group_code'] = $data['group_code'];
         endif;
 
+        if(!empty($data['system_code'])):
+            $queryData['where_in']['system_code'] = $data['system_code'];
+            $queryData['order_by_field']['system_code'] = $data['system_code'];
+        endif;
+
         if(!empty($data['party_type'])):
             $queryData['where_in']['party_type'] = $data['party_type'];
         else:

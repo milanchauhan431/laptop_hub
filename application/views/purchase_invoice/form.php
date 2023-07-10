@@ -26,6 +26,8 @@
                                         <input type="hidden" name="gst_type" id="gst_type" value="<?=(!empty($dataRow->gst_type))?$dataRow->gst_type:""?>">
                                         <input type="hidden" name="party_state_code" id="party_state_code" value="<?=(!empty($dataRow->party_state_code))?$dataRow->party_state_code:""?>">
 
+                                        <input type="hidden" name="tax_class" id="tax_class" value="<?=(!empty($dataRow->tax_class))?$dataRow->tax_class:""?>">
+
                                         <input type="hidden" name="ledger_eff" id="ledger_eff" value="1">
                                     </div>
 
@@ -78,13 +80,13 @@
                                                         $selected = ($dataRow->gstin == $row->gstin)?"selected":"";
                                                         echo '<option value="'.$row->gstin.'" '.$selected.'>'.$row->gstin.'</option>';
                                                     endforeach;
-                                                    echo '<option value="URP" '.(($dataRow->gstin == 'URP')?"selected":"").'>URP</option>';
+                                                    
                                                 endif;
                                             ?>
                                         </select>
                                     </div>
 
-                                    <div class="col-md-3 form-group">
+                                    <div class="col-md-2 form-group">
 										<label for="memo_type">Memo Type</label>
 										<select name="memo_type" id="memo_type" class="form-control">
 											<option value="DEBIT" <?=(!empty($dataRow->memo_type) && $dataRow->memo_type == "DEBIT")?"selected":""?> >Debit</option>
@@ -93,25 +95,49 @@
 									</div>
 
                                     <div class="col-md-3 form-group">
-										<label for="sales_type">Purchase Type </label>
-										<select name="sales_type" id="sales_type" class="form-control">
-                                            <option value="1" <?= (!empty($dataRow->sales_type) && $dataRow->sales_type == 1) ? "selected" : "" ?>>Regular</option>
-                                            <option value="2" <?= (!empty($dataRow->sales_type) && $dataRow->sales_type == 2) ? "selected" : "" ?>>Import</option>
-                                            <option value="3" <?= (!empty($dataRow->sales_type) && $dataRow->sales_type == 3) ? "selected" : "" ?>>Jobwork</option>
+										<label for="sp_acc_id">GST Type </label>
+                                        <select name="sp_acc_id" id="sp_acc_id" class="form-control single-select req">
+											<?=getSpAccListOption($purchaseAccounts,((!empty($dataRow->sp_acc_id))?$dataRow->sp_acc_id:0))?>
 										</select>
+                                        <input type="hidden" id="inv_type" value="PURCHASE">
 									</div>
 
                                     <div class="col-md-3 form-group">
+                                        <label for="itc">Eligibility For ITC</label>
+                                        <select name="itc" id="itc" class="form-control">
+                                            <option value="Inputs" <?=(!empty($dataRow->itc) && $dataRow->itc == "Inputs")?"selected":""?> >Inputs</option>
+                                            <option value="Capital Goods" <?=(!empty($dataRow->itc) && $dataRow->itc == "Capital Goods")?"selected":""?> >Capital Goods</option>
+                                            <option value="Input Services" <?=(!empty($dataRow->itc) && $dataRow->itc == "Input Services")?"selected":""?> >Input Services</option>
+                                            <option value="Ineligible" <?=(!empty($dataRow->itc) && $dataRow->itc == "Ineligible")?"selected":""?> >Ineligible</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-2 form-group">
 										<label for="challan_no">PO. No./Challan No.</label>
 										<input type="text" name="challan_no" class="form-control" placeholder="Enter Challan No." value="<?= (!empty($dataRow->challan_no)) ? $dataRow->challan_no : "" ?>" />
 									</div>
                                     
-                                    <div class="col-md-3 form-group">
+                                    <div class="col-md-2 form-group">
 										<label for="apply_round">Apply Round Off</label>
                                         <select name="apply_round" id="apply_round" class="form-control">
 											<option value="1" <?= (!empty($dataRow) && $dataRow->apply_round == 1) ? "selected" : "" ?>>Yes</option>
 											<option value="0" <?= (!empty($dataRow) && $dataRow->apply_round == 0) ? "selected" : "" ?>>No</option>
 										</select>
+                                    </div>
+
+                                    <div class="col-md-2 form-group exportData <?=(empty($dataRow))?"hidden":((!empty($dataRow->tax_class) && !in_array($dataRow->tax_class,["EXPORTGSTACC","EXPORTTFACC"]))?"hidden":"")?>">
+                                        <label for="port_code">Port Code</label>
+                                        <input type="text" name="port_code" id="port_code" class="form-control" value="<?=(!empty($dataRow->port_code))?$dataRow->port_code:""?>">
+                                    </div>
+
+                                    <div class="col-md-2 form-group exportData <?=(empty($dataRow))?"hidden":((!empty($dataRow->tax_class) && !in_array($dataRow->tax_class,["EXPORTGSTACC","EXPORTTFACC"]))?"hidden":"")?>">
+                                        <label for="ship_bill_no">Shipping Bill No.</label>
+                                        <input type="text" name="ship_bill_no" id="ship_bill_no" class="form-control" value="<?=(!empty($dataRow->ship_bill_no))?$dataRow->ship_bill_no:""?>">
+                                    </div>
+
+                                    <div class="col-md-2 form-group exportData <?=(empty($dataRow))?"hidden":((!empty($dataRow->tax_class) && !in_array($dataRow->tax_class,["EXPORTGSTACC","EXPORTTFACC"]))?"hidden":"")?>">
+                                        <label for="ship_bill_date">Shipping Bill Date</label>
+                                        <input type="date" name="ship_bill_date" id="ship_bill_date" class="form-control" value="<?=(!empty($dataRow->ship_bill_date))?$dataRow->ship_bill_date:""?>">
                                     </div>
                                 </div>
 

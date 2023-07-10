@@ -38,6 +38,7 @@ class PurchaseInvoice extends MY_Controller{
         $this->data['itemList'] = $this->item->getItemList(['item_type'=>"2,3"]);
         $this->data['unitList'] = $this->item->itemUnits();
         $this->data['hsnList'] = $this->hsnModel->getHSNList();
+        $this->data['purchaseAccounts'] = $this->party->getPartyList(['system_code'=>$this->purchaseTypeCodes]);
 		$this->data['taxList'] = $this->taxMaster->getActiveTaxList(1);
         $this->data['expenseList'] = $this->expenseMaster->getActiveExpenseList(1);
         $this->data['termsList'] = $this->terms->getTermsList(['type'=>'Purchase']);
@@ -53,6 +54,8 @@ class PurchaseInvoice extends MY_Controller{
             $errorMessage['trans_number'] = "Inv No. is required.";
         if(empty($data['party_id']))
             $errorMessage['party_id'] = "Party Name is required.";
+        if(empty($data['sp_acc_id']))
+            $errorMessage['sp_acc_id'] = "GST Type is required.";
         if(empty($data['itemData']))
             $errorMessage['itemData'] = "Item Details is required.";
         
@@ -73,6 +76,7 @@ class PurchaseInvoice extends MY_Controller{
         $this->data['itemList'] = $this->item->getItemList(['item_type'=>"2,3"]);
         $this->data['unitList'] = $this->item->itemUnits();
         $this->data['hsnList'] = $this->hsnModel->getHSNList();
+        $this->data['purchaseAccounts'] = $this->party->getPartyList(['system_code'=>$this->purchaseTypeCodes]);
 		$this->data['taxList'] = $this->taxMaster->getActiveTaxList(1);
         $this->data['expenseList'] = $this->expenseMaster->getActiveExpenseList(1);
         $this->data['termsList'] = $this->terms->getTermsList(['type'=>'Purchase']);

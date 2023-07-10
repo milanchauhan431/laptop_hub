@@ -95,10 +95,10 @@ class Items extends MY_Controller{
             if(!empty($data['part_no'])){$fname[] = $data['part_no'];}
             $data['full_name'] = (!empty($fname)) ? implode(' - ',$fname) : '';			
 			
-			if(!empty($data['hsn_code'])):
+			/* if(!empty($data['hsn_code'])):
 			    $hsnData = $this->hsnModel->getHSNDetail(['hsn'=>$data['hsn_code']]);
 				$data['gst_per'] = $hsnData->gst_per;
-			endif;
+			endif; */
 
             $this->printJson($this->item->save($data));
         endif;

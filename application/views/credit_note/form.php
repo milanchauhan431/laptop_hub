@@ -25,6 +25,7 @@
                                         <input type="hidden" name="gst_type" id="gst_type" value="<?=(!empty($dataRow->gst_type))?$dataRow->gst_type:"1"?>">
                                         <input type="hidden" name="party_state_code" id="party_state_code" value="<?=(!empty($dataRow->party_state_code))?$dataRow->party_state_code:""?>">
                                     
+                                        <input type="hidden" name="tax_class" id="tax_class" value="<?=(!empty($dataRow->tax_class))?$dataRow->tax_class:""?>">
                                     </div>
 
                                     <div class="col-md-2 form-group">
@@ -84,21 +85,20 @@
 									</div>
 
                                     <div class="col-md-2 form-group">
-										<label for="sales_type">Bill Type </label>
-										<select name="sales_type" id="sales_type" class="form-control">
-                                            <option value="1" <?= (!empty($dataRow->sales_type) && $dataRow->sales_type == 1) ? "selected" : "" ?>>Tax Invoice</option>
-                                            <option value="2" <?= (!empty($dataRow->sales_type) && $dataRow->sales_type == 2) ? "selected" : "" ?>>Export/Import</option>
-                                            <option value="3" <?= (!empty($dataRow->sales_type) && $dataRow->sales_type == 3) ? "selected" : "" ?>>Jobwork</option>
-										</select>
-									</div>
-
-                                    <div class="col-md-2 form-group">
 										<label for="order_type">CN. Type</label>
                                         <select name="order_type" id="order_type" class="form-control">
                                             <option value="Decrease Sales" <?=(!empty($dataRow->order_type) && $dataRow->order_type == "Decrease Sales")?"selected":""?>>Decrease Sales</option>
                                             <option value="Sales Return" <?=(!empty($dataRow->order_type) && $dataRow->order_type == "Sales Return")?"selected":""?>>Sales Return</option>
                                             <option value="Increase Purchase" <?=(!empty($dataRow->order_type) && $dataRow->order_type == "Increase Purchase")?"selected":""?>>Increase Purchase</option>
                                         </select>
+									</div>
+
+                                    <div class="col-md-4 form-group">
+										<label for="sp_acc_id">GST Type</label>
+                                        <select name="sp_acc_id" id="sp_acc_id" class="form-control single-select req">
+											<?=getSpAccListOption($salesAccounts,((!empty($dataRow->sp_acc_id))?$dataRow->sp_acc_id:0))?>
+										</select>
+                                        <input type="hidden" id="inv_type" value="SALES">
 									</div>
 
                                     <div class="col-md-2 form-group">

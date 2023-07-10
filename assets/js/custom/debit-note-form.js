@@ -1,6 +1,21 @@
 $(document).ready(function(){
     $(document).on("change",'#order_type',function(){
         var order_type = $(this).val();
+		$.ajax({ 
+            type: "post",   
+            url: base_url + controller + '/getDebitNoteTypes',   
+            data: {order_type:order_type},
+			dataType: 'json',
+        }).done(function(response){
+			$("#inv_type").val("");
+			$("#inv_type").val(response.inv_type);
+			$("#sp_acc_id").html("");
+			$("#sp_acc_id").html(response.accountOptions);
+			$("#sp_acc_id").comboSelect();
+
+			gstin();
+        });
+
         $.ajax({ 
             type: "post",   
             url: base_url + controller + '/getAccountSummaryHtml',   
@@ -369,7 +384,7 @@ function resPartyDetail(response = ""){
     }else{
         $("#party_name").val("");
     }
-    html += '<option value="URP">URP</option>';
+    
     $("#gstin").html(html);$("#gstin").comboSelect();gstin();
 }
 

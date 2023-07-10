@@ -371,7 +371,7 @@ function resPartyDetail(response = ""){
     }else{
         $("#party_name").val("");
     }
-    html += '<option value="URP">URP</option>';
+    
     $("#gstin").html(html);
     $("#gstin").comboSelect();
     gstin();

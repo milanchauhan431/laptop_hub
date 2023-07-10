@@ -38,10 +38,11 @@ class CreditNote extends MY_Controller{
         $this->data['itemList'] = $this->item->getItemList();
         $this->data['unitList'] = $this->item->itemUnits();
         $this->data['hsnList'] = $this->hsnModel->getHSNList();
+        $this->data['salesAccounts'] = $this->party->getPartyList(['system_code'=>$this->salesTypeCodes]);
 		$this->data['taxList'] = $this->taxMaster->getActiveTaxList(2);
         $this->data['expenseList'] = $this->expenseMaster->getActiveExpenseList(2);
         $this->data['termsList'] = $this->terms->getTermsList(['type'=>'Sales']);
-		$this->data['ledgerList'] = $this->party->getPartyList(["'DT'","'ED'","'EI'","'ID'","'II'"]);
+		$this->data['ledgerList'] = $this->party->getPartyList(['group_code'=>["'DT'","'ED'","'EI'","'ID'","'II'"]]);
         $this->load->view($this->form,$this->data);
     }
 
@@ -51,6 +52,8 @@ class CreditNote extends MY_Controller{
 
         if(empty($data['party_id']))
             $errorMessage['party_id'] = "Party Name is required.";
+        if(empty($data['sp_acc_id']))
+            $errorMessage['sp_acc_id'] = "GST Type is required.";
         if(empty($data['itemData'])):
             $errorMessage['itemData'] = "Item Details is required.";
         else:
@@ -79,10 +82,11 @@ class CreditNote extends MY_Controller{
         $this->data['itemList'] = $this->item->getItemList();
         $this->data['unitList'] = $this->item->itemUnits();
         $this->data['hsnList'] = $this->hsnModel->getHSNList();
+        $this->data['salesAccounts'] = $this->party->getPartyList(['system_code'=>($dataRow->order_type == "Increase Purchase")?$this->purchaseTypeCodes:$this->salesTypeCodes]);
 		$this->data['taxList'] = $this->taxMaster->getActiveTaxList(2);
         $this->data['expenseList'] = $this->expenseMaster->getActiveExpenseList(2);
         $this->data['termsList'] = $this->terms->getTermsList(['type'=>'Sales']);
-        $this->data['ledgerList'] = $this->party->getPartyList(["'DT'","'ED'","'EI'","'ID'","'II'"]);
+        $this->data['ledgerList'] = $this->party->getPartyList(['group_code'=>["'DT'","'ED'","'EI'","'ID'","'II'"]]);
         $this->load->view($this->form,$this->data);
     }
 
@@ -95,12 +99,20 @@ class CreditNote extends MY_Controller{
         endif;
     }
 
+    public function getCreditNoteTypes(){
+        $data = $this->input->post();
+        $accounts = $this->party->getPartyList(['system_code'=>($data['order_type'] == "Increase Purchase")?$this->purchaseTypeCodes:$this->salesTypeCodes]);
+        $type = ($data['order_type'] == "Increase Purchase")?"PURCHASE":"SALES";
+        $accountOptions = getSpAccListOption($accounts);
+        $this->printJson(['status'=>1,'accountOptions'=>$accountOptions,'inv_type'=>$type]);
+    }
+
     public function getAccountSummaryHtml(){
         $data = $this->input->post();
         $type = ($data['order_type'] == "Increase Purchase")?1:2;
         $this->data['taxList'] = $this->taxMaster->getActiveTaxList($type);
         $this->data['expenseList'] = $this->expenseMaster->getActiveExpenseList($type);
-        $this->data['ledgerList'] = $this->party->getPartyList(["'DT'","'ED'","'EI'","'ID'","'II'"]);
+        $this->data['ledgerList'] = $this->party->getPartyList(['group_code'=>["'DT'","'ED'","'EI'","'ID'","'II'"]]);
         $this->data['dataRow'] = array();
         $this->load->view('includes/tax_summary',$this->data);
     }

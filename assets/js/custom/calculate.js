@@ -36,38 +36,118 @@ $(document).ready(function(){
 
     $(document).on('keyup', '.calculateSummary', function () { claculateColumn(); });
     $(document).on('change','#gstin', function(){ gstin(); });
-    $(document).on('change','#sales_type', function(){ gstin(); });
+    /* $(document).on('change','#sales_type', function(){ gstin(); }); */
 	$(document).on('change',"#apply_round",function(){ claculateColumn(); });
+
+	$(document).on('change',"#sp_acc_id",function(){
+		var tax_class = $(this).find(":selected").data('tax_class');
+		var gstin = $("#gstin").find(":selected").val();	
+		$("#tax_class").val(tax_class);
+
+		var gst_type = 1;var stateCode = 24;
+		if(gstin != ""){		
+			stateCode = gstin.substr(0, 2);
+			if(stateCode == 24 || stateCode == "24"){
+				gst_type = 1;
+			}else{
+				gst_type = 2;
+			}
+			$('#sp_acc_id').comboSelect();
+		}else{
+			stateCode = 96;
+		}
+
+		if($.inArray(tax_class, ["SALESGSTACC","SALESJOBGSTACC","PURGSTACC","PURJOBGSTACC"]) >= 0){
+			gst_type = 1;
+		}else if($.inArray(tax_class, ["SALESIGSTACC","SALESJOBIGSTACC","EXPORTGSTACC","SEZSTFACC","SEZSGSTACC","DEEMEDEXP","PURIGSTACC","PURJOBIGSTACC","IMPORTACC","IMPORTSACC","SEZRACC"]) >= 0){
+			gst_type = 2;
+		}else if($.inArray(tax_class, ["SALESTFACC","SALESEXEMPTEDTFACC","EXPORTTFACC","PURTFACC","PURURDGSTACC","PURURDIGSTACC","PUREXEMPTEDTFACC"]) >= 0){
+			gst_type = 3;
+		}
+
+		if($.inArray(tax_class, ["EXPORTGSTACC","EXPORTTFACC","IMPORTACC","IMPORTSACC"]) >= 0){
+			$(".exportData").removeClass("hidden");
+		}else{
+			$(".exportData").addClass("hidden");
+		}
+
+		$("#gst_type").val(gst_type);
+		$("#party_state_code").val(stateCode);
+
+		if(gst_type == 1){ 
+			$(".cgstCol").show();$(".sgstCol").show();$(".igstCol").hide();
+			$(".amountCol").hide();$(".netAmtCol").show();
+		}else if(gst_type == 2){
+			$(".cgstCol").hide();$(".sgstCol").hide();$(".igstCol").show();
+			$(".amountCol").hide();$(".netAmtCol").show();
+		}else{
+			$(".cgstCol").hide();$(".sgstCol").hide();$(".igstCol").hide();
+			$(".amountCol").show();$(".netAmtCol").hide();
+		}
+
+		claculateColumn();
+	});
 });
 
 function gstin(){
     var gstin = $("#gstin").find(":selected").val();	
-	var sales_type = $("#sales_type").find(":selected").val();
 
-    var gst_type= 1; var stateCode = 24;
-	
-	if(sales_type == 2){
-		if(gstin == "URP"){
-			gst_type = 3;
-			stateCode = 96;
-		}else{
-			gst_type = 2;
-			stateCode = 97;
-		}		
+    var gst_type = 1; var stateCode = 24;
+	var inv_type = $("#inv_type").val(); 
+	if(inv_type == "SALES"){
+		$('#sp_acc_id').find('option[data-tax_class="SALESGSTACC"]').prop('selected', true);
+		$("#tax_class").val("SALESGSTACC");
 	}else{
-    	if(gstin != ""){		
-			if(gstin == "URP"){
-				stateCode = 24;
-				gst_type = 3;
+		$('#sp_acc_id').find('option[data-tax_class="PURGSTACC"]').prop('selected', true);
+		$("#tax_class").val("PURGSTACC");
+	}
+	
+	if(gstin != "" && gstin != "URP"){
+		stateCode = gstin.substr(0, 2);
+		if(stateCode == 24 || stateCode == "24"){
+			gst_type = 1;
+			if(inv_type == "SALES"){
+				$('#sp_acc_id').find('option[data-tax_class="SALESGSTACC"]').prop('selected', true);
+				$("#tax_class").val("SALESGSTACC");
 			}else{
-				stateCode = gstin.substr(0, 2);
-				if(stateCode == 24 || stateCode == "24"){gst_type= 1;}else{gst_type= 2;}
-			} 
-		}		       
-    }
+				$('#sp_acc_id').find('option[data-tax_class="PURGSTACC"]').prop('selected', true);
+				$("#tax_class").val("PURGSTACC");
+			}
+		}else{
+			gst_type = 2;stateCode = 96;
+			if(inv_type == "SALES"){
+				$('#sp_acc_id').find('option[data-tax_class="SALESIGSTACC"]').prop('selected', true);
+				$("#tax_class").val("SALESIGSTACC");
+			}else{
+				$('#sp_acc_id').find('option[data-tax_class="PURIGSTACC"]').prop('selected', true);
+				$("#tax_class").val("PURIGSTACC");
+			}			
+		}
+	}else{
+		if(inv_type == "PURCHASE"){
+			$('#sp_acc_id').find('option[data-tax_class="PURTFACC"]').prop('selected', true);
+			$("#tax_class").val("PURTFACC");
+			gst_type = 3;
+		}else if(inv_type == "SALES"){
+			$('#sp_acc_id').find('option[data-tax_class="SALESGSTACC"]').prop('selected', true);
+			$("#tax_class").val("SALESGSTACC");
+			gst_type = 1;
+		}
+		stateCode = 96;
+	}
+
+	if($.inArray(inv_type, ["PURCHASE","SALES"]) >= 0){
+		var tax_class = $(this).find(":selected").data('tax_class');
+		if($.inArray(tax_class, ["EXPORTGSTACC","EXPORTTFACC","IMPORTACC","IMPORTSACC"]) >= 0){
+			$(".exportData").removeClass("hidden");
+		}else{
+			$(".exportData").addClass("hidden");
+		}
+	}
 
     $("#gst_type").val(gst_type);
     $("#party_state_code").val(stateCode);
+	$('#sp_acc_id').comboSelect();
 
     if(gst_type == 1){ 
 		$(".cgstCol").show();$(".sgstCol").show();$(".igstCol").hide();

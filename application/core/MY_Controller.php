@@ -3,7 +3,7 @@ defined( 'BASEPATH' )OR exit( 'No direct script access allowed' );
 class MY_Controller extends CI_Controller{
 
 	public $termsTypeArray = ["Purchase","Sales"];
-	public $gstPer = ['0'=>"NILL",'5'=>"5 %",'12'=>"12 %",'18'=>"18 %",'28'=>"28 %"];
+	public $gstPer = ['0'=>"NILL",'0.10'=>'0.10 %','0.25'=>"0.25 %",'1'=>"1 %",'3'=>"3%",'5'=>"5 %","6"=>"6 %","7.50"=>"7.50 %",'12'=>"12 %",'18'=>"18 %",'28'=>"28 %"];
 	public $deptCategory = ["1"=>"Admin","2"=>"HR","3"=>"Purchase","4"=>"Sales","5"=>"Store","6"=>"QC","7"=>"General","8"=>"Machining"];
 	public $empRole = ["1"=>"Admin","2"=>"Production Manager","3"=>"Accountant","4"=>"Sales Manager","5"=>"Purchase Manager","6"=>"Employee"];
     public $gender = ["M"=>"Male","F"=>"Female","O"=>"Other"];
@@ -29,6 +29,11 @@ class MY_Controller extends CI_Controller{
 	public $leadStatus = ["Initited", "Appointment Fixed", "Qualified", "Enquiry Generated", "Proposal", "In Negotiation", "Confirm", "Close"];
 	public $appointmentMode = [1 => "Phone", 2 => "Email", 3 => "Visit", 4 => "Other"];
 	public $followupStage = [0 => 'Open', 1 => "Confirmed", 2 => "Hold", 3 => "Won", 4 => "Lost", 5 => "Enquiry" , 6 => "Quatation"];
+
+	//Types of Invoice
+	public $purchaseTypeCodes = ["'PURGSTACC'","'PURIGSTACC'","'PURJOBGSTACC'","'PURJOBIGSTACC'","'PURURDGSTACC'","'PURURDIGSTACC'","'PURTFACC'","'PUREXEMPTEDTFACC'","'IMPORTACC'","'IMPORTSACC'","'SEZRACC'","'SEZSGSTACC'","'SEZSTFACC'","'DEEMEDEXP'"];
+
+	public $salesTypeCodes = ["'SALESGSTACC'","'SALESIGSTACC'","'SALESJOBGSTACC'","'SALESJOBIGSTACC'","'SALESTFACC'","'SALESEXEMPTEDTFACC'","'EXPORTGSTACC'","'EXPORTTFACC'","'SEZSGSTACC'","'SEZSTFACC'","'DEEMEDEXP'"];
 	
 	public function __construct(){
 		parent::__construct();

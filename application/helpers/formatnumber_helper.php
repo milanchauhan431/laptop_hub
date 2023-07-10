@@ -602,4 +602,15 @@ function getLocationListOption($locationList,$locationId = 0){
 
 	return $options;
 }
+
+/* Get Sales / Purchase Account Options */
+function getSpAccListOption($accounts,$acc_id = 0){
+	$options = '<option value="">Select Type</option>';
+	foreach($accounts as $row):
+		$selected = (!empty($acc_id) && $acc_id == $row->id)?"selected":"";
+		$options .= '<option value="'.$row->id.'" data-tax_class="'.$row->system_code.'" '.$selected.'>'.$row->party_name.'</option>';
+	endforeach;
+
+	return $options;
+}
 ?>

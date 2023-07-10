@@ -24,7 +24,8 @@
                                         <input type="hidden" name="party_name" id="party_name" value="<?=(!empty($dataRow->party_name))?$dataRow->party_name:""?>">
                                         <input type="hidden" name="gst_type" id="gst_type" value="<?=(!empty($dataRow->gst_type))?$dataRow->gst_type:""?>">
                                         <input type="hidden" name="party_state_code" id="party_state_code" value="<?=(!empty($dataRow->party_state_code))?$dataRow->party_state_code:""?>">
-                                    
+
+                                        <input type="hidden" name="tax_class" id="tax_class" value="<?=(!empty($dataRow->tax_class))?$dataRow->tax_class:""?>">
                                     </div>
 
                                     <div class="col-md-2 form-group">
@@ -86,13 +87,12 @@
 										</select>
 									</div>
 
-                                    <div class="col-md-2 form-group">
-										<label for="sales_type">Sales Type </label>
-										<select name="sales_type" id="sales_type" class="form-control">
-                                            <option value="1" <?= (!empty($dataRow->sales_type) && $dataRow->sales_type == 1) ? "selected" : "" ?>>Manufacturing (Domestics)</option>
-                                            <option value="2" <?= (!empty($dataRow->sales_type) && $dataRow->sales_type == 2) ? "selected" : "" ?>>Manufacturing (Export)</option>
-                                            <option value="3" <?= (!empty($dataRow->sales_type) && $dataRow->sales_type == 3) ? "selected" : "" ?>>Jobwork (Domestics)</option>
+                                    <div class="col-md-3 form-group">
+										<label for="sp_acc_id">GST Type </label>
+                                        <select name="sp_acc_id" id="sp_acc_id" class="form-control single-select req">
+											<?=getSpAccListOption($salesAccounts,((!empty($dataRow->sp_acc_id))?$dataRow->sp_acc_id:0))?>
 										</select>
+                                        <input type="hidden" id="inv_type" value="SALES">
 									</div>
 
                                     <div class="col-md-2 form-group">
@@ -105,7 +105,7 @@
                                         <input type="text" name="doc_no" id="doc_no" class="form-control" value="<?=(!empty($dataRow->doc_no))?$dataRow->doc_no:""?>">
                                     </div>
 
-                                    <div class="col-md-2 form-group">
+                                    <div class="col-md-3 form-group">
                                         <label for="doc_date">PO. Date</label>
                                         <input type="date" name="doc_date" id="doc_date" class="form-control" value="<?=(!empty($dataRow->doc_date))?$dataRow->doc_date:getFyDate()?>">
                                     </div>
@@ -128,9 +128,24 @@
                                         <input type="text" name="masterDetails[t_col_2]" id="master_t_col_2" class="form-control numericOnly" value="<?=(!empty($dataRow->contact_no))?$dataRow->contact_no:""?>">
                                     </div>
 
-                                    <div class="col-md-8 form-group">
+                                    <div class="col-md-6 form-group">
                                         <label for="master_t_col_3">Ship To</label>
                                         <input type="text" name="masterDetails[t_col_3]" id="master_t_col_3" class="form-control" value="<?=(!empty($dataRow->ship_address))?$dataRow->ship_address:""?>">
+                                    </div>
+
+                                    <div class="col-md-2 form-group exportData <?=(empty($dataRow))?"hidden":((!empty($dataRow->tax_class) && !in_array($dataRow->tax_class,["EXPORTGSTACC","EXPORTTFACC"]))?"hidden":"")?>">
+                                        <label for="port_code">Port Code</label>
+                                        <input type="text" name="port_code" id="port_code" class="form-control" value="<?=(!empty($dataRow->port_code))?$dataRow->port_code:""?>">
+                                    </div>
+
+                                    <div class="col-md-2 form-group exportData <?=(empty($dataRow))?"hidden":((!empty($dataRow->tax_class) && !in_array($dataRow->tax_class,["EXPORTGSTACC","EXPORTTFACC"]))?"hidden":"")?>">
+                                        <label for="ship_bill_no">Shipping Bill No.</label>
+                                        <input type="text" name="ship_bill_no" id="ship_bill_no" class="form-control" value="<?=(!empty($dataRow->ship_bill_no))?$dataRow->ship_bill_no:""?>">
+                                    </div>
+
+                                    <div class="col-md-2 form-group exportData <?=(empty($dataRow))?"hidden":((!empty($dataRow->tax_class) && !in_array($dataRow->tax_class,["EXPORTGSTACC","EXPORTTFACC"]))?"hidden":"")?>">
+                                        <label for="ship_bill_date">Shipping Bill Date</label>
+                                        <input type="date" name="ship_bill_date" id="ship_bill_date" class="form-control" value="<?=(!empty($dataRow->ship_bill_date))?$dataRow->ship_bill_date:""?>">
                                     </div>
 
                                     <div class="col-md-2 form-group">
@@ -230,7 +245,6 @@
                                 
 								<input type="hidden" name="row_index" id="row_index" value="">
 								<input type="hidden" name="item_code" id="item_code" value="" />
-                                <input type="hidden" name="item_id" id="item_id" value="0" />
                                 <input type="hidden" name="item_type" id="item_type" value="1" />
                                 <input type="hidden" name="stock_eff" id="stock_eff" value="1" />
                                 <input type="hidden" name="org_price" id="org_price" class="org_price" value="" />

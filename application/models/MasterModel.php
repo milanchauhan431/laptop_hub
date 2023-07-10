@@ -458,6 +458,14 @@ class MasterModel extends CI_Model{
             endif;
         endif;
 
+        if(isset($data['order_by_field'])):
+            if(!empty($data['order_by_field'])):
+                foreach($data['order_by_field'] as $key=>$value):
+                    $this->db->order_by("FIELD(".$key.", ".implode(",",$value).")", '', false);
+                endforeach;
+            endif;
+        endif;
+
         if(isset($data['group_by'])):
             if(!empty($data['group_by'])):
                 foreach($data['group_by'] as $key=>$value):

@@ -25,6 +25,7 @@
                                         <input type="hidden" name="gst_type" id="gst_type" value="<?=(!empty($dataRow->gst_type))?$dataRow->gst_type:"1"?>">
                                         <input type="hidden" name="party_state_code" id="party_state_code" value="<?=(!empty($dataRow->party_state_code))?$dataRow->party_state_code:""?>">
                                     
+                                        <input type="hidden" name="tax_class" id="tax_class" value="<?=(!empty($dataRow->tax_class))?$dataRow->tax_class:""?>">
                                     </div>
 
                                     <div class="col-md-2 form-group">
@@ -69,7 +70,7 @@
                                                         $selected = ($dataRow->gstin == $row->gstin)?"selected":"";
                                                         echo '<option value="'.$row->gstin.'" '.$selected.'>'.$row->gstin.'</option>';
                                                     endforeach;
-                                                    echo '<option value="URP" '.(($dataRow->gstin == 'URP')?"selected":"").'>URP</option>';
+                                                    
                                                 endif;
                                             ?>
                                         </select>
@@ -81,16 +82,7 @@
 											<option value="DEBIT" <?=(!empty($dataRow->memo_type) && $dataRow->memo_type == "DEBIT")?"selected":""?> >Debit</option>
 											<option value="CASH" <?=(!empty($dataRow->memo_type) && $dataRow->memo_type == "CASH")?"selected":""?> >Cash</option>
 										</select>
-									</div>
-
-                                    <div class="col-md-2 form-group">
-										<label for="sales_type">Bill Type </label>
-										<select name="sales_type" id="sales_type" class="form-control">
-                                            <option value="1" <?= (!empty($dataRow->sales_type) && $dataRow->sales_type == 1) ? "selected" : "" ?>>Tax Invoice</option>
-                                            <option value="2" <?= (!empty($dataRow->sales_type) && $dataRow->sales_type == 2) ? "selected" : "" ?>>Export/Import</option>
-                                            <option value="3" <?= (!empty($dataRow->sales_type) && $dataRow->sales_type == 3) ? "selected" : "" ?>>Jobwork</option>
-										</select>
-									</div>
+									</div>                                    
 
                                     <div class="col-md-2 form-group">
 										<label for="order_type">DN. Type</label>
@@ -99,6 +91,14 @@
                                             <option value="Purchase Return" <?=(!empty($dataRow->order_type) && $dataRow->order_type == "Purchase Return")?"selected":""?>>Purchase Return</option>
                                             <option value="Increase Sales" <?=(!empty($dataRow->order_type) && $dataRow->order_type == "Increase Sales")?"selected":""?>>Increase Sales</option>
                                         </select>
+									</div>
+
+                                    <div class="col-md-4 form-group">
+										<label for="sp_acc_id">GST Type</label>
+                                        <select name="sp_acc_id" id="sp_acc_id" class="form-control single-select req">
+											<?=getSpAccListOption($purchaseAccounts,((!empty($dataRow->sp_acc_id))?$dataRow->sp_acc_id:0))?>
+										</select>
+                                        <input type="hidden" id="inv_type" value="PURCHASE">
 									</div>
 
                                     <div class="col-md-2 form-group">
@@ -213,7 +213,6 @@
                                 
 								<input type="hidden" name="row_index" id="row_index" value="">
 								<input type="hidden" name="item_code" id="item_code" value="" />
-                                <input type="hidden" name="item_id" id="item_id" value="0" />
                                 <input type="hidden" name="item_type" id="item_type" value="1" />
                                 <input type="hidden" name="stock_eff" id="stock_eff" value="1" />
                                 <input type="hidden" name="org_price" id="org_price" class="org_price" value="" />

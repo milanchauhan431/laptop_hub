@@ -38,10 +38,11 @@ class GstExpense extends MY_Controller{
 		$this->data['itemLedgerList'] = $this->party->getPartyList(['party_category'=>4]);
         $this->data['unitList'] = $this->item->itemUnits();
         $this->data['hsnList'] = $this->hsnModel->getHSNList();
+        $this->data['purchaseAccounts'] = $this->party->getPartyList(['system_code'=>$this->purchaseTypeCodes]);
 		$this->data['taxList'] = $this->taxMaster->getActiveTaxList(1);
 		$this->data['expenseList'] = $this->expenseMaster->getActiveExpenseList(1);
 		$this->data['termsList'] = $this->terms->getTermsList(['type'=>'Purchase']);
-		$this->data['ledgerList'] = $this->party->getPartyList(["'DT'","'ED'","'EI'","'ID'","'II'"]);
+		$this->data['ledgerList'] = $this->party->getPartyList(['group_code'=>["'DT'","'ED'","'EI'","'ID'","'II'"]]);
 		$this->load->view($this->form,$this->data);
 	}
 
@@ -51,6 +52,8 @@ class GstExpense extends MY_Controller{
 
         if(empty($data['trans_number']))
             $errorMessage['trans_number'] = "Inv No. is required.";
+        if(empty($data['sp_acc_id']))
+            $errorMessage['sp_acc_id'] = "GST Type is required.";
         if(empty($data['party_id']))
             $errorMessage['party_id'] = "Party Name is required.";
         if(empty($data['itemData']))
@@ -73,10 +76,11 @@ class GstExpense extends MY_Controller{
 		$this->data['itemLedgerList'] = $this->party->getPartyList(['party_category'=>4]);
         $this->data['unitList'] = $this->item->itemUnits();
         $this->data['hsnList'] = $this->hsnModel->getHSNList();
+        $this->data['purchaseAccounts'] = $this->party->getPartyList(['system_code'=>$this->purchaseTypeCodes]);
 		$this->data['taxList'] = $this->taxMaster->getActiveTaxList(1);
 		$this->data['expenseList'] = $this->expenseMaster->getActiveExpenseList(1);
 		$this->data['termsList'] = $this->terms->getTermsList(['type'=>'Purchase']);
-		$this->data['ledgerList'] = $this->party->getPartyList(["'DT'","'ED'","'EI'","'ID'","'II'"]);
+		$this->data['ledgerList'] = $this->party->getPartyList(['group_code'=>["'DT'","'ED'","'EI'","'ID'","'II'"]]);
         $this->load->view($this->form,$this->data);
     }
 
