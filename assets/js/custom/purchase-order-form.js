@@ -297,7 +297,7 @@ function Remove(button) {
 }
 
 function resPartyDetail(response = ""){
-    var html = '';
+    var html = '<option value="">Select GST No.</option>';
     if(response != ""){
         var partyDetail = response.data.partyDetail;
         $("#party_name").val(partyDetail.party_name);
@@ -315,7 +315,7 @@ function resPartyDetail(response = ""){
 		$("#master_t_col_2").val("");
         $("#master_t_col_3").val("");
     }
-    html += '<option value="URP">URP</option>';
+    //html += '<option value="URP">URP</option>';
     $("#gstin").html(html);$("#gstin").comboSelect();gstin();
 }
 

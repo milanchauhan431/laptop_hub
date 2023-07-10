@@ -76,7 +76,7 @@
                                                         echo '<option value="'.$row->gstin.'" '.$selected.'>'.$row->gstin.'</option>';
                                                     endforeach;
 
-                                                    echo '<option value="URP" '.(($dataRow->gstin == 'URP')?"selected":"").'>URP</option>';
+                                                    //echo '<option value="URP" '.(($dataRow->gstin == 'URP')?"selected":"").'>URP</option>';
                                                 endif;
                                             ?>
                                         </select>
