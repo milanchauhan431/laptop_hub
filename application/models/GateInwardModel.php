@@ -132,7 +132,7 @@ class GateInwardModel extends masterModel{
                     $setData['tableName'] = $this->transChild;
                     $setData['where']['id'] = $row['po_trans_id'];
                     $setData['set']['dispatch_qty'] = 'dispatch_qty, + '.$row['qty'];
-                    $setData['update']['trans_status'] = "(CASE WHEN (dispatch_qty + ".$row['qty'].") >= qty THEN 1 ELSE 0 END)";
+                    $setData['update']['trans_status'] = "(CASE WHEN dispatch_qty >= qty THEN 1 ELSE 0 END)";
                     $this->setValue($setData);
 
                     $setData = array();

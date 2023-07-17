@@ -51,7 +51,7 @@ class PurchaseInvoiceModel extends MasterModel{
                         $setData['tableName'] = "mir_transaction";
                         $setData['where']['id'] = $row->ref_id;
                         $setData['set']['inv_qty'] = 'inv_qty, - '.$row->qty;
-                        $setData['update']['trans_status'] = "(CASE WHEN (inv_qty - ".$row->qty.") >= qty THEN 1 ELSE 0 END)";
+                        $setData['update']['trans_status'] = "(CASE WHEN inv_qty >= qty THEN 1 ELSE 0 END)";
                         $this->setValue($setData);
                     endif;
 
@@ -60,7 +60,7 @@ class PurchaseInvoiceModel extends MasterModel{
                         $setData['tableName'] = $this->transChild;
                         $setData['where']['id'] = $row->ref_id;
                         $setData['set']['dispatch_qty'] = 'dispatch_qty, - '.$row->qty;
-                        $setData['update']['trans_status'] = "(CASE WHEN (dispatch_qty - ".$row->qty.") >= qty THEN 1 ELSE 0 END)";
+                        $setData['update']['trans_status'] = "(CASE WHEN dispatch_qty >= qty THEN 1 ELSE 0 END)";
                         $this->setValue($setData);
                     endif;
 
@@ -181,7 +181,7 @@ class PurchaseInvoiceModel extends MasterModel{
                     $setData['tableName'] = "mir_transaction";
                     $setData['where']['id'] = $row['ref_id'];
                     $setData['set']['inv_qty'] = 'inv_qty, + '.$row['qty'];
-                    $setData['update']['trans_status'] = "(CASE WHEN (inv_qty + ".$row['qty'].") >= qty THEN 1 ELSE 0 END)";
+                    $setData['update']['trans_status'] = "(CASE WHEN inv_qty >= qty THEN 1 ELSE 0 END)";
                     $this->setValue($setData);
                 endif;
 
@@ -190,7 +190,7 @@ class PurchaseInvoiceModel extends MasterModel{
                     $setData['tableName'] = $this->transChild;
                     $setData['where']['id'] = $row['ref_id'];
                     $setData['set']['dispatch_qty'] = 'dispatch_qty, + '.$row['qty'];
-                    $setData['update']['trans_status'] = "(CASE WHEN (dispatch_qty + ".$row['qty'].") >= qty THEN 1 ELSE 0 END)";
+                    $setData['update']['trans_status'] = "(CASE WHEN dispatch_qty >= qty THEN 1 ELSE 0 END)";
                     $this->setValue($setData);
                 endif;
             endforeach;
@@ -301,7 +301,7 @@ class PurchaseInvoiceModel extends MasterModel{
                     $setData['tableName'] = "mir_transaction";
                     $setData['where']['id'] = $row->ref_id;
                     $setData['set']['inv_qty'] = 'inv_qty, - '.$row->qty;
-                    $setData['update']['trans_status'] = "(CASE WHEN (inv_qty - ".$row->qty.") >= qty THEN 1 ELSE 0 END)";
+                    $setData['update']['trans_status'] = "(CASE WHEN inv_qty >= qty THEN 1 ELSE 0 END)";
                     $this->setValue($setData);
                 endif;
 
@@ -310,7 +310,7 @@ class PurchaseInvoiceModel extends MasterModel{
                     $setData['tableName'] = $this->transChild;
                     $setData['where']['id'] = $row->ref_id;
                     $setData['set']['dispatch_qty'] = 'dispatch_qty, - '.$row->qty;
-                    $setData['update']['trans_status'] = "(CASE WHEN (dispatch_qty - ".$row->qty.") >= qty THEN 1 ELSE 0 END)";
+                    $setData['update']['trans_status'] = "(CASE WHEN dispatch_qty >= qty THEN 1 ELSE 0 END)";
                     $this->setValue($setData);
                 endif;
 

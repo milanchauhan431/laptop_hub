@@ -238,6 +238,9 @@ function createInvoice(){
 		row = $(this).data('row');
 		mainRefIds.push(row.trans_main_id);
 		mainFromEntryType.push(row.main_entry_type);
+		row.qty = row.pending_qty;
+		row.gst_per = parseFloat(row.gst_per);
+		row.org_price = row.price;
 		AddRow(row);
 	}).get();
 
