@@ -151,7 +151,7 @@
 
             <div class="<?=((!empty($dataRow->item_type) && $dataRow->item_type != 1) || (empty($dataRow) && $item_type != 1))?"col-md-8":"col-md-6"?> form-group">
                 <label for="description">Product Description</label>
-                <textarea name="note" id="note" class="form-control" rows="1"><?=(!empty($dataRow->note))?$dataRow->note:""?></textarea>
+                <textarea name="description" id="description" class="form-control" rows="1"><?=(!empty($dataRow->description))?$dataRow->description:""?></textarea>
             </div>
 
             <div class="col-md-12 form-group">
