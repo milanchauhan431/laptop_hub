@@ -62,7 +62,7 @@
 
             <div class="col-md-3 form-group">
                 <label for="item_id">Item Name</label>
-                <select id="item_id" class="form-control itemDetails single-select" data-res_function="resItemDetail">
+                <select id="item_id" class="form-control itemDetails single-select req" data-res_function="resItemDetail">
                     <option value="">Select Item Name</option>
                     <?=getItemListOption($itemList)?>
                 </select>

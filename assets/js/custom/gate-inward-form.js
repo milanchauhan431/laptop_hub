@@ -56,6 +56,9 @@ $(document).ready(function(){
         /* if(formData.po_trans_id == ""){ 
             $('.po_trans_id').html("PO is required.");
         } */
+        if(formData.item_id == ""){ 
+            $('.item_id').html("Item Name is required.");
+        }
         if(formData.qty == "" || parseFloat(formData.qty) == 0){ 
             $('.qty').html("Qty is required.");
         }
@@ -83,6 +86,7 @@ $(document).ready(function(){
             $("#po_trans_id").val("");
             $("#po_id").val("");$("#po_id").comboSelect();            
             $("#price").val("");
+            $(".error").html("");
         }
     });
 });
