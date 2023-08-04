@@ -82,6 +82,8 @@ class PartyModel extends MasterModel{
             $queryData['where']['party_type'] = 1;
         endif;
 
+        $queryData['order_by']['party_name'] = "ASC";
+
         return $this->rows($queryData);
     }
 

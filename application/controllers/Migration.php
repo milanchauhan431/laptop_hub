@@ -315,11 +315,17 @@ class Migration extends MY_Controller{
             $this->db->trans_begin();
 
             $this->db->select("id,gstin,party_address,party_pincode,delivery_address,delivery_pincode");
-            $this->db->where_in('party_category',[1,2]);
+            $this->db->where_in('party_category',[1,2,3]);
             $this->db->where('is_delete',0);
             $result = $this->db->get('party_master')->result();
 
             foreach($result as $row):
+                $this->db->where('main_ref_id',$row->id);
+                $this->db->where('table_name','party_master');
+                $this->db->where('description','PARTY GST DETAIL');
+                $this->db->where('t_col_1','');
+                $this->db->update('trans_details',['is_delete'=>1]);
+
                 $this->db->select('id');
                 $this->db->where('main_ref_id',$row->id);
                 $this->db->where('table_name','party_master');

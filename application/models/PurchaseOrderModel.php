@@ -67,9 +67,9 @@ class PurchaseOrderModel extends MasterModel{
             $masterDetails = $data['masterDetails'];
             $itemData = $data['itemData'];
 
-            $transExp = getExpArrayMap($data['expenseData']);
+            $transExp = getExpArrayMap(((!empty($data['expenseData']))?$data['expenseData']:array()));
 			$expAmount = $transExp['exp_amount'];
-            $termsData = $data['termsData'];
+            $termsData = (!empty($data['termsData']))?$data['termsData']:array();
 
             unset($transExp['exp_amount'],$data['itemData'],$data['expenseData'],$data['termsData'],$data['masterDetails']);		
 
@@ -181,7 +181,7 @@ class PurchaseOrderModel extends MasterModel{
         try{
             $this->db->trans_begin();
 
-            $itemList = $this->getPurchaseOrderItems(['id'=>$data['id']]);
+            $itemList = $this->getPurchaseOrderItems(['id'=>$id]);
             foreach($itemList as $row):
                 if(!empty($row->ref_id)):
                     $setData = Array();

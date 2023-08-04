@@ -305,9 +305,12 @@ function resPartyDetail(response = ""){
         $("#master_t_col_2").val(partyDetail.delivery_contact_no);
         $("#master_t_col_3").val(partyDetail.delivery_address);
 		
-        var gstDetails = response.data.gstDetails;
+        var gstDetails = response.data.gstDetails;var i = 1;
         $.each(gstDetails,function(index,row){  
-            html += '<option value="'+row.gstin+'">'+row.gstin+'</option>';
+			if(row.gstin !=""){
+				html += '<option value="'+row.gstin+'" '+((i==1)?"selected":"")+'>'+row.gstin+'</option>';
+				i++;
+			}
         });        
     }else{
         $("#party_name").val("");

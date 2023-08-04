@@ -408,13 +408,16 @@ function getCrDrEff($type){
 }
 
 function getExpArrayMap($input){
+    $result = array();
 	$expAmount=0;
-	for($i=1; $i<=25 ; $i++):
-		$result['exp'.$i.'_acc_id'] = (isset($input['exp'.$i.'_acc_id']))?$input['exp'.$i.'_acc_id']:0;
-		$result['exp'.$i.'_per'] = (isset($input['exp'.$i.'_per']))?$input['exp'.$i.'_per']:0;
-		$result['exp'.$i.'_amount'] = (isset($input['exp'.$i.'_amount']))?$input['exp'.$i.'_amount']:0;
-		$expAmount += $result['exp'.$i.'_amount'];
-	endfor;
+    if(!empty($input)):
+        for($i=1; $i<=25 ; $i++):
+            $result['exp'.$i.'_acc_id'] = (isset($input['exp'.$i.'_acc_id']))?$input['exp'.$i.'_acc_id']:0;
+            $result['exp'.$i.'_per'] = (isset($input['exp'.$i.'_per']))?$input['exp'.$i.'_per']:0;
+            $result['exp'.$i.'_amount'] = (isset($input['exp'.$i.'_amount']))?$input['exp'.$i.'_amount']:0;
+            $expAmount += $result['exp'.$i.'_amount'];
+        endfor;
+    endif;
 	$result['exp_amount'] = $expAmount;
 	return $result;
 }
