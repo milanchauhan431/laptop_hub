@@ -37,7 +37,7 @@ function getPurchaseOrderData($data){
     $deleteParam = "{'postData':{'id' : ".$data->id."},'message' : 'Purchase Order'}";
     $deleteButton = '<a class="btn btn-danger btn-delete permission-remove" href="javascript:void(0)" onclick="trash('.$deleteParam.');" datatip="Remove" flow="down"><i class="ti-trash"></i></a>';
 
-    $printBtn = '<a class="btn btn-success btn-info permission-approve" href="'.base_url('purchaseOrders/printPO/'.$data->id).'" target="_blank" datatip="Print" flow="down"><i class="fas fa-print" ></i></a>';
+    $printBtn = '<a class="btn btn-success btn-info" href="'.base_url('purchaseOrders/printPO/'.$data->id).'" target="_blank" datatip="Print" flow="down"><i class="fas fa-print" ></i></a>';
 
     $action = getActionButton($printBtn.$editButton.$deleteButton);
 
