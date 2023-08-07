@@ -114,6 +114,7 @@ class LeadModel extends MasterModel{
                     $this->edit($this->partyMaster,['id'=>$leadData->party_id],['party_type'=>1]);
                 endif;
 
+                unset($data['entry_type']);
                 $result = $this->store($this->lead_managment,$data,'Status');
                 $result['message'] = "Lead ".(($data['lead_status'] == 3)?"won":"lost")." successfully.";
             endif;
