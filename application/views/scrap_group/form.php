@@ -11,7 +11,7 @@
 
             <div class="col-md-6 form-group">
                 <label for="category_id">Category</label>
-                <select name="category_id" id="category_id" class="form-control single-select req">
+                <select name="category_id" id="category_id" class="form-control select2 req">
                     <option value="">Select Category</option>
                     <?php
                         foreach ($categoryList as $row) :
@@ -24,7 +24,7 @@
 
             <div class="col-md-6 form-group">
                 <label for="unit_id">Unit</label>
-                <select name="unit_id" id="unit_id" class="form-control single-select req">
+                <select name="unit_id" id="unit_id" class="form-control select2 req">
                     <option value="">--</option>
                     <?php
                     foreach ($unitData as $row) :

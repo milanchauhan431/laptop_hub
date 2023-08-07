@@ -26,7 +26,7 @@
 
             <div class="col-md-6 form-group">
                 <label for="final_category">Final Category</label>
-                <select name="final_category" id="final_category" class="form-control single-select">
+                <select name="final_category" id="final_category" class="form-control">
                     <option value="0" <?=(!empty($dataRow) && $dataRow->final_category == 0) ? "selected" : "";?>>No</option>
                     <option value="1" <?=(!empty($dataRow) && $dataRow->final_category == 1) ? "selected" : "";?>>Yes</option>
                 </select>
@@ -34,7 +34,7 @@
 
             <div class="col-md-6 form-group returnable">
                 <label for="is_return">Returnable</label>
-                <select name="is_return" id="is_return" class="form-control single-select">
+                <select name="is_return" id="is_return" class="form-control">
                     <option value="0" <?=(!empty($dataRow) && $dataRow->is_return == 0) ? "selected" : "";?>>No</option>
                     <option value="1" <?=(!empty($dataRow) && $dataRow->is_return == 1) ? "selected" : "";?>>Yes</option>
                 </select>

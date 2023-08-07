@@ -20,7 +20,7 @@ $(document).ready(function(){
         $("#empPermission")[0].reset();
         $(".error").html("");
         $(this).val(emp_id);
-        $(this).comboSelect();
+        $(this).select2();
         $(".chk-col-success").removeAttr("checked");
         
         $.ajax({

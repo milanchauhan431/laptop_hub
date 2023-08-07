@@ -58,7 +58,7 @@
 												</div>
 											</span>
 										</div>
-                                        <select name="party_id" id="party_id" class="form-control single-select partyDetails partyOptions req" data-res_function="resPartyDetail">
+                                        <select name="party_id" id="party_id" class="form-control select2 partyDetails partyOptions req" data-res_function="resPartyDetail">
 											<option value="">Select Party</option>
 											<?=getPartyListOption($partyList,((!empty($dataRow->party_id))?$dataRow->party_id:0))?>
 										</select>
@@ -67,7 +67,7 @@
 
                                     <div class="col-md-3 form-group">
                                         <label for="gstin">GST NO.</label>
-                                        <select name="gstin" id="gstin" class="form-control single-select">
+                                        <select name="gstin" id="gstin" class="form-control select2">
                                             <option value="">Select GST No.</option>
                                             <?php
                                                 if(!empty($dataRow->party_id)):
@@ -84,7 +84,7 @@
 
                                     <div class="col-md-4 form-group">
                                         <label for="master_i_col_1">Transport Name</label>
-                                        <select name="masterDetails[i_col_1]" id="master_i_col_1" class="form-control single-select">
+                                        <select name="masterDetails[i_col_1]" id="master_i_col_1" class="form-control select2">
                                             <option value="">Select Transport</option>
                                             <?php
                                                 foreach($transportList as $row):
@@ -186,7 +186,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="itemModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel1" data-backdrop="static" data-keyboard="false">
+<div class="modal fade" id="itemModel" role="dialog" aria-labelledby="exampleModalLabel1" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-md" role="document">
         <div class="modal-content animated slideDown">
             <div class="modal-header" style="display:block;"><h4 class="modal-title">Add or Update Item</h4></div>
@@ -209,7 +209,7 @@
 
                             <div class="col-md-12 form-group">
 								<label for="item_id">Product Name</label>
-                                <select name="item_id" id="item_id" class="form-control single-select itemDetails itemOptions" data-res_function="resItemDetail">
+                                <select name="item_id" id="item_id" class="form-control select2 itemDetails itemOptions" data-res_function="resItemDetail">
                                     <option value="">Select Product Name</option>
                                     <?=getItemListOption($itemList)?>
                                 </select>
@@ -228,7 +228,7 @@
                             </div>
                             <div class="col-md-4 form-group">
                                 <label for="unit_id">Unit</label>
-                                <select name="unit_id" id="unit_id" class="form-control single-select req">
+                                <select name="unit_id" id="unit_id" class="form-control select2 req">
                                     <option value="0" selected>--</option>
                                     <?=getItemUnitListOption($unitList)?>
                                 </select>
@@ -236,14 +236,14 @@
                             </div>
 							<div class="col-md-4 form-group">
                                 <label for="hsn_code">HSN Code</label>
-                                <select name="hsn_code" id="hsn_code" class="form-control single-select">
+                                <select name="hsn_code" id="hsn_code" class="form-control select2">
                                     <option value="">Select HSN Code</option>
                                     <?=getHsnCodeListOption($hsnList)?>
                                 </select>
                             </div>
                             <div class="col-md-4 form-group">
                                 <label for="gst_per">GST Per.(%)</label>
-                                <select name="gst_per" id="gst_per" class="form-control single-select">
+                                <select name="gst_per" id="gst_per" class="form-control select2">
                                     <?php
                                         foreach($this->gstPer as $per=>$text):
                                             echo '<option value="'.$per.'">'.$text.'</option>';
@@ -251,11 +251,11 @@
                                     ?>
                                 </select>
                             </div>
-                            <div class="col-md-4 form-group">
+                            <div class="col-md-4 form-group hidden">
                                 <label for="make">Make</label>
                                 <input type="text" name="make" id="make" class="form-control" value="" />
                             </div>  
-                            <div class="col-md-8 form-group">
+                            <div class="col-md-12 form-group">
                                 <label for="item_remark">Remark</label>
                                 <input type="text" name="item_remark" id="item_remark" class="form-control" value="" />
                             </div>                            

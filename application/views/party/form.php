@@ -13,7 +13,7 @@
 
 			<div class="col-md-2 form-group hidden">
                 <label for="party_category">Party Category</label>
-                <select name="party_category" id="party_category" class="form-control single-select req">
+                <select name="party_category" id="party_category" class="form-control select2 req">
                     <?php
                         foreach($this->partyCategory as $key => $name):
                             if($key <= 3):
@@ -32,7 +32,7 @@
 
             <div class="col-md-3 form-group">
                 <label for="sales_executive">Sales Executive</label>
-                <select name="sales_executive" id="sales_executive" class="form-control single-select" >
+                <select name="sales_executive" id="sales_executive" class="form-control select2" >
 					<option value="">Sales Executive</option>
 					<?php
 						foreach($salesExecutives as $row):
@@ -65,7 +65,7 @@
 
             <div class="col-md-3 form-group">
                 <label for="registration_type">Registration Type</label>
-                <select name="registration_type" id="registration_type" class="form-control single-select">
+                <select name="registration_type" id="registration_type" class="form-control select2">
                     <?php
                         foreach($this->gstRegistrationTypes as $key=>$value):
                             $selected = (!empty($dataRow->registration_type) && $dataRow->registration_type == $key)?"selected":"";
@@ -87,7 +87,7 @@
 			
             <div class="col-md-3 form-group">
                 <label for="currency">Currency</label>
-                <select name="currency" id="currency" class="form-control single-select" tabindex="-1">
+                <select name="currency" id="currency" class="form-control select2">
                     <option value="">Select Currency</option>
                     <?php $i=1; foreach($currencyData as $row):
                         $selected = (!empty($dataRow->currency) && $dataRow->currency == $row->currency)?"selected":"";
@@ -100,7 +100,7 @@
             
             <div class="col-md-3 form-group">
                 <label for="country_id">Select Country</label>
-                <select name="country_id" id="country_id" class="form-control country_list single-select req" tabindex="-1" data-state_id="state_id" data-selected_state_id="<?=(!empty($dataRow->state_id))?$dataRow->state_id:4030?>">
+                <select name="country_id" id="country_id" class="form-control country_list select2 req" data-state_id="state_id" data-selected_state_id="<?=(!empty($dataRow->state_id))?$dataRow->state_id:4030?>">
                     <option value="">Select Country</option>
                     <?php foreach($countryData as $row):
                         $selected = (!empty($dataRow->country_id) && $dataRow->country_id == $row->id)?"selected":((empty($dataRow) && $row->id == 101)?"selected":"");
@@ -113,14 +113,14 @@
 
             <div class="col-md-3 form-group">
                 <label for="state_id">Select State</label>
-                <select name="state_id" id="state_id" class="form-control state_list single-select req" data-city_id="city_id" data-selected_city_id="<?=(!empty($dataRow->city_id))?$dataRow->city_id:""?>" tabindex="-1">
+                <select name="state_id" id="state_id" class="form-control state_list select2 req" data-city_id="city_id" data-selected_city_id="<?=(!empty($dataRow->city_id))?$dataRow->city_id:""?>">
                     <option value="">Select State</option>
                 </select>
             </div>
             
             <div class="col-md-3 form-group">
                 <label for="city_id">Select City</label>
-                <select name="city_id" id="city_id" class="form-control single-select req" tabindex="-1">
+                <select name="city_id" id="city_id" class="form-control select2 req">
                     <option value="">Select City</option>
                 </select>
             </div>
@@ -137,7 +137,7 @@
 
             <div class="col-md-3 form-group">
                 <label for="delivery_country_id">Delivery Country</label>
-                <select name="delivery_country_id" id="delivery_country_id" class="form-control country_list single-select" tabindex="-1" data-state_id="delivery_state_id" data-selected_state_id="<?=(!empty($dataRow->delivery_state_id))?$dataRow->delivery_state_id:""?>">
+                <select name="delivery_country_id" id="delivery_country_id" class="form-control country_list select2" data-state_id="delivery_state_id" data-selected_state_id="<?=(!empty($dataRow->delivery_state_id))?$dataRow->delivery_state_id:""?>">
                     <option value="">Select Country</option>
                     <?php foreach($countryData as $row):
                         $selected = (!empty($dataRow->delivery_country_id) && $dataRow->delivery_country_id == $row->id)?"selected":"";
@@ -149,14 +149,14 @@
 
             <div class="col-md-3 form-group">
                 <label for="delivery_state_id">Delivery State</label>
-                <select name="delivery_state_id" id="delivery_state_id" class="form-control state_list single-select" data-city_id="delivery_city_id" data-selected_city_id="<?=(!empty($dataRow->delivery_city_id))?$dataRow->delivery_city_id:""?>" tabindex="-1">
+                <select name="delivery_state_id" id="delivery_state_id" class="form-control state_list select2" data-city_id="delivery_city_id" data-selected_city_id="<?=(!empty($dataRow->delivery_city_id))?$dataRow->delivery_city_id:""?>">
                     <option value="">Select State</option>
                 </select>
             </div>
             
             <div class="col-md-3 form-group">
                 <label for="delivery_city_id">Select City</label>
-                <select name="delivery_city_id" id="delivery_city_id" class="form-control single-select" tabindex="-1">
+                <select name="delivery_city_id" id="delivery_city_id" class="form-control select2">
                     <option value="">Select City</option>
                 </select>
             </div>

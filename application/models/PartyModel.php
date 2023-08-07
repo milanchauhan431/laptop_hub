@@ -74,6 +74,8 @@ class PartyModel extends MasterModel{
         if(!empty($data['system_code'])):
             $queryData['where_in']['system_code'] = $data['system_code'];
             $queryData['order_by_field']['system_code'] = $data['system_code'];
+        else:
+            $queryData['order_by']['party_name'] = "ASC";
         endif;
 
         if(!empty($data['party_type'])):
@@ -81,8 +83,6 @@ class PartyModel extends MasterModel{
         else:
             $queryData['where']['party_type'] = 1;
         endif;
-
-        $queryData['order_by']['party_name'] = "ASC";
 
         return $this->rows($queryData);
     }

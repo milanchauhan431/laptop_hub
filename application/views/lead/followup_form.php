@@ -13,7 +13,7 @@
             </div>
             <div class="col-md-3 form-group">
                 <label for="mode">Mode</label>
-                <select name="mode" id="mode" class="form-control req single-select">
+                <select name="mode" id="mode" class="form-control req select2">
                     <?php
                         foreach($this->appointmentMode as $key=>$row):
                             echo '<option value="'.$key.'">'.$row.'</option>';
@@ -23,7 +23,7 @@
             </div>
 			<div class="col-md-3 form-group">
                 <label for="sales_executive">Sales Executives</label>
-                <select class="form-control single-select" name="sales_executive" id="sales_executive">
+                <select class="form-control select2" name="sales_executive" id="sales_executive">
                     <option value="">Select Sales Executive</option>
                     <?php
                     if(!empty($salesExecutives)){

@@ -15,7 +15,9 @@ $(document).ready(function(){
 			setPlaceHolder();
 			$("#itemModel").modal();
 			$("#itemModel .btn-close").show();
-			$("#itemModel .btn-save").show();		
+			$("#itemModel .btn-save").show();	
+			$("#itemForm .select2").select2();
+			setTimeout(function(){ $("#itemForm #item_id").focus(); },500);	
 		}else{ 
             $(".party_id").html("Party name is required."); $("#itemModel").modal('hide'); 
         }
@@ -46,9 +48,9 @@ $(document).ready(function(){
             $('#itemForm')[0].reset();
             $("#itemForm input:hidden").val('')
             $('#itemForm #row_index').val("");
-            
+            $("#itemForm .select2").select2();
             if ($(this).data('fn') == "save") {
-                $("#item_idc").focus();
+                $("#item_id").focus();
             } else if ($(this).data('fn') == "save_close") {
                 $("#itemModel").modal('hide');
             }
@@ -61,11 +63,12 @@ $(document).ready(function(){
 		$("#itemForm input:hidden").val('')
 		$('#itemForm #row_index').val("");
 		$("#itemForm .error").html("");
-        $('#itemForm .single-select').comboSelect();
+        $('#itemForm .select2').select2();
 	});   
 
 	$(document).on('change','#unit_id',function(){
-		$("#unit_name").val($("#unit_idc").val());
+		$("#unit_name").val("");
+		if($(this).val()){ $("#unit_name").val($("#unit_id :selected").text()); }		
 	});
 
 	/* $(document).on('change','#hsn_code',function(){
@@ -75,7 +78,7 @@ $(document).ready(function(){
 });
 
 function AddRow(data) {
-    var tblName = "salesOrderItems";
+    var tblName = "salesEnquiryItems";
 
     //Remove blank line.
 	$('table#'+tblName+' tr#noData').remove();
@@ -178,12 +181,12 @@ function Edit(data, button) {
 		$("#itemForm #" + key).val(value);
 	});
 
-	$("#itemForm .single-select").comboSelect();
+	$("#itemForm .select2").select2();
 	$("#itemForm #row_index").val(row_index);
 }
 
 function Remove(button) {
-    var tableId = "salesOrderItems";
+    var tableId = "salesEnquiryItems";
 	//Determine the reference of the Row using the Button.
 	var row = $(button).closest("TR");
 	var table = $("#"+tableId)[0];
@@ -225,7 +228,7 @@ function resPartyDetail(response = ""){
         $("#master_t_col_4").val("");
         $("#master_t_col_5").val("");
     }
-    $("#gstin").html(html);$("#gstin").comboSelect(); //gstin();
+    $("#gstin").html(html);$("#gstin").select2(); //gstin();
 }
 
 function resItemDetail(response = ""){
@@ -234,22 +237,22 @@ function resItemDetail(response = ""){
         $("#itemForm #item_code").val(itemDetail.item_code);
         $("#itemForm #item_name").val(itemDetail.item_name);
         $("#itemForm #item_type").val(itemDetail.item_type);
-        $("#itemForm #unit_id").val(itemDetail.unit_id);$("#itemForm #unit_id").comboSelect();
+        $("#itemForm #unit_id").val(itemDetail.unit_id);$("#itemForm #unit_id").select2();
         $("#itemForm #unit_name").val(itemDetail.unit_name);
 		/* $("#itemForm #disc_per").val(itemDetail.defualt_disc);
 		$("#itemForm #price").val(itemDetail.price); */
-        $("#itemForm #hsn_code").val(itemDetail.hsn_code);$("#itemForm #hsn_code").comboSelect();
-        $("#itemForm #gst_per").val(parseFloat(itemDetail.gst_per).toFixed(0));$("#itemForm #gst_per").comboSelect();
+        $("#itemForm #hsn_code").val(itemDetail.hsn_code);$("#itemForm #hsn_code").select2();
+        $("#itemForm #gst_per").val(parseFloat(itemDetail.gst_per).toFixed(0));$("#itemForm #gst_per").select2();
     }else{
         $("#itemForm #item_code").val("");
         $("#itemForm #item_name").val("");
         $("#itemForm #item_type").val("");
-        $("#itemForm #unit_id").val("");$("#itemForm #unit_id").comboSelect();
+        $("#itemForm #unit_id").val("");$("#itemForm #unit_id").select2();
         $("#itemForm #unit_name").val("");
 		$("#itemForm #disc_per").val("");
 		$("#itemForm #price").val("");
-        $("#itemForm #hsn_code").val("");$("#itemForm #hsn_code").comboSelect();
-        $("#itemForm #gst_per").val(0);$("#itemForm #gst_per").comboSelect(); 
+        $("#itemForm #hsn_code").val("");$("#itemForm #hsn_code").select2();
+        $("#itemForm #gst_per").val(0);$("#itemForm #gst_per").select2(); 
     }
 }
 

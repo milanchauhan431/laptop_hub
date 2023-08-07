@@ -125,10 +125,10 @@ class SalesInvoiceModel extends MasterModel{
                 $data['vou_acc_id'] = 0;
             endif;
 
-            $masterDetails = $data['masterDetails'];
+            $masterDetails = (!empty($data['masterDetails']))?$data['masterDetails']:array();
             $itemData = $data['itemData'];
 
-            $transExp = getExpArrayMap($data['expenseData']);
+            $transExp = getExpArrayMap(((!empty($data['expenseData']))?$data['expenseData']:array()));
 			$expAmount = $transExp['exp_amount'];
             $termsData = (!empty($data['termsData']))?$data['termsData']:array();
 

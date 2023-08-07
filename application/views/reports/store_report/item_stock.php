@@ -11,15 +11,17 @@
                             </div>       
                             <div class="col-md-6 float-right">  
                                 <div class="input-group">
-                                    <select id="item_type" class="form-control single-select" style="width:50%;">
-                                        <?php
-                                            foreach($this->itemTypes as $type=>$typeName):
-                                                echo '<option value="'.$type.'">'.$typeName.'</option>';
-                                            endforeach;
-                                        ?>
-                                    </select>
+                                    <div class="input-group-append" style="width:50%;">
+                                        <select id="item_type" class="form-control select2">
+                                            <?php
+                                                foreach($this->itemTypes as $type=>$typeName):
+                                                    echo '<option value="'.$type.'">'.$typeName.'</option>';
+                                                endforeach;
+                                            ?>
+                                        </select>
+                                    </div>
                                     <div class="input-group-append" style="width:30%;">
-                                        <select id="stock_type" class="form-control single-select" >
+                                        <select id="stock_type" class="form-control select2" >
                                             <option value="0">ALL</option>
                                             <option value="1">With Stock</option>
                                             <option value="2">Without Stock</option>

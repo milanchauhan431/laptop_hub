@@ -54,7 +54,7 @@
 												</div>
 											</span>
 										</div>
-                                        <select name="party_id" id="party_id" class="form-control single-select partyDetails partyOptions req" data-res_function="resPartyDetail" data-party_category="1">
+                                        <select name="party_id" id="party_id" class="form-control select2 partyDetails partyOptions req" data-res_function="resPartyDetail" data-party_category="1">
 											<option value="">Select Party</option>
 											<?=getPartyListOption($partyList,((!empty($dataRow->party_id))?$dataRow->party_id:((!empty($party_id))?$party_id:0)))?>
 										</select>
@@ -63,7 +63,7 @@
 
                                     <div class="col-md-3 form-group">
                                         <label for="gstin">GST NO.</label>
-                                        <select name="gstin" id="gstin" class="form-control single-select">
+                                        <select name="gstin" id="gstin" class="form-control select2">
                                             <option value="">Select GST No.</option>
                                             <?php
                                                 if(!empty($dataRow->party_id)):
@@ -120,7 +120,7 @@
                                     <div class="error itemData"></div>
                                     <div class="row form-group">
                                         <div class="table-responsive">
-                                            <table id="salesOrderItems" class="table table-striped table-borderless">
+                                            <table id="salesEnquiryItems" class="table table-striped table-borderless">
                                                 <thead class="thead-info">
                                                     <tr>
                                                         <th style="width:5%;">#</th>
@@ -166,7 +166,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="itemModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel1" data-backdrop="static" data-keyboard="false">
+<div class="modal fade" id="itemModel" role="dialog" aria-labelledby="exampleModalLabel1" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-md" role="document">
         <div class="modal-content animated slideDown">
             <div class="modal-header" style="display:block;"><h4 class="modal-title">Add or Update Item</h4></div>
@@ -203,7 +203,7 @@
                                 </div>
 
                                 <input type="hidden" name="item_name" id="item_name" class="form-control" value="" />
-                                <select name="item_id" id="item_id" class="form-control single-select itemDetails itemOptions" data-res_function="resItemDetail" data-item_type="1">
+                                <select name="item_id" id="item_id" class="form-control select2 itemDetails itemOptions" data-res_function="resItemDetail" data-item_type="1">
                                     <option value="">Select Product Name</option>
                                     <?=getItemListOption($itemList)?>
                                 </select>
@@ -222,7 +222,7 @@
                             </div>
                             <div class="col-md-6 form-group">
                                 <label for="unit_id">Unit</label>        
-                                <select name="unit_id" id="unit_id" class="form-control single-select">
+                                <select name="unit_id" id="unit_id" class="form-control select2">
                                     <option value="">Select Unit</option>
                                     <?=getItemUnitListOption($unitList)?>
                                 </select> 

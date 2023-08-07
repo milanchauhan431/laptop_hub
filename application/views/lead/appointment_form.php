@@ -16,7 +16,7 @@
             </div>
             <div class="col-md-3 form-group">
                 <label for="mode">Mode</label>
-                <select name="mode" id="mode" class="form-control req single-select">
+                <select name="mode" id="mode" class="form-control req select2">
                     <?php
                        foreach($appointmentMode as $key=>$row):
                            $selected = (!empty($dataRow->mode) and $dataRow->mode == $row)?"selected":"";

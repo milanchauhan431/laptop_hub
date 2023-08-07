@@ -27,7 +27,7 @@
             </div>
             <div class="col-md-4 form-group">
                 <label for="acc_id">Ledger Name</label>
-                <select name="acc_id" id="acc_id" class="form-control single-select req">
+                <select name="acc_id" id="acc_id" class="form-control select2 req">
                     <option value="">Select Ledger Name</option>
                     <?php
                         foreach ($ledgerData as $row) :
@@ -59,7 +59,7 @@
 <script>
     $(document).ready(function(){
         $(document).on("change","#acc_id",function(){
-            var acc_name = $("#acc_idc").val();
+            var acc_name = $("#acc_id :selected").text();
             $("#acc_name").val(acc_name);
         });
     });

@@ -21,7 +21,7 @@
                                     </ul>
                                 </div>                                
                                 <div class="col-md-4">
-                                    <select name="emp_id" id="emp_id" class="form-control single-select">
+                                    <select name="emp_id" id="emp_id" class="form-control select2">
                                         <option value="">Select Employee</option>
                                         <?php
                                             foreach ($empList as $row) :

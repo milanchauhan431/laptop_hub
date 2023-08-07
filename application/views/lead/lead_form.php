@@ -17,7 +17,7 @@
                         
                     </div>
                 </span>
-                <select class="form-control single-select partyDetails partyOptions" name="party_id" id="party_id" data-res_function="resPartyDetail" data-party_category="1">
+                <select class="form-control select2 partyOptions" name="party_id" id="party_id" data-res_function="resPartyDetail" data-party_category="1" data-party_type="0,1">
                     <option value="">Select Customer</option>
                     <?=getPartyListOption($customerList,((!empty($dataRow->party_id))?$dataRow->party_id:0))?>
                 </select>
@@ -30,12 +30,20 @@
 
             <div class="col-md-3 form-group">
                 <label for="lead_from">Lead From</label>
-                <input type="text" name="lead_from" id="lead_from" class="form-control" value="<?=(!empty($dataRow->lead_from))?$dataRow->lead_from:""?>">
+                <select name="lead_from" id="lead_from" class="form-control select2">
+                    <option value="">Select</option>
+                    <?php
+                        foreach($this->leadFrom as $row):
+                            $selected = (!empty($dataRow->lead_from) && $dataRow->lead_from == $row)?"selected":"";
+                            echo '<option value="'.$row.'" '.$selected.'>'.$row.'</option>';
+                        endforeach;
+                    ?>
+                </select>
             </div>
 
             <div class="col-md-4 form-group">
                 <label for="mode">Mode</label>
-                <select name="mode" id="mode" class="form-control req single-select">
+                <select name="mode" id="mode" class="form-control req select2">
                     <?php
                         foreach($this->appointmentMode as $key=>$row):
 							$selected = (!empty($dataRow->mode) && $dataRow->mode == $key)?"selected":"";
@@ -47,7 +55,7 @@
 
 			<div class="col-md-4 form-group">
                 <label for="sales_executive">Sales Executives</label>
-                <select class="form-control single-select" name="sales_executive" id="sales_executive">
+                <select class="form-control select2" name="sales_executive" id="sales_executive">
                     <option value="">Select Sales Executive</option>
                     <?php
                     if(!empty($salesExecutives)){
@@ -76,13 +84,3 @@
         </div>
     </div>    
 </form>
-<script>
-function resPartyDetail(response = ""){
-    var html = '<option value="">Select GST No.</option>';
-    if(response != ""){
-        var partyDetail = response.data.partyDetail;
-    }else{
-        $("#party_name").val("");
-    }
-}
-</script>

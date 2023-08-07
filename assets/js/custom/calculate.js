@@ -52,7 +52,7 @@ $(document).ready(function(){
 			}else{
 				gst_type = 2;
 			}
-			$('#sp_acc_id').comboSelect();
+			$('#sp_acc_id').select2();
 		}else{
 			stateCode = 96;
 		}
@@ -147,7 +147,7 @@ function gstin(){
 
     $("#gst_type").val(gst_type);
     $("#party_state_code").val(stateCode);
-	$('#sp_acc_id').comboSelect();
+	$('#sp_acc_id').select2();
 
     if(gst_type == 1){ 
 		$(".cgstCol").show();$(".sgstCol").show();$(".igstCol").hide();

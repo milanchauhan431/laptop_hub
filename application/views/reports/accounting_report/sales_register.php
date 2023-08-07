@@ -11,11 +11,13 @@
                             </div>
 							<div class="col-md-8"> 
 							    <div class="input-group ">
-							        <select id="state_code" name="state_code" class="form-control single-select" style="width: 20%;">
-										<option value="">All States</option>
-										<option value="1">IntraState</option>
-										<option value="2">InterState</option>
-									</select>
+                                    <div class="input-group-append" style="width:20%;">
+                                        <select id="state_code" name="state_code" class="form-control select2">
+                                            <option value="">All States</option>
+                                            <option value="1">IntraState</option>
+                                            <option value="2">InterState</option>
+                                        </select>
+                                    </div>
                                     <input type="date" name="from_date" id="from_date" class="form-control" value="<?=$startDate?>" />
                                     <div class="error fromDate"></div>
                                     <input type="date" name="to_date" id="to_date" class="form-control" value="<?=$endDate?>" />

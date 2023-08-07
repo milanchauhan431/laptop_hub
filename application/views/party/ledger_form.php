@@ -9,9 +9,9 @@
                 <input type="text" name="party_name" class="form-control text-capitalize req" value="<?=(!empty($dataRow->party_name))?$dataRow->party_name:""; ?>" />
             </div>
 
-            <div class="col-md-12 form-group">
+            <div class="col-md-8 form-group">
                 <label for="group_id">Group Name</label>
-                <select name="group_id" id="group_id" class="form-control single-select req">
+                <select name="group_id" id="group_id" class="form-control select2 req">
                     <option value="">Select Group</option>
                     <?php
                         foreach($groupList as $row):
@@ -22,7 +22,7 @@
                 </select>
             </div>
 
-            <div class="col-md-12 form-group">
+            <div class="col-md-4 form-group">
                 <label for="is_gst_applicable">Gst Applicable</label>
                 <select name="is_gst_applicable" id="is_gst_applicable" class="form-control req" >
                     <option value="0" <?=(!empty($dataRow->is_gst_applicable) && $dataRow->is_gst_applicable == 0)?"selected":""?>>No</option>
@@ -32,12 +32,15 @@
 
             <div class="col-md-4 form-group applicable <?=(empty($dataRow->is_gst_applicable))?'hidden':'';?>">
                 <label for="hsn_code">Hsn Code</label>
-                <input type="text" name="hsn_code" class="form-control" value="<?=(!empty($dataRow->hsn_code)) ? $dataRow->hsn_code : "" ?>" />
+                <select name="hsn_code" id="hsn_code" class="form-control select2">
+                    <option value="">Select HSN Code</option>
+                    <?=getHsnCodeListOption($hsnList)?>
+                </select>
             </div>
 
             <div class="col-md-4 form-group applicable <?=(empty($dataRow->is_gst_applicable))?'hidden':'';?>" >
                 <label for="gst_per">GST Per.</label>
-                <select name="gst_per" id="gst_per" class="form-control single-select">
+                <select name="gst_per" id="gst_per" class="form-control select2">
                     <?php
                         foreach($this->gstPer as $per=>$text):
                             $selected = (!empty($dataRow->gst_per) && floatVal($dataRow->gst_per) == $per)?"selected":"";
@@ -49,7 +52,7 @@
 
             <div class="col-md-4 form-group applicable <?=(empty($dataRow->is_gst_applicable))?'hidden':'';?>" >
                 <label for="cess_per">Cess Per.</label>
-                <input type="number" name="cess_per" class="form-control numericOnly" value="<?=(!empty($dataRow->cess_per))?$dataRow->cess_per:""?>" />
+                <input type="text" name="cess_per" class="form-control numericOnly" value="<?=(!empty($dataRow->cess_per))?$dataRow->cess_per:""?>" />
             </div>           
 
         </div>
@@ -65,6 +68,11 @@ $(document).ready(function(){
 		} else {
             $('.applicable').addClass('hidden');
         }
+	});
+
+    $(document).on('change','#hsn_code',function(){
+		$("#gst_per").val(($("#hsn_code :selected").data('gst_per') || 0));
+		$("#gst_per").select2();
 	});
 });
 </script>

@@ -19,7 +19,7 @@
             
             <div class="col-md-3 form-group">
                 <label for="husband_name">Emp. Type</label>
-                <select name="emp_type" id="emp_type" class="form-control single-select req " tabindex="-1">
+                <select name="emp_type" id="emp_type" class="form-control req">
                     <option value="">Select Type</option>
                     <?php
                         foreach($this->empType as $id=>$type):
@@ -53,14 +53,14 @@
             </div>
             <div class="col-md-3 form-group">
                 <label for="attendance_type">Attendance</label>
-                <select name="attendance_type" id="attendance_type" class="form-control single-select req ">
+                <select name="attendance_type" id="attendance_type" class="form-control req ">
                     <option value="1">Yes</option>
                     <option value="0">No</option>
                 </select>
             </div>
             <div class="col-md-3 form-group">
                 <label for="emp_category">Emp Category</label>
-                <select name="emp_category" id="emp_category" class="form-control single-select">
+                <select name="emp_category" id="emp_category" class="form-control select2">
                     <option value="">Select Category</option>
                     <?php
                         foreach($empCategoryList as $row):
@@ -72,7 +72,7 @@
             </div>
             <div class="col-md-3 form-group">
                 <label for="emp_gender">Gender</label>
-                <select name="emp_gender" id="emp_gender" class="form-control single-select">
+                <select name="emp_gender" id="emp_gender" class="form-control">
                     <option value="">Select Gender</option>
                     <?php
                         foreach($genderList as $value):
@@ -102,7 +102,7 @@
             
             <div class="col-md-3 form-group">
                 <label for="shift_id">Shift</label>
-                <select name="shift_id" id="shift_id" class="form-control single-select req">
+                <select name="shift_id" id="shift_id" class="form-control select2 req">
                     <option value="">Select Shift</option>
                     <?php
                         foreach($shiftList as $row):
@@ -114,7 +114,7 @@
             </div>
             <div class="col-md-3 form-group">
                 <label for="emp_dept_id">Department</label>
-                <select name="emp_dept_id" id="emp_dept_id" class="form-control single-select req">
+                <select name="emp_dept_id" id="emp_dept_id" class="form-control select2 req">
                     <option value="">Select Department</option>
                     <?php
                         foreach($departmentList as $row):
@@ -126,7 +126,7 @@
             </div>
             <div class="col-md-3 from-group">
                 <label for="emp_designation">Designation</label>
-                <select name="emp_designation" id="emp_designation" class="form-control single-select req" tabindex="-1">
+                <select name="emp_designation" id="emp_designation" class="form-control select2 req">
                     <option value="">Select Designation</option>
                     <?php
                         foreach($designationList as $row):
@@ -152,7 +152,7 @@
             </div>
             <div class="col-md-3 form-group">
                 <label for="emp_role">Role</label>
-                <select name="emp_role" id="emp_role" class="form-control single-select req">
+                <select name="emp_role" id="emp_role" class="form-control select2 req">
                     <option value="">Select Role</option>
                     <?php
                         foreach($roleList as $key => $value):
@@ -206,8 +206,12 @@
 
 <script>
 $(document).ready(function(){
-    $(document).on('keyup','#emp_designationc',function(){
-        $('#designationTitle').val($(this).val());
+    $(document).on('change keyup','#emp_designation',function(){
+        if($(this).val()){
+            $('#designationTitle').val($('#emp_designation :selected').text());
+        }else{
+            $('#designationTitle').val("");
+        }        
     });
 });
 </script>

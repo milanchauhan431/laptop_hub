@@ -144,7 +144,7 @@
 
                                                                 <div class="col-md-3 form-group">
                                                                     <label for="emp_gender">Gender</label>
-                                                                    <select name="emp_gender" id="emp_gender" class="form-control single-select">
+                                                                    <select name="emp_gender" id="emp_gender" class="form-control select2">
                                                                         <option value="">Select Gender</option>
                                                                         <?php
                                                                             foreach($this->gender as $value):
@@ -227,7 +227,7 @@
                                                                     <input type="hidden" name="form_type" value="workprofile" />
                                                                     
                                                                     <label for="emp_grade">Grade</label>
-                                                                    <select name="emp_grade" id="emp_grade" class="form-control single-select">
+                                                                    <select name="emp_grade" id="emp_grade" class="form-control select2">
                                                                         <option value="">Select Grade</option>
                                                                         <?php
                                                                             foreach($this->empGrade as $value):
@@ -240,7 +240,7 @@
 
                                                                 <div class="col-md-3 form-group">
                                                                     <label for="emp_category">Punch Category</label>
-                                                                    <select name="emp_category" id="emp_category" class="form-control single-select req">
+                                                                    <select name="emp_category" id="emp_category" class="form-control select2 req">
                                                                         <option value="">Select Category</option>
                                                                         <?php
                                                                             foreach($empCategoryList as $row):
@@ -258,7 +258,7 @@
                                                             
                                                                 <div class="col-md-3 form-group">
                                                                     <label for="emp_type">Employee Type</label>
-                                                                    <select name="emp_type" id="emp_type" class="form-control single-select req " >
+                                                                    <select name="emp_type" id="emp_type" class="form-control select2 req " >
                                                                         <option value="">Select Type</option>
                                                                         <?php
                                                                             foreach($this->empType as $id=>$type):
@@ -271,7 +271,7 @@
 
                                                                 <div class="col-md-3 form-group">
                                                                     <label for="emp_dept_id">Department</label>
-                                                                    <select name="emp_dept_id" id="emp_dept_id" class="form-control single-select req">
+                                                                    <select name="emp_dept_id" id="emp_dept_id" class="form-control select2 req">
                                                                         <option value="">Select Department</option>
                                                                         <?php
                                                                             foreach($departmentList as $row):
@@ -284,7 +284,7 @@
 
                                                                 <div class="col-md-3 from-group">
                                                                     <label for="emp_designation">Designation</label>
-                                                                    <select name="emp_designation" id="emp_designation" class="form-control single-select req" tabindex="-1">
+                                                                    <select name="emp_designation" id="emp_designation" class="form-control select2 req">
                                                                         <option value="">Select Designation</option>
                                                                         <?php
                                                                             foreach($designationList as $row):
@@ -298,7 +298,7 @@
 
                                                                 <div class="col-md-3 form-group">
                                                                     <label for="emp_sys_desc_id">System Designation</label>
-                                                                    <select name="emp_sys_desc_id" id="emp_sys_desc_id" class="form-control single-select">
+                                                                    <select name="emp_sys_desc_id" id="emp_sys_desc_id" class="form-control select2">
                                                                         <option value="">System Designation</option>
                                                                         <?php
                                                                             foreach($this->systemDesignation as $key=>$value):
@@ -310,7 +310,7 @@
                                                                 </div>
                                                                 <div class="col-md-3 form-group">
                                                                     <label for="emp_type">Payment Mode</label>
-                                                                    <select name="sal_pay_mode" id="sal_pay_mode" class="form-control single-select req " >
+                                                                    <select name="sal_pay_mode" id="sal_pay_mode" class="form-control select2 req " >
                                                                         <option value="">Select Type</option>
                                                                         <?php
                                                                             foreach($this->paymentMode as $mode):
@@ -416,7 +416,7 @@
                                                             </div>
                                                             <div class="col-md-4 form-group">
                                                                 <label for="nom_gender">Gender</label>
-                                                                <select id="nom_gender" name="nom_gender" class="form-control single-select">
+                                                                <select id="nom_gender" name="nom_gender" class="form-control select2">
                                                                     <?php
                                                                         foreach ($this->gender as $value) :
                                                                             echo '<option value="' . $value . '">' . $value . '</option>';

@@ -74,10 +74,10 @@ class SalesOrderModel extends MasterModel{
                 $this->remove($this->transDetails,['main_ref_id'=>$data['id'],'table_name'=>$this->transMain,'description'=>"SO MASTER DETAILS"]);
             endif;
             
-            $masterDetails = $data['masterDetails'];
+            $masterDetails = (!empty($data['masterDetails']))?$data['masterDetails']:array();
             $itemData = $data['itemData'];
 
-            $transExp = getExpArrayMap($data['expenseData']);
+            $transExp = getExpArrayMap(((!empty($data['expenseData']))?$data['expenseData']:array()));
 			$expAmount = $transExp['exp_amount'];
             $termsData = (!empty($data['termsData']))?$data['termsData']:array();
 

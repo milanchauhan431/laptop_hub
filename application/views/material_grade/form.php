@@ -10,7 +10,7 @@
 
             <div class="col-md-6 form-group">
                 <label for="standard">Standard</label>
-                <select id="standardName" class="form-control single-select req" tabindex="-1">
+                <select id="standardName" class="form-control select2 req" >
                     <option value="">Select Standard</option>
                     <?php $i=1; 
                         foreach($standard as $row):
@@ -27,7 +27,7 @@
 
             <div class="col-md-6 form-group">
                 <label for="scrap_group">Scrap Group</label>
-                <select name="scrap_group" id="scrap_group" class="form-control single-select req">
+                <select name="scrap_group" id="scrap_group" class="form-control select2 req">
                     <option value="">Select Scrap Group</option>
                     <?php
                         foreach ($scrapData as $row) :
@@ -40,7 +40,7 @@
             
             <div class="col-md-6 form-group">
                 <label for="color_code">Colour Code</label>
-                <select id="colorCodeName" class="form-control single-select">
+                <select id="colorCodeName" class="form-control select2">
                     <option value="">Select</option>
                     <?php   
                         foreach($colorList as $row):

@@ -28,7 +28,7 @@
 
             <div class="col-md-4 form-group">
                 <label for="transporter">Transport Name</label>
-                <select name="transporter" id="transporter" class="form-control single-select">
+                <select name="transporter" id="transporter" class="form-control select2">
                     <option value="">Select Transport Name</option>
                     <?php
                         foreach($transportList as $row):
@@ -46,7 +46,7 @@
 
             <div class="col-md-4 form-group">
                 <label for="vehicle_type">Vehicle Type</label>
-                <select name="vehicle_type" id="vehicle_type" class="form-control single-select req">
+                <select name="vehicle_type" id="vehicle_type" class="form-control select2 req">
                     <option value="">Select Transport Name</option>
                     <?php
                         foreach($vehicleTypeList as $row):
@@ -64,7 +64,7 @@
 
             <div class="col-md-4 form-group">
                 <label for="party_id">Party Name</label>
-                <select name="party_id" id="party_id" class="form-control single-select req">
+                <select name="party_id" id="party_id" class="form-control select2 req">
                     <option value="">Select Party Name</option>
                     <?=getPartyListOption($partyList,((!empty($dataRow->party_id))?$dataRow->party_id:0))?>
                 </select>

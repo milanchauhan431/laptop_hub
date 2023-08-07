@@ -11,7 +11,7 @@
 
             <div class="col-md-8 form-group">
                 <label for="item_id">Item Name</label>
-                <select name="item_id" id="item_id" class="form-control single-select itemDetails" data-res_function="resItemDetail">
+                <select name="item_id" id="item_id" class="form-control select2 itemDetails" data-res_function="resItemDetail">
                     <option value="">Select Item</option>
                     <?=getItemListOption($itemList)?>
                 </select>

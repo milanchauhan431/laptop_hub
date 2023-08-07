@@ -20,7 +20,7 @@
 
             <div class="col-md-4 form-group">
                 <label for="acc_id">Ledger Name</label>
-                <select name="acc_id" id="acc_id" class="form-control single-select req">
+                <select name="acc_id" id="acc_id" class="form-control select2 req">
                     <option value="">Select Ledger Name</option>
                     <?php
                         foreach ($ledgerData as $row) :

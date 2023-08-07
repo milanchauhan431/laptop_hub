@@ -117,7 +117,7 @@ class PurchaseInvoiceModel extends MasterModel{
             $masterDetails = (isset($data['masterDetails']))?$data['masterDetails']:array();
             $itemData = $data['itemData'];
 
-            $transExp = getExpArrayMap($data['expenseData']);
+            $transExp = getExpArrayMap(((!empty($data['expenseData']))?$data['expenseData']:array()));
 			$expAmount = $transExp['exp_amount'];
             $termsData = (!empty($data['termsData']))?$data['termsData']:array();
 

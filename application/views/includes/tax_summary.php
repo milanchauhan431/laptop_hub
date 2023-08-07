@@ -40,7 +40,7 @@
                         endif;
 
                         $options = '';
-                        $options = '<select class="form-control single-select" name="'.(($row->map_code != "roff")?'expenseData[' . $row->map_code . '_acc_id]':"round_off_acc_id").'" id="' . $row->map_code . '_acc_id">';
+                        $options = '<select class="form-control select2" name="'.(($row->map_code != "roff")?'expenseData[' . $row->map_code . '_acc_id]':"round_off_acc_id").'" id="' . $row->map_code . '_acc_id">';
 
                         foreach ($ledgerList as $ledgerRow) :
                             if ($ledgerRow->group_code != "DT") :
@@ -127,7 +127,7 @@
 
                     foreach ($taxList as $taxRow) :
                         $options = '';
-                        $options = '<select class="form-control single-select" name="' . $taxRow->map_code . '_acc_id" id="' . $taxRow->map_code . '_acc_id">';
+                        $options = '<select class="form-control select2" name="' . $taxRow->map_code . '_acc_id" id="' . $taxRow->map_code . '_acc_id">';
 
                         foreach ($ledgerList as $ledgerRow) :
                             if ($ledgerRow->group_code == "DT") :

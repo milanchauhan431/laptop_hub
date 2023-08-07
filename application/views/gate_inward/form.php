@@ -19,7 +19,7 @@
 
             <div class="col-md-6 form-group">
                 <label for="party_id">Party Name</label>
-                <select name="party_id" id="party_id" class="form-control single-select">
+                <select name="party_id" id="party_id" class="form-control select2">
                     <option value="">Select Party Name</option>
                     <?=getPartyListOption($partyList,((!empty($gateInwardData->party_id))?$gateInwardData->party_id:((!empty($gateEntryData->party_id))?$gateEntryData->party_id:"")))?>
                 </select>                
@@ -47,13 +47,13 @@
 
             <div class="col-md-3 form-group">
                 <!-- <label for="po_trans_id">Purchase Order</label>
-                <select id="po_trans_id" class="form-control single-select">
+                <select id="po_trans_id" class="form-control select2">
                     <option value="">Select Purchase Order</option>
                 </select>
                 <div class="error po_trans_id"></div>
                 <input type="hidden" id="po_id" value=""> -->
                 <label for="po_id">Purchase Order</label>
-                <select id="po_id" class="form-control single-select">
+                <select id="po_id" class="form-control select2">
                     <option value="">Select Purchase Order</option>
                 </select>
                 <div class="error po_id"></div>
@@ -62,7 +62,7 @@
 
             <div class="col-md-3 form-group">
                 <label for="item_id">Item Name</label>
-                <select id="item_id" class="form-control itemDetails single-select req" data-res_function="resItemDetail">
+                <select id="item_id" class="form-control itemDetails select2 req" data-res_function="resItemDetail">
                     <option value="">Select Item Name</option>
                     <?=getItemListOption($itemList)?>
                 </select>

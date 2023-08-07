@@ -9,7 +9,7 @@
 
             <div class="col-md-4 form-group">
                 <label for="gst_per">GST Per (%)</label>
-                <select name="gst_per" id="gst_per" class="form-control single-select">
+                <select name="gst_per" id="gst_per" class="form-control select2">
                     <option value="">Select</option>
                     <?php
                         foreach($this->gstPer as $key => $value):

@@ -106,7 +106,7 @@
 	</div>
 </div>
 
-<div class="modal fade" id="itemModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel1" data-backdrop="static" data-keyboard="false">
+<div class="modal fade" id="itemModel" role="dialog" aria-labelledby="exampleModalLabel1" data-backdrop="static" data-keyboard="false">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content animated slideDown">
 			<div class="modal-header">
@@ -124,7 +124,7 @@
 
 							<div class="col-md-12 form-group">
 								<label for="acc_id">Ledger</label>
-								<select name="acc_id" id="acc_id" class="form-control single-select partyDetails req" data-res_function="resPartyDetail">
+								<select name="acc_id" id="acc_id" class="form-control select2 partyDetails req" data-res_function="resPartyDetail">
 									<option value="">Select Ledger</option>
 									<?=getPartyListOption($partyList)?>
 								</select>

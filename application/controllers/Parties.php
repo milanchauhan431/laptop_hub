@@ -47,6 +47,7 @@ class Parties extends MY_Controller{
             $this->load->view($this->form, $this->data);
         else:
             $this->data['groupList'] = $this->party->getGroupList();
+            $this->data['hsnList'] = $this->hsnModel->getHSNList();
             $this->load->view($this->ledgerForm,$this->data);
         endif;
     }
@@ -168,6 +169,7 @@ class Parties extends MY_Controller{
             $this->load->view($this->form, $this->data);
         else:
             $this->data['groupList'] = $this->party->getGroupList();
+            $this->data['hsnList'] = $this->hsnModel->getHSNList();
             $this->load->view($this->ledgerForm,$this->data);
         endif;
     }

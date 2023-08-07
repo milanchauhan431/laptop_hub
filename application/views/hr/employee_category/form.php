@@ -8,7 +8,7 @@
             </div>
             <div class="col-md-4 form-group">
                 <label for="overtime">Over Time</label>
-                <select name="overtime" id="overtime" class="form-control single-select">
+                <select name="overtime" id="overtime" class="form-control">
                     <option value="No" <?=(!empty($dataRow->overtime) && $dataRow->overtime == "No")?"selected":""?>>No</option>
                     <option value="Yes" <?=(!empty($dataRow->overtime) && $dataRow->overtime == "Yes")?"selected":""?>>Yes</option>
                 </select> 

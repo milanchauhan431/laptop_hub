@@ -10,7 +10,7 @@
             
 			<div class="col-md-12 form-group">
 				<label for="category">Category</label>
-				<select name="category" id="category" class="form-control single-select req">
+				<select name="category" id="category" class="form-control select2 req">
                     <?php
                         foreach($categoryData as  $key => $value):
 							$selected = (!empty($dataRow->category) && $key == $dataRow->category)?"selected":"";

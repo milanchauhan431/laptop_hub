@@ -11,7 +11,8 @@ $(document).ready(function () {
         $("#itemModel").modal();
         $("#itemModel .btn-close").show();
         $("#itemModel .btn-save").show();	
-        $('#itemForm .single-select').comboSelect();
+        $('#itemForm .select2').select2();
+		setTimeout(function(){ $("#itemForm #acc_id").focus(); },500);
 	});
 
     $(document).on('click', '.btn-close', function () {
@@ -19,7 +20,7 @@ $(document).ready(function () {
 		$("#itemForm input:hidden").val('')
 		$('#itemForm #row_index').val("");
 		$("#itemForm .error").html("");
-        $('#itemForm .single-select').comboSelect();
+        $('#itemForm .select2').select2();
 	});   
 
     $(document).on('click', '.saveItem', function () {
@@ -52,6 +53,7 @@ $(document).ready(function () {
             AddRow(formData);
             $("#itemForm .error").html('');
             $('#itemForm')[0].reset();
+			$('#itemForm .select2').select2();
             if ($(this).data('fn') == "save") {
                 $("#acc_id").focus();
             } else if ($(this).data('fn') == "save_close") {
@@ -142,7 +144,7 @@ function Edit(data, button) {
 	$("#itemModel .btn-save").hide();
 	$.each(data, function (key, value) { $("#itemForm #" + key).val(value); });
 	$("#itemForm #row_index").val(row_index);
-	$('#itemForm .single-select').comboSelect();
+	$('#itemForm .select2').select2();
 }
 
 function Remove(button) {

@@ -18,7 +18,7 @@
 
             <div class="col-md-4 form-group">
                 <label for="vou_name_s">Entry Type</label>
-                <select name="vou_name_s" id="vou_name_s" class="form-control single-select" >
+                <select name="vou_name_s" id="vou_name_s" class="form-control select2" >
                     <option value="BCRct" <?=(!empty($dataRow->vou_name_s) && $dataRow->vou_name_s == "BCRct")?"selected":"" ;?> >Receive</option>
                     <option value="BCPmt" <?=(!empty($dataRow->vou_name_s) && $dataRow->vou_name_s == "BCPmt")?"selected":"" ;?> >Paid</option>
                 </select>
@@ -27,7 +27,7 @@
             <div class="col-md-6 form-group">
                 <label>Party Name</label> 
                 <span class="float-right">Balance : <span  id="opp_acc_balance">0</span></span>
-                <select name="opp_acc_id" id="opp_acc_id" class="form-control partyDetails single-select" data-res_function="resOppAcc">
+                <select name="opp_acc_id" id="opp_acc_id" class="form-control partyDetails select2" data-res_function="resOppAcc">
                     <option value="">Select Party</option>
                     <?=getPartyListOption($partyList,((!empty($dataRow->opp_acc_id))?$dataRow->opp_acc_id:0))?>
                 </select>
@@ -37,7 +37,7 @@
             <div class="col-md-6 form-group">
                 <label>Bank/Cash Account</label>
                 <span class="float-right">Balance : <span  id="vou_acc_balance">0</span></span>
-                <select name="vou_acc_id" id="vou_acc_id" class="form-control partyDetails single-select" data-res_function="resVouAcc">
+                <select name="vou_acc_id" id="vou_acc_id" class="form-control partyDetails select2" data-res_function="resVouAcc">
                 <option value="">Select Ledger</option>
                     <?=getPartyListOption($ledgerList,((!empty($dataRow->vou_acc_id))?$dataRow->vou_acc_id:0))?>
                 </select>
@@ -45,7 +45,7 @@
 
             <div class="col-md-4 form-group">
                 <label>Inv. Referance</label>
-                <select name="ref_id" id="ref_id" class="form-control single-select" data-selected="<?=(!empty($dataRow->ref_id))?$dataRow->ref_id:""?>">
+                <select name="ref_id" id="ref_id" class="form-control select2" data-selected="<?=(!empty($dataRow->ref_id))?$dataRow->ref_id:""?>">
                     <option value="">Select Reference</option>
                     <?=(!empty($optionsHtml)?$optionsHtml:"")?>
                 </select>
@@ -58,7 +58,7 @@
 
             <div class="col-md-4 form-group">
                 <label>Payment Mode</label>
-                <select name="payment_mode" id="payment_mode" class="form-control single-select" data-selected="<?=(!empty($dataRow->payment_mode)) ? $dataRow->payment_mode:''?>">
+                <select name="payment_mode" id="payment_mode" class="form-control select2" data-selected="<?=(!empty($dataRow->payment_mode)) ? $dataRow->payment_mode:''?>">
                     <option value="">Select Payment Mode</option>
                     <?php
                         foreach($this->paymentMode as $row):
@@ -113,7 +113,7 @@ $(document).ready(function(){
     });
 
     $(document).on('change',"#opp_acc_id",function(){
-        $("#ref_id").html('');
+        $("#ref_id").html(''); $("#ref_id").select2();
         $(".vou_name_s").html("");
         $(".opp_acc_id").html("");
         var vou_name_s = $("#vou_name_s").val();
@@ -127,7 +127,7 @@ $(document).ready(function(){
 				dataType:'json',
 				success:function(data){                    
                     $("#ref_id").html(data.referenceData);
-                    $("#ref_id").comboSelect();
+                    $("#ref_id").select2();
 				}
 			}); 
         }else{
@@ -172,20 +172,20 @@ function resVouAcc(response){
             $('#payment_mode option[value="CASH"]').prop('disabled', false);
             $('#payment_mode option:not([value="CASH"])').prop('disabled', true);
             $('#payment_mode').val('CASH');
-            $('#payment_mode').comboSelect();
+            $('#payment_mode').select2();
         }else{            
             $('#payment_mode option[value="CASH"]').prop('disabled', true);
             $('#payment_mode option:not([value="CASH"])').prop('disabled', false);
 
             var paymentMode = $("#payment_mode").data('selected');
             $('#payment_mode').val(paymentMode);
-            $('#payment_mode').comboSelect();
+            $('#payment_mode').select2();
         }
     }else{
 		$("#vou_acc_balance").html(0);   
         $('#payment_mode option').prop('disabled', false);
         $('#payment_mode').val('');
-        $('#payment_mode').comboSelect();     
+        $('#payment_mode').select2();     
     }
 }
 </script>

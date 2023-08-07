@@ -6,7 +6,7 @@
 
             <div class="col-md-4 form-group">
                 <label for="shape">Shape</label>
-                <select name="shape" id="shape" class="form-control single-select">
+                <select name="shape" id="shape" class="form-control select2">
                     <option value="">Select Shape</option>
                     <option value="SQUARE" <?=(!empty($dataRow->shape) && $dataRow->shape = "SQUARE")?"selected":""?> >SQUARE</option>
                     <option value="RECTANGLE" <?=(!empty($dataRow->shape) && $dataRow->shape = "RECTANGLE")?"selected":""?> >RECTANGLE</option>
