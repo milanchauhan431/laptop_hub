@@ -39,7 +39,6 @@ class SalesInvoiceModel extends MasterModel{
         return $this->pagingRows($data);
     }
 
-
     public function save($data){
         try{
             $this->db->trans_begin();
@@ -47,8 +46,14 @@ class SalesInvoiceModel extends MasterModel{
             $cahsEntryNew = false;
             if(empty($data['id'])):
                 $cahsEntryNew = true;
-                $data['trans_no'] = $this->transMainModel->nextTransNo($data['entry_type']);
-                $data['trans_number'] = $data['trans_prefix'].$data['trans_no'];
+                //$data['trans_no'] = $this->transMainModel->nextTransNo($data['entry_type']);
+                //$data['trans_number'] = $data['trans_prefix'].$data['trans_no'];
+            endif;
+            $data['trans_number'] = $data['trans_prefix'].$data['trans_no'];
+
+            if($this->checkDuplicate($data) > 0):
+                $errorMessage['trans_number'] = "Inv. No. is duplicate.";
+                return ['status'=>0,'message'=>$errorMessage];
             endif;
 
             if(!empty($data['id'])):
@@ -328,6 +333,7 @@ class SalesInvoiceModel extends MasterModel{
 
     public function checkDuplicate($data){
         $queryData['tableName'] = $this->transMain;
+        $queryData['where']['entry_type'] = $data['entry_type'];
         $queryData['where']['trans_number'] = $data['trans_number'];
 
         if(!empty($data['id']))
