@@ -14,6 +14,7 @@ function getSalesDtHeader($page){
     $data['lead'][] = ["name"=>"Appointmens","textAlign"=>"center","sortable"=>"FALSE"];
     $data['lead'][] = ["name"=>"Followup Date","sortable"=>"FALSE"];
     $data['lead'][] = ["name"=>"Followup Remark","sortable"=>"FALSE"];
+    $data['lead'][] = ["name"=>"Next Followup Date","sortable"=>"FALSE"];
 
     /* Sales Enquiry Header */
     $data['salesEnquiry'][] = ["name"=>"Action","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"];
@@ -90,7 +91,7 @@ function getLeadData($data){
 
     $action = getActionButton($enqBtn.$appointmentBtn.$followupBtn.$leadStatusButton.$editButton.$deleteButton);
 
-    $responseData = [$action,$data->sr_no,formatDate($data->lead_date),sprintf("%04d",$data->lead_no),$data->lead_from,$data->party_name,$data->party_phone,$data->emp_name,$data->appointments,$data->followupDate,$data->followupNote];
+    $responseData = [$action,$data->sr_no,formatDate($data->lead_date),sprintf("%04d",$data->lead_no),$data->lead_from,$data->party_name,$data->party_phone,$data->emp_name,$data->appointments,$data->followupDate,$data->followupNote,$data->next_fup_date];
 
     return $responseData;
 }

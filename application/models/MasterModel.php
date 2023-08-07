@@ -832,6 +832,14 @@ class MasterModel extends CI_Model{
                     endforeach;
                 endif;
             endif;
+
+            if(isset($data['order_by'])):
+                if(!empty($data['order_by'])):
+                    foreach($data['order_by'] as $key=>$value):
+                        $this->db->order_by($key,$value);
+                    endforeach;
+                endif;
+            endif;
 			
 			if(isset($data['set'])):
 				if(!empty($data['set'])):

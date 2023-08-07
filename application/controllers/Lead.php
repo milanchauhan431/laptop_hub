@@ -36,7 +36,8 @@ class Lead extends MY_Controller{
 			$row->followupNote = '';
 			$followupData = $this->leads->getFollowupData(['entry_type' => 1, 'lead_id' => $row->id]);
 			if(!empty($followupData)):
-				$row->followupDate = formatDate($followupData->appointment_date) ;
+				$row->followupDate = formatDate($followupData->appointment_date);
+				$row->next_fup_date = formatDate($followupData->next_fup_date);
 				$row->followupNote =$followupData->notes;
 			endif;
 
@@ -127,7 +128,7 @@ class Lead extends MY_Controller{
 					<td clas="text-center">'.formatDate($row->appointment_date,'d-m-Y ').'</td>
 					<td>'.$this->appointmentMode[$row->mode].'</td>
 					<td>'.$row->executive_name.'</td>
-					<td>'.$row->contact_person.'</td>
+					<!-- <td>'.$row->contact_person.'</td> -->
 					<td>'.$row->notes.'</td>
 					<td >'.$deleteBtn.'</td>
 				</tr>';

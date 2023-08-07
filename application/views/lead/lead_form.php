@@ -69,9 +69,14 @@
                 </select>
             </div>
             
-            <div class="col-md-4 form-group">
+            <div class="col-md-4 form-group hidden">
                 <label for="contact_person">Contact Person</label>
                 <input type="text" name="contact_person" id="contact_person" class="form-control" value="<?=(!empty($dataRow->contact_person))?$dataRow->contact_person:""?>">
+            </div>
+
+            <div class="col-md-4 form-group <?=(!empty($dataRow->id))?"hidden":""?>">
+                <label for="next_fup_date">Next Follow UP Date</label>
+                <input type="date" name="next_fup_date" id="appointment_next_fup_datedate" class="form-control" value="<?=(!empty($dataRow->next_fup_date))?$dataRow->next_fup_date:getFyDate()?>" min="<?=getFyDate()?>">
             </div>
 
             <div class="col-md-12 form-group">

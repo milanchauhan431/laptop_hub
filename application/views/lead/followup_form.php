@@ -37,9 +37,13 @@
                     ?>
                 </select>
             </div>
-            <div class="col-md-3 form-group">
+            <div class="col-md-3 form-group hidden">
                 <label for="contact_person">Contact Person</label>
                 <input type="text" name="contact_person" id="contact_person" class="form-control text-capitalize req" value="<?=(!empty($dataRow->contact_person))?$dataRow->contact_person:""?>" />
+            </div>
+            <div class="col-md-3 form-group">
+                <label for="next_fup_date">Next Follow UP Date</label>
+                <input type="date" name="next_fup_date" id="appointment_next_fup_datedate" class="form-control" value="<?=(!empty($dataRow->next_fup_date))?$dataRow->next_fup_date:getFyDate()?>" min="<?=getFyDate()?>">
             </div>
             <div class="col-md-12 form-group">
                 <label for="notes">Notes</label>
@@ -66,7 +70,7 @@
                         <th>Date</th>
                         <th>Mode</th>
                         <th>Sales Executives</th>
-                        <th>Contact Person</th>
+                        <!-- <th>Contact Person</th> -->
                         <th>Notes</th>
                         <th style="width:10%;">Action</th>
                     </tr>                            

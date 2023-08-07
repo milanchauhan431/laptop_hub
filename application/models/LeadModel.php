@@ -52,14 +52,18 @@ class LeadModel extends MasterModel{
                 'lead_no'=>$leadNo,
                 'lead_status'=>$data['status'],
                 'lead_from'=>$data['lead_from'],
+                'next_fup_date'=>$data['next_fup_date']
             ];
             $result = $this->store($this->lead_managment,$leadData);
             
-            $data['lead_id'] = $result['id'];
-            $data['entry_type'] = 1;
-            $data['appointment_date'] = $data['lead_date'];
-            unset($data['lead_date'],$data['lead_from']);
-            $this->saveFollowup($data);
+            if(empty($data['id'])):
+                $data['lead_id'] = $result['id'];
+                $data['entry_type'] = 1;
+                $data['appointment_date'] = $data['lead_date'];
+                $data['next_fup_date'] = $data['next_fup_date'];
+                unset($data['lead_date'],$data['lead_from']);
+                $this->saveFollowup($data);
+            endif;
 
             if ($this->db->trans_status() !== FALSE):
                 $this->db->trans_commit();
