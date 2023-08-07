@@ -109,22 +109,31 @@
                     ?>
                 </table>
                 
-                <table class="table top-table" style="margin-top:10px;border-top:1px solid #545454;border-bottom:1px solid #000000;">
-                    <tr>
-                        <td style="width:50%;"></td>
-                        <td style="width:20%;"></td>
-                        <th class="text-center">For, <?=$companyData->company_name?></th>
-                    </tr>
-                    <tr>
-                        <td colspan="3" height="50"></td>
-                    </tr>
-                    <tr>
-                        <td><br>This is a computer-generated order.</td>
-                        <td class="text-center"><?=$dataRow->created_name?><br>Prepared By</td>
-                        <td class="text-center"><br>Authorised By</td>
-                    </tr>
-                </table>
-                
+                <htmlpagefooter name="lastpage">
+                    <table class="table top-table" style="margin-top:10px;border-top:1px solid #545454;">
+                        <tr>
+                            <td style="width:50%;"></td>
+                            <td style="width:20%;"></td>
+                            <th class="text-center">For, <?=$companyData->company_name?></th>
+                        </tr>
+                        <tr>
+                            <td colspan="3" height="50"></td>
+                        </tr>
+                        <tr>
+                            <td><br>This is a computer-generated order.</td>
+                            <td class="text-center"><?=$dataRow->created_name?><br>Prepared By</td>
+                            <td class="text-center"><br>Authorised By</td>
+                        </tr>
+                    </table>
+                    <table class="table top-table" style="margin-top:10px;border-top:1px solid #545454;">
+						<tr>
+							<td style="width:25%;">PO No. & Date : <?=$dataRow->trans_number.' ['.formatDate($dataRow->trans_date).']'?></td>
+							<td style="width:25%;"></td>
+							<td style="width:25%;text-align:right;">Page No. {PAGENO}/{nbpg}</td>
+						</tr>
+					</table>
+                </htmlpagefooter>
+				<sethtmlpagefooter name="lastpage" value="on" />                
             </div>
         </div>        
     </body>

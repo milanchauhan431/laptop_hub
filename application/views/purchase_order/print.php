@@ -64,7 +64,9 @@
 							<th style="width:75px;">HSN/SAC</th>
 							<th style="width:80px;">Qty</th>
 							<th style="width:75px;">Rate</th>
-							<th style="width:110px;">Amount</th>
+							<th style="width:60px;">Disc (%)</th>
+                            <th style="width:60px;">GST <small>(%)</small></th>
+							<th style="width:110px;">Taxable Amount</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -83,9 +85,11 @@
 										echo '<td class="text-center">'.$row->hsn_code.'</td>';
 										echo '<td class="text-right">'.sprintf('%0.2f',$row->qty).' <small>'.$row->unit_name.'</small></td>';
 										echo '<td class="text-center">'.$row->price.'</td>';
-										echo '<td rowspan="2" class="text-right">'.$row->amount.'</td>';
+										echo '<td class="text-center">'.$row->disc_per.'</td>';
+										echo '<td class="text-center">'.$row->gst_per.'</td>';
+										echo '<td rowspan="2" class="text-right">'.$row->taxable_amount.'</td>';
 									echo '</tr>';
-									echo '<tr><td colspan="4"><i>Notes:</i> '.$row->item_remark.'</td></tr>';
+									echo '<tr><td colspan="6"><i>Notes:</i> '.$row->item_remark.'</td></tr>';
 									$totalQty += $row->qty;
 								endforeach;
 							endif;
@@ -93,8 +97,9 @@
 						<tr>
 							<th colspan="3" class="text-right">Total Qty.</th>
 							<th class="text-right"><?=sprintf('%.3f',$totalQty)?></th>
-							<th colspan="1" class="text-right">Sub Total</th>
-							<th class="text-right"><?=sprintf('%.2f',$dataRow->total_amount)?></th>
+							<th class="text-right"></th>
+							<th colspan="2" class="text-right">Sub Total</th>
+							<th class="text-right"><?=sprintf('%.2f',$dataRow->taxable_amount)?></th>
 						</tr>
 					</tbody>
 					<tfoot>
@@ -113,7 +118,7 @@
 								if(!empty($expAmt)):
 									if ($row->position == 1) :
 										if($rwspan == 0):
-											$beforExp .= '<th class="text-right">'.$row->exp_name.'</th>
+											$beforExp .= '<th class="text-right" colspan="2">'.$row->exp_name.'</th>
 											<td class="text-right">'.sprintf('%.2f',$expAmt).'</td>';
 										else:
 											$beforExp .= '<tr>
@@ -123,7 +128,7 @@
 										endif;                                
 									else:
 										$afterExp .= '<tr>
-											<th class="text-right">'.$row->exp_name.'</th>
+											<th colspan="2" class="text-right">'.$row->exp_name.'</th>
 											<td class="text-right">'.sprintf('%.2f',$expAmt).'</td>
 										</tr>';
 									endif;
@@ -137,11 +142,11 @@
 								$taxAmt = floatVal($dataRow->{$taxRow->map_code.'_amount'});
 								if(!empty($taxAmt)):
 									if($rwspan == 0):
-										$taxHtml .= '<th class="text-right">'.$taxRow->name.'</th>
+										$taxHtml .= '<th colspan="2" class="text-right">'.$taxRow->name.'</th>
 										<td class="text-right">'.sprintf('%.2f',$taxAmt).'</td>';
 									else:
 										$taxHtml .= '<tr>
-											<th class="text-right">'.$taxRow->name.'</th>
+											<th colspan="2" class="text-right">'.$taxRow->name.'</th>
 											<td class="text-right">'.sprintf('%.2f',$taxAmt).'</td>
 										</tr>';
 									endif;
@@ -149,26 +154,41 @@
 									$rwspan++;
 								endif;
 							endforeach;
+
+							$fixRwSpan = (!empty($rwspan))?3:0;
 						?>
 						<tr>
-							<th class="text-left" colspan="4" rowspan="<?=$rwspan?>">
-								<b>Note: </b> <?= $dataRow->remark."-".$rwspan ?>
+							<th class="text-left" colspan="5" rowspan="<?=$rwspan?>">
+								<b>Note: </b> <?= $dataRow->remark?>
 							</th>
+
+							<?php if(empty($rwspan)): ?>
+                                <th colspan="2" class="text-right">Round Off</th>
+								<td class="text-right"><?=sprintf('%.2f',$dataRow->round_off_amount)?></td>
+                            <?php endif; ?>
 						</tr>
 						<?=$beforExp.$taxHtml.$afterExp?>
 						<tr>
-							<th class="text-left" colspan="4" rowspan="3">
+							<th class="text-left" colspan="5" rowspan="3">
 								Amount In Words : <br><?=numToWordEnglish(sprintf('%.2f',$dataRow->net_amount))?>
 							</th>
+
+							<?php if(empty($rwspan)): ?>
+                                <th colspan="2" class="text-right">Grand Total</th>
+                                <th class="text-right"><?=sprintf('%.2f',$dataRow->net_amount)?></th>
+                            <?php endif; ?>
 						</tr>
+
+						<?php if(!empty($rwspan)): ?>
 						<tr>
-							<th class="text-right">Round Off</th>
+							<th colspan="2" class="text-right">Round Off</th>
 							<td class="text-right"><?=sprintf('%.2f',$dataRow->round_off_amount)?></td>
 						</tr>
 						<tr>
-							<th class="text-right">Grand Total</th>
+							<th colspan="2" class="text-right">Grand Total</th>
 							<th class="text-right"><?=sprintf('%.2f',$dataRow->net_amount)?></th>
-						</tr>			
+						</tr>	
+						<?php endif; ?>		
 					</tfoot>
                 </table>
 

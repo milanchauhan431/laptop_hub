@@ -156,7 +156,7 @@ class SalesOrders extends MY_Controller{
         $mpdf->SetWatermarkImage($logo, 0.03, array(120, 120));
         $mpdf->showWatermarkImage = true;
         $mpdf->SetHTMLFooter($htmlFooter);
-		$mpdf->AddPage('P','','','','',5,5,5,5,3,3,'','','','','','','','','','A4-P');
+		$mpdf->AddPage('P','','','','',10,5,5,15,5,5,'','','','','','','','','','A4-P');
         $mpdf->WriteHTML($pdfData);
 		
 		ob_clean();

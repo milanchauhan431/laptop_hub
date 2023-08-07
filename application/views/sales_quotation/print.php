@@ -129,7 +129,7 @@
                                 endif;
                             endforeach;
 
-                            $taxHtml = '';
+                            $taxHtml = ''; 
                             foreach ($taxList as $taxRow) :
                                 $taxAmt = 0;
                                 $taxAmt = floatVal($dataRow->{$taxRow->map_code.'_amount'});
@@ -146,7 +146,8 @@
                                 
                                     $rwspan++;
                                 endif;
-                            endforeach;
+                            endforeach;                         
+                            $fixRwSpan = (!empty($rwspan))?3:0;
                         ?>
                         <tr>
                             <th colspan="3" class="text-right">Total Qty.</th>
@@ -161,20 +162,28 @@
                                 <b>A/c. No. : </b><?=$companyData->company_acc_no?><br>
                                 <b>IFSC Code : </b><?=$companyData->company_ifsc_code?><br>
                                 <b>Branch : </b><?=$companyData->company_bank_branch?>
+                                <hr>
+                                <b>Note : </b> <?=$dataRow->remark?>
                             </th>
+
+                            <?php if(empty($rwspan)): ?>
+                                <th colspan="2" class="text-right">Round Off</th>
+                                <td class="text-right"><?=sprintf('%.2f',$dataRow->round_off_amount)?></td>
+                            <?php endif; ?>
                         </tr>
-                        <!-- <tr>
-                            <th class="text-left" colspan="5" rowspan="2">
-                                Notes : <br><?=$dataRow->remark?>
-                            </th>				
-                        </tr> -->
                         <?=$beforExp.$taxHtml.$afterExp?>
                         <tr>
-                            <th class="text-left" colspan="5" rowspan="3">
+                            <th class="text-left" colspan="5" rowspan="<?=$fixRwSpan?>">
                                 Amount In Words : <br><?=numToWordEnglish(sprintf('%.2f',$dataRow->net_amount))?>
-                            </th>				
+                            </th>	
+                            
+                            <?php if(empty($rwspan)): ?>
+                                <th colspan="2" class="text-right">Grand Total</th>
+                                <th class="text-right"><?=sprintf('%.2f',$dataRow->net_amount)?></th>
+                            <?php endif; ?>
                         </tr>
                         
+                        <?php if(!empty($rwspan)): ?>
                         <tr>
                             <th colspan="2" class="text-right">Round Off</th>
                             <td class="text-right"><?=sprintf('%.2f',$dataRow->round_off_amount)?></td>
@@ -183,6 +192,7 @@
                             <th colspan="2" class="text-right">Grand Total</th>
                             <th class="text-right"><?=sprintf('%.2f',$dataRow->net_amount)?></th>
                         </tr>
+                        <?php endif; ?>
                     </tbody>
                 </table>
                 <h4>Terms & Conditions :-</h4>
@@ -199,22 +209,31 @@
                     ?>
                 </table>
                 
-                <table class="table top-table" style="margin-top:10px;border-top:1px solid #545454;border-bottom:1px solid #000000;">
-                    <tr>
-                        <td style="width:50%;"></td>
-                        <td style="width:20%;"></td>
-                        <th class="text-center">For, <?=$companyData->company_name?></th>
-                    </tr>
-                    <tr>
-                        <td colspan="3" height="50"></td>
-                    </tr>
-                    <tr>
-                        <td><br>This is a computer-generated quotation.</td>
-                        <td class="text-center"><?=$dataRow->created_name?><br>Prepared By</td>
-                        <td class="text-center"><br>Authorised By</td>
-                    </tr>
-                </table>
-                
+                <htmlpagefooter name="lastpage">
+                    <table class="table top-table" style="margin-top:10px;border-top:1px solid #545454;">
+                        <tr>
+                            <td style="width:50%;"></td>
+                            <td style="width:20%;"></td>
+                            <th class="text-center">For, <?=$companyData->company_name?></th>
+                        </tr>
+                        <tr>
+                            <td colspan="3" height="50"></td>
+                        </tr>
+                        <tr>
+                            <td><br>This is a computer-generated quotation.</td>
+                            <td class="text-center"><?=$dataRow->created_name?><br>Prepared By</td>
+                            <td class="text-center"><br>Authorised By</td>
+                        </tr>
+                    </table>
+                    <table class="table top-table" style="margin-top:10px;border-top:1px solid #545454;">
+						<tr>
+							<td style="width:25%;">PO No. & Date : <?=$dataRow->trans_number.' ['.formatDate($dataRow->trans_date).']'?></td>
+							<td style="width:25%;"></td>
+							<td style="width:25%;text-align:right;">Page No. {PAGENO}/{nbpg}</td>
+						</tr>
+					</table>
+                </htmlpagefooter>
+				<sethtmlpagefooter name="lastpage" value="on" /> 
             </div>
         </div>        
     </body>
