@@ -77,12 +77,12 @@
             
 			<div class="col-md-3 form-group">
                 <label for="gstin">Party GSTIN</label>
-                <input type="text" name="gstin" class="form-control req" value="<?=(!empty($dataRow->gstin))?$dataRow->gstin:""; ?>" />
+                <input type="text" name="gstin" class="form-control text-uppercase req" value="<?=(!empty($dataRow->gstin))?$dataRow->gstin:""; ?>" />
             </div>	
             		
             <div class="col-md-3 form-group">
                 <label for="pan_no">Party PAN</label>
-                <input type="text" name="pan_no" class="form-control" value="<?=(!empty($dataRow->pan_no))?$dataRow->pan_no:""?>" />
+                <input type="text" name="pan_no" class="form-control text-uppercase" value="<?=(!empty($dataRow->pan_no))?$dataRow->pan_no:""?>" />
             </div>
 			
             <div class="col-md-3 form-group">
