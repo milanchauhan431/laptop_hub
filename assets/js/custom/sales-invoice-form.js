@@ -93,7 +93,7 @@ $(document).ready(function(){
             var gst_per = 0; var cgst_per = 0; var sgst_per = 0; var igst_per = 0;
 
 			formData.org_price = (formData.org_price != "" || parseFloat(formData.org_price) > 0)?formData.org_price:0;
-			formData.price = parseFloat((parseFloat(formData.org_price) * parseFloat(($("#master_i_col_1").val() || 0)) / 100)).toFixed(0);
+			formData.price = parseFloat((parseFloat(formData.org_price) * parseFloat(($("#master_i_col_1").val() || 0)) / 100)).toFixed(2);
 
             if (formData.disc_per == "" && formData.disc_per == "0") {
                 taxable_amount = amount = parseFloat(parseFloat(formData.qty) * parseFloat(formData.price)).toFixed(2);
@@ -114,6 +114,7 @@ $(document).ready(function(){
 
             net_amount = parseFloat(parseFloat(taxable_amount) + parseFloat(igst_amt)).toFixed(2);
 
+			formData.gst_per = parseFloat(formData.gst_per);
             formData.qty = parseFloat(formData.qty).toFixed(2);
             formData.cgst_per = cgst_per;
             formData.cgst_amount = cgst_amt;
@@ -192,7 +193,7 @@ $(document).ready(function(){
 
 				var org_price = $("#salesInvoiceItems tbody tr:eq("+i+") input[name='itemData["+countRow+"][org_price]']").val();
 				formData.org_price = (org_price != "" || parseFloat(org_price) > 0)?org_price:0;
-				formData.price = parseFloat((parseFloat(org_price) * parseFloat(billPer) / 100)).toFixed(0);
+				formData.price = parseFloat((parseFloat(org_price) * parseFloat(billPer) / 100)).toFixed(2);
 				
 				formData.disc_per = $("#salesInvoiceItems tbody tr:eq("+i+") input[name='itemData["+countRow+"][disc_per]']").val();
 				formData.gst_per = $("#salesInvoiceItems tbody tr:eq("+i+") input[name='itemData["+countRow+"][gst_per]']").val();
@@ -221,6 +222,7 @@ $(document).ready(function(){
 				
 				net_amount = parseFloat(parseFloat(taxable_amount) + parseFloat(igst_amt)).toFixed(2);
 
+				formData.gst_per = parseFloat(formData.gst_per);
 				formData.gst_type = $('#gst_type').val();
 				formData.qty = parseFloat(formData.qty).toFixed(2);
 				formData.cgst_per = cgst_per;
@@ -437,7 +439,7 @@ function Edit(data, button) {
 	$.each(data, function (key, value) {
 		$("#itemForm #" + key).val(value);
 	});
-
+	$("#itemForm #price").val(data.org_price);
 	$("#itemForm .select2").select2();
 	$("#itemForm #row_index").val(row_index);
 }
