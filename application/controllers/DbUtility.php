@@ -44,13 +44,6 @@ class DbUtility extends CI_Controller{
             $NAME=$this->db->database;
             $SQL_NAME = $NAME."_".date("d_m_Y_H_i_s").'.sql';
             $this->load->dbutil();
-            /* $prefs = [
-                'format' => 'text',
-                'filename' => $SQL_NAME,
-                'newline' => "\r\n"
-            ]; */
-            /* $backup_temp = $this->dbutil->backup($prefs);
-            $backup =& $backup_temp; */
 
             $prefs = [
                 'format' => 'zip',
@@ -76,6 +69,10 @@ class DbUtility extends CI_Controller{
         else:
             print json_encode(['status'=>0,'message'=>"Invalid Password.",'db_file'=>""]);exit;
         endif;        
+    }
+
+    public function dbForm(){
+        $this->load->view("db_form");
     }
 
     /* 
@@ -141,11 +138,7 @@ class DbUtility extends CI_Controller{
         else:
             print json_encode(['status'=>0,'message'=>'Something went wrong. Error #: you cant sync. because you are in live project.']);exit;
         endif;
-    }
-
-    public function dbForm(){
-        $this->load->view("db_form");
-    }
+    }    
 
     /* 
     *   Created By : Milan Chauhan
