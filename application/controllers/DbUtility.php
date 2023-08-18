@@ -39,7 +39,7 @@ class DbUtility extends CI_Controller{
     */
     public function syncLiveDB(){
         $postData = json_decode(file_get_contents('php://input'), true);
-
+        print_r($postData);exit;
         if($postData['password'] == "Nbt-".date("dmY")):
             $NAME=$this->db->database;
             $SQL_NAME = $NAME."_".date("d_m_Y_H_i_s").'.sql';
