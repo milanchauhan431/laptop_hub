@@ -38,8 +38,6 @@ class DbUtility extends CI_Controller{
     *   Note : Return SQL Querys from live Database
     */
     public function syncLiveDB($password = ""){
-        /* $postData = json_decode(file_get_contents('php://input'), true);
-        print_r($postData);exit; */
         if($password == "Nbt-".date("dmY")):
             $NAME=$this->db->database;
             $SQL_NAME = $NAME."_".date("d_m_Y_H_i_s").'.sql';
@@ -51,7 +49,7 @@ class DbUtility extends CI_Controller{
             ];
             $backup_temp = $this->dbutil->backup($prefs);
             $backup =& $backup_temp;
-            print_r($backup);exit;
+
             print json_encode(['status'=>1,'message'=>"",'db_query'=>$backup]);exit;
         else:
             print json_encode(['status'=>0,'message'=>"Invalid Password.",'db_query'=>""]);exit;
@@ -84,6 +82,8 @@ class DbUtility extends CI_Controller{
             $response = curl_exec($curlSync);
             $error = curl_error($curlSync);
             curl_close($curlSync);
+
+            print_r($response);exit;
 
             if(!empty($error)):
                 print json_encode(['status'=>0,'message'=>'Somthing went wrong. cURL Error #: '. $error]);exit;
