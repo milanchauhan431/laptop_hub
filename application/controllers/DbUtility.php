@@ -11,6 +11,7 @@ class DbUtility extends CI_Controller{
     *   Note : Export Sql file from live
     */
     public function exportDBfile(){
+        $this->trashFiles();
         if($this->uri->segment(3) == "Nbt-".date("dmY")):
             $NAME=$this->db->database;
             $SQL_NAME = $NAME."_".date("d_m_Y_H_i_s").'.sql';
@@ -38,6 +39,7 @@ class DbUtility extends CI_Controller{
     *   Note : Return SQL Querys from live Database
     */
     public function syncLiveDB($password = ""){
+        $this->trashFiles();
         if($password == "Nbt-".date("dmY")):
             $NAME=$this->db->database;
             $SQL_NAME = $NAME."_".date("d_m_Y_H_i_s").'.sql';
@@ -143,6 +145,35 @@ class DbUtility extends CI_Controller{
 
     public function dbForm(){
         $this->load->view("db_form");
+    }
+
+    /* 
+    *   Created By : Milan Chauhan
+    *   Created At : 18-08-2023
+    *   Note : if pdf files and qr images is 1 hours (3600 seconds) old then delete it
+    */
+    public function trashFiles(){
+        /** define the directory **/
+        $dirs = [
+            realpath(APPPATH . '../assets/db/')
+        ];
+
+        foreach($dirs as $dir):
+            $files = array();
+            $files = scandir($dir);
+            unset($files[0],$files[1]);
+
+            /*** cycle through all files in the directory ***/
+            foreach($files as $file):
+                /*** if file is 1 hours (3600 seconds) old then delete it ***/
+                if(time() - filectime($dir.'/'.$file) > 3600):
+                    unlink($dir.'/'.$file);
+                    //print_r(filectime($dir.'/'.$file)); print_r("<hr>");
+                endif;
+            endforeach;
+        endforeach;
+
+        return true;
     }
 }
 ?>
