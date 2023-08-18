@@ -63,7 +63,7 @@
                                                 <a class="text-primary font-bold waves-effect waves-dark getPendingOrders" href="javascript:void(0)">+ Gate Inward</a>
                                             </span>
 										</div>
-                                        <select name="party_id" id="party_id" class="form-control select2 partyDetails partyOptions req" data-res_function="resPartyDetail" data-party_category="1">
+                                        <select name="party_id" id="party_id" class="form-control select2 partyDetails partyOptions req" data-res_function="resPartyDetail" data-party_category="2,3">
 											<option value="">Select Party</option>
 											<?=getPartyListOption($partyList,((!empty($dataRow->party_id))?$dataRow->party_id:0))?>
 										</select>
