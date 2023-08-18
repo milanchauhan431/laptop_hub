@@ -66,12 +66,12 @@ class DbUtility extends CI_Controller{
                 $zip->extractTo('assets/db/');
                 $zip->close();
 
-                print json_encode(['status'=>0,'message'=>"Failed to extract zip file.",'db_file'=>base_url('assets/db/'.$SQL_NAME)]);exit;
+                print json_encode(['status'=>1,'message'=>"extract zip file successfully.",'db_file'=>base_url('assets/db/'.$SQL_NAME)]);exit;
             else:
                 print json_encode(['status'=>0,'message'=>"Failed to extract zip file.",'db_file'=>""]);exit;
             endif;            
         else:
-            print json_encode(['status'=>0,'message'=>"Invalid Password.",'db_query'=>""]);exit;
+            print json_encode(['status'=>0,'message'=>"Invalid Password.",'db_file'=>""]);exit;
         endif;        
     }
 
@@ -102,8 +102,6 @@ class DbUtility extends CI_Controller{
             $error = curl_error($curlSync);
             curl_close($curlSync);
 
-            print_r($response);exit;
-
             if(!empty($error)):
                 print json_encode(['status'=>0,'message'=>'Somthing went wrong. cURL Error #: '. $error]);exit;
             else:
@@ -111,9 +109,12 @@ class DbUtility extends CI_Controller{
                 if($response->status == 0):
                     print json_encode(['status'=>0,'message'=>'Somthing went wrong. Error #: '. $response->message]);exit;
                 else:
-                    if(!empty($response->db_query)):
-                        $this->db->query($response->db_query);
-                        print json_encode(['status'=>1,'message'=>'Database sync successfully.']);exit;
+                    if(!empty($response->db_file)):
+                        $this->load->helper('url');
+                        $fileContent = file_get_contents($response->db_file);
+                        print_r($fileContent);exit;
+                        //$this->db->query($response->db_query);
+                        //print json_encode(['status'=>1,'message'=>'Database sync successfully.']);exit;
                     else:
                         print json_encode(['status'=>0,'message'=>'Somthing went wrong. Error #: SQL QUERY not found.']);exit;
                     endif;
