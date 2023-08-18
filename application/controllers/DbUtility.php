@@ -54,7 +54,8 @@ class DbUtility extends CI_Controller{
                 'format' => 'zip',
                 'filename' => $SQL_NAME
             ];
-            $backup =& $this->dbutil->backup($prefs);    
+            $backup_temp = $this->dbutil->backup($prefs);
+            $backup =& $backup_temp;
             $db_name = $NAME."_".date("d_m_Y_H_i_s").'.zip';    
             $save = 'assets/db/'.$db_name;
             $this->load->helper('file');
@@ -62,7 +63,7 @@ class DbUtility extends CI_Controller{
 
             $zip = new ZipArchive;
             if ($zip->open($save) === TRUE):
-                $zip->extractTo('assets/db/'.$SQL_NAME);
+                $zip->extractTo('assets/db/');
                 $zip->close();
 
                 print json_encode(['status'=>0,'message'=>"Failed to extract zip file.",'db_file'=>base_url('assets/db/'.$SQL_NAME)]);exit;
