@@ -37,10 +37,10 @@ class DbUtility extends CI_Controller{
     *   Required Data : password
     *   Note : Return SQL Querys from live Database
     */
-    public function syncLiveDB(){
-        $postData = json_decode(file_get_contents('php://input'), true);
-        print_r($postData);exit;
-        if($postData['password'] == "Nbt-".date("dmY")):
+    public function syncLiveDB($password = ""){
+        /* $postData = json_decode(file_get_contents('php://input'), true);
+        print_r($postData);exit; */
+        if($password == "Nbt-".date("dmY")):
             $NAME=$this->db->database;
             $SQL_NAME = $NAME."_".date("d_m_Y_H_i_s").'.sql';
             $this->load->dbutil();
@@ -68,25 +68,24 @@ class DbUtility extends CI_Controller{
         if($_SERVER['HTTP_HOST'] == 'localhost'):
             $data = $this->input->post();
 
-            $curl = curl_init();
-            curl_setopt_array($curl, array(
-                CURLOPT_URL => "https://admix.scubeerp.in/dbUtility/syncLiveDB",
+            $curlSync = curl_init();
+            curl_setopt_array($curlSync, array(
+                CURLOPT_URL => "https://admix.scubeerp.in/dbUtility/syncLiveDB/".$data['password'],
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_FOLLOWLOCATION => true,
                 CURLOPT_ENCODING => "",
                 CURLOPT_MAXREDIRS => 10,
                 CURLOPT_TIMEOUT => 0,
                 CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                CURLOPT_CUSTOMREQUEST => "POST",
-                CURLOPT_HTTPHEADER => array('Content-Type: application/json'),
-                CURLOPT_POSTFIELDS => json_encode($data)
+                CURLOPT_CUSTOMREQUEST => "GET",
+                CURLOPT_HTTPHEADER => array('Content-Type: application/json')
             ));
 
-            $response = curl_exec($curl);
-            $error = curl_error($curl);
-            curl_close($curl);
-            print_r($response);exit;
-            if($error):
+            $response = curl_exec($curlSync);
+            $error = curl_error($curlSync);
+            curl_close($curlSync);
+
+            if(!empty($error)):
                 print json_encode(['status'=>0,'message'=>'Somthing went wrong. cURL Error #: '. $error]);exit;
             else:
                 $response = json_decode($response);	
