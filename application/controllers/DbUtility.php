@@ -53,7 +53,7 @@ class DbUtility extends CI_Controller{
             $prefs = [
                 'format' => 'zip',
                 'filename' => $SQL_NAME,
-                'newline' => "\r\n"
+                'newline' => "@\r\n"
             ];
             $backup_temp = $this->dbutil->backup($prefs);
             $backup =& $backup_temp;
@@ -116,7 +116,7 @@ class DbUtility extends CI_Controller{
                         $this->load->database();
 
                         if ($sqlContent !== false):
-                            $queries = explode('\r\n', $sqlContent);
+                            $queries = explode("@\r\n", $sqlContent);
                         
                             foreach ($queries as $query):
                                 if (!empty(trim($query))):
