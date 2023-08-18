@@ -51,7 +51,7 @@ class DbUtility extends CI_Controller{
             ];
             $backup_temp = $this->dbutil->backup($prefs);
             $backup =& $backup_temp;
-
+            print_r($backup);exit;
             print json_encode(['status'=>1,'message'=>"",'db_query'=>$backup]);exit;
         else:
             print json_encode(['status'=>0,'message'=>"Invalid Password.",'db_query'=>""]);exit;
@@ -85,7 +85,7 @@ class DbUtility extends CI_Controller{
             $response = curl_exec($curl);
             $error = curl_error($curl);
             curl_close($curl);
-
+            print_r($response);exit;
             if($error):
                 print json_encode(['status'=>0,'message'=>'Somthing went wrong. cURL Error #: '. $error]);exit;
             else:
