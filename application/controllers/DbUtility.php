@@ -42,15 +42,33 @@ class DbUtility extends CI_Controller{
             $NAME=$this->db->database;
             $SQL_NAME = $NAME."_".date("d_m_Y_H_i_s").'.sql';
             $this->load->dbutil();
-            $prefs = [
+            /* $prefs = [
                 'format' => 'text',
                 'filename' => $SQL_NAME,
                 'newline' => "\r\n"
-            ];
-            $backup_temp = $this->dbutil->backup($prefs);
-            $backup =& $backup_temp;
+            ]; */
+            /* $backup_temp = $this->dbutil->backup($prefs);
+            $backup =& $backup_temp; */
 
-            print json_encode(['status'=>1,'message'=>"",'db_query'=>$backup]);exit;
+            $prefs = [
+                'format' => 'zip',
+                'filename' => $SQL_NAME
+            ];
+            $backup =& $this->dbutil->backup($prefs);    
+            $db_name = $NAME."_".date("d_m_Y_H_i_s").'.zip';    
+            $save = 'assets/db/'.$db_name;
+            $this->load->helper('file');
+            write_file($save, $backup);
+
+            $zip = new ZipArchive;
+            if ($zip->open($save) === TRUE):
+                $zip->extractTo('assets/db/'.$SQL_NAME);
+                $zip->close();
+
+                print json_encode(['status'=>0,'message'=>"Failed to extract zip file.",'db_file'=>base_url('assets/db/'.$SQL_NAME)]);exit;
+            else:
+                print json_encode(['status'=>0,'message'=>"Failed to extract zip file.",'db_file'=>""]);exit;
+            endif;            
         else:
             print json_encode(['status'=>0,'message'=>"Invalid Password.",'db_query'=>""]);exit;
         endif;        
