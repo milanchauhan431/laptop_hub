@@ -52,7 +52,8 @@ class DbUtility extends CI_Controller{
 
             $prefs = [
                 'format' => 'zip',
-                'filename' => $SQL_NAME
+                'filename' => $SQL_NAME,
+                'newline' => "\r\n"
             ];
             $backup_temp = $this->dbutil->backup($prefs);
             $backup =& $backup_temp;
@@ -110,11 +111,26 @@ class DbUtility extends CI_Controller{
                     print json_encode(['status'=>0,'message'=>'Somthing went wrong. Error #: '. $response->message]);exit;
                 else:
                     if(!empty($response->db_file)):
-                        $this->load->helper('url');
-                        $fileContent = file_get_contents($response->db_file);
-                        print_r($fileContent);exit;
-                        //$this->db->query($response->db_query);
-                        //print json_encode(['status'=>1,'message'=>'Database sync successfully.']);exit;
+                        $this->load->helper('file');
+                        $sqlContent = file_get_contents($response->db_file);
+                        $this->load->database();
+
+                        if ($sqlContent !== false):
+                            $queries = explode('\r\n', $sqlContent);
+                        
+                            foreach ($queries as $query):
+                                if (!empty(trim($query))):
+                                    if (!$this->db->query($query)):
+                                        $error_message = $this->db->error()['message'];
+                                        log_message('error', 'Query error: ' . $error_message);
+                                    endif;
+                                endif;
+                            endforeach;
+                        
+                            print json_encode(['status'=>1,'message'=>'Database sync successfully.']);exit;
+                        else:
+                            print json_encode(['status'=>0,'message'=>'Failed to read the SQL file.']);exit;
+                        endif;
                     else:
                         print json_encode(['status'=>0,'message'=>'Somthing went wrong. Error #: SQL QUERY not found.']);exit;
                     endif;
