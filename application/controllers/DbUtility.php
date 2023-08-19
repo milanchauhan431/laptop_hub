@@ -7,26 +7,30 @@ class DbUtility extends CI_Controller{
     /* 
     *   Created BY : Milan Chauhan
     *   Created AT : 18-08-2023
-    *   Required Data : password in query param
+    *   Required Data : password,db_name in query param
     *   Note : Export Sql file from live
     */
-    public function exportDBfile(){
+    public function exportDBfile($password = "",$db_name = ""){
         $this->trashFiles();
-        if($this->uri->segment(3) == "Nbt-".date("dmY")):
-            $NAME=$this->db->database;
-            $SQL_NAME = $NAME."_".date("d_m_Y_H_i_s").'.sql';
-            $this->load->dbutil();
-            $prefs = [
-                'format' => 'zip',
-                'filename' => $SQL_NAME
-            ];
-            $backup =& $this->dbutil->backup($prefs);    
-            $db_name = $NAME."_".date("d_m_Y_H_i_s").'.zip';    
-            $save = 'assets/db/'.$db_name;
-            $this->load->helper('file');
-            write_file($save, $backup);
-            $this->load->helper('download');
-            force_download($db_name, $backup); 
+        if($password == "Nbt-".date("dmY")):
+            if($NAME == SERVER_PREFIX.$db_name):
+                $NAME=$this->db->database;
+                $SQL_NAME = $NAME."_".date("d_m_Y_H_i_s").'.sql';
+                $this->load->dbutil();
+                $prefs = [
+                    'format' => 'zip',
+                    'filename' => $SQL_NAME
+                ];
+                $backup =& $this->dbutil->backup($prefs);    
+                $db_name = $NAME."_".date("d_m_Y_H_i_s").'.zip';    
+                $save = 'assets/db/'.$db_name;
+                $this->load->helper('file');
+                write_file($save, $backup);
+                $this->load->helper('download');
+                force_download($db_name, $backup); 
+            else:
+                $this->load->view('page-403');
+            endif;
         else:
             $this->load->view('page-403');
         endif;
@@ -38,34 +42,38 @@ class DbUtility extends CI_Controller{
     *   Required Data : password
     *   Note : Return SQL Querys from live Database
     */
-    public function syncLiveDB($password = ""){
+    public function syncLiveDB($password = "",$db_name = ""){
         $this->trashFiles();
         if($password == "Nbt-".date("dmY")):
             $NAME=$this->db->database;
-            $SQL_NAME = $NAME."_".date("d_m_Y_H_i_s").'.sql';
-            $this->load->dbutil();
+            if($NAME == SERVER_PREFIX.$db_name):
+                $SQL_NAME = $NAME."_".date("d_m_Y_H_i_s").'.sql';
+                $this->load->dbutil();
 
-            $prefs = [
-                'format' => 'zip',
-                'filename' => $SQL_NAME,
-                'newline' => "@\r\n"
-            ];
-            $backup_temp = $this->dbutil->backup($prefs);
-            $backup =& $backup_temp;
-            $db_name = $NAME."_".date("d_m_Y_H_i_s").'.zip';    
-            $save = 'assets/db/'.$db_name;
-            $this->load->helper('file');
-            write_file($save, $backup);
+                $prefs = [
+                    'format' => 'zip',
+                    'filename' => $SQL_NAME,
+                    'newline' => "@\r\n"
+                ];
+                $backup_temp = $this->dbutil->backup($prefs);
+                $backup =& $backup_temp;
+                $db_name = $NAME."_".date("d_m_Y_H_i_s").'.zip';    
+                $save = 'assets/db/'.$db_name;
+                $this->load->helper('file');
+                write_file($save, $backup);
 
-            $zip = new ZipArchive;
-            if ($zip->open($save) === TRUE):
-                $zip->extractTo('assets/db/');
-                $zip->close();
+                $zip = new ZipArchive;
+                if ($zip->open($save) === TRUE):
+                    $zip->extractTo('assets/db/');
+                    $zip->close();
 
-                print json_encode(['status'=>1,'message'=>"extract zip file successfully.",'db_file'=>base_url('assets/db/'.$SQL_NAME)]);exit;
+                    print json_encode(['status'=>1,'message'=>"extract zip file successfully.",'db_file'=>base_url('assets/db/'.$SQL_NAME)]);exit;
+                else:
+                    print json_encode(['status'=>0,'message'=>"Failed to extract zip file.",'db_file'=>""]);exit;
+                endif;   
             else:
-                print json_encode(['status'=>0,'message'=>"Failed to extract zip file.",'db_file'=>""]);exit;
-            endif;            
+                print json_encode(['status'=>0,'message'=>"Invalid DB name.",'db_file'=>""]);exit;
+            endif;
         else:
             print json_encode(['status'=>0,'message'=>"Invalid Password.",'db_file'=>""]);exit;
         endif;        
@@ -87,7 +95,7 @@ class DbUtility extends CI_Controller{
 
             $curlSync = curl_init();
             curl_setopt_array($curlSync, array(
-                CURLOPT_URL => "https://admix.scubeerp.in/dbUtility/syncLiveDB/".$data['password'],
+                CURLOPT_URL => LIVE_LINK."dbUtility/syncLiveDB/".$data['password']."/".MASTER_DB,
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_FOLLOWLOCATION => true,
                 CURLOPT_ENCODING => "",

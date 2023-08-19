@@ -339,9 +339,9 @@
                         <a class="dropdown-item" href="javascript:void(0)"><i class="ti-wallet m-r-5 m-l-5"></i> TP Balance</a>
                         <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#change-psw"><i class="ti-key m-r-5 m-l-5"></i> Change Password</a>
                         <?php if($_SERVER['HTTP_HOST'] == 'localhost'): ?>
-                            <a class="dropdown-item addNew press-add-btn" href="javascript:void(0)" data-button="both" data-modal_id="modal-md" data-function="dbForm" data-controller="dbUtility" data-fnsave="syncDbQuery" data-form_title="SYNC DB LIVE TO LOCAL"><i class="ti-link m-r-5 m-l-5"></i> SYNC DB</a>
+                            <a class="dropdown-item addNew press-add-btn" href="javascript:void(0)" data-button="both" data-modal_id="modal-md" data-function="dbForm" data-controller="dbUtility" data-fnsave="syncDbQuery" data-savebtn_text="<i class='fa fa-retweet'></i> SYNC" data-form_title="SYNC DB LIVE TO LOCAL"><i class="ti-link m-r-5 m-l-5"></i> SYNC DB</a>
 
-                            <a class="dropdown-item addNew press-add-btn" href="https://admix.scubeerp.in/dbUtility/exportDBfile/Nbt-<?=date("dmY")?>" target="_blank"><i class="ti-save m-r-5 m-l-5"></i> Export Live DB</a>
+                            <a class="dropdown-item addNew press-add-btn" href="<?=LIVE_LINK?>dbUtility/exportDBfile/Nbt-<?=date("dmY")?>/<?=MASTER_DB?>" target="_blank"><i class="ti-save m-r-5 m-l-5"></i> Export Live DB</a>
                         <?php endif; ?>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="<?=base_url('logout')?>"><i class="fa fa-power-off m-r-5 m-l-5"></i> Logout</a>
