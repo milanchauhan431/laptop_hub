@@ -1,5 +1,6 @@
 <div class="row">
     <div class="col-12">
+        <?php if(!empty($header_footer)): ?>
         <table>
             <tr>
                 <td>
@@ -7,6 +8,7 @@
                 </td>
             </tr>
         </table>
+        <?php endif; ?>
 
         <table class="table bg-light-grey">
             <tr class="" style="letter-spacing: 2px;font-weight:bold;padding:2px !important; border-bottom:1px solid #000000;">

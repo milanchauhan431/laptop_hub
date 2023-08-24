@@ -150,6 +150,9 @@ class SalesInvoice extends MY_Controller{
             endfor;
         endif;
 
+        $postData['header_footer'] = (!empty($postData['header_footer']))?1:0;
+        $this->data['header_footer'] = $postData['header_footer'];
+
         $inv_id = (!empty($id))?$id:$postData['id'];
 
 		$this->data['invData'] = $invData = $this->salesInvoice->getSalesInvoice(['id'=>$inv_id,'itemList'=>1]);
@@ -164,7 +167,7 @@ class SalesInvoice extends MY_Controller{
         $pdfData = "";
         $countPT = count($printTypes); $i=0;
         foreach($printTypes as $printType):
-            ++$i;
+            ++$i;           
             $this->data['printType'] = $printType;
             $this->data['maxLinePP'] = (!empty($postData['max_lines']))?$postData['max_lines']:18;
 		    $pdfData .= $this->load->view('sales_invoice/print',$this->data,true);
@@ -184,7 +187,7 @@ class SalesInvoice extends MY_Controller{
 		
 		/* $mpdf->SetHTMLHeader($htmlHeader);
 		$mpdf->SetHTMLFooter($htmlFooter); */
-		$mpdf->AddPage('P','','','','',10,5,5,5,5,5,'','','','','','','','','','A4-P');
+		$mpdf->AddPage('P','','','','',10,5,(($postData['header_footer'] == 1)?5:35),5,5,5,'','','','','','','','','','A4-P');
 		$mpdf->WriteHTML($pdfData);
 		$mpdf->Output($pdfFileName,'I');
 	}
