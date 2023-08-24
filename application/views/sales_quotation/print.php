@@ -41,7 +41,7 @@
                     <tr>
                         <td style="width:40%;" colspan="2">
                             <b>Qtn. Date</b> : <?=formatDate($dataRow->trans_date)?><br>
-                            <b>Valid till</b> : <?=formatDate($dataRow->delivery_date)?><br>
+                            <!-- <b>Valid till</b> : <?=formatDate($dataRow->delivery_date)?><br> -->
                             <b>GSTIN</b> : <?=(!empty($partyData->gstin)) ? $partyData->gstin : ""?>
                         </td>
                     </tr>

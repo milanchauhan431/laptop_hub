@@ -235,7 +235,7 @@ class AccountingReport extends MY_Controller{
             $mpdf = new \Mpdf\Mpdf();
             $filePath = realpath(APPPATH . '../assets/uploads/');
             $pdfFileName = $filePath.'/AccountLedger.pdf';
-            $stylesheet = file_get_contents(base_url('assets/css/pdf_style.css'));
+            $stylesheet = file_get_contents(base_url('assets/css/pdf_style.css?v='.time()));
             $mpdf->WriteHTML($stylesheet, 1);
             $mpdf->SetDisplayMode('fullpage');
             $mpdf->SetWatermarkImage($logo, 0.08, array(120, 120));
@@ -366,7 +366,7 @@ class AccountingReport extends MY_Controller{
             $mpdf = new \Mpdf\Mpdf();
             $filePath = realpath(APPPATH . '../assets/uploads/');
             $pdfFileName = $filePath.'/AccountLedgerDetail.pdf';
-            $stylesheet = file_get_contents(base_url('assets/css/pdf_style.css'));
+            $stylesheet = file_get_contents(base_url('assets/css/pdf_style.css?v='.time()));
             $mpdf->WriteHTML($stylesheet, 1);
             $mpdf->SetDisplayMode('fullpage');
             $mpdf->SetWatermarkImage($logo, 0.08, array(120, 120));
@@ -678,7 +678,7 @@ class AccountingReport extends MY_Controller{
 			$mpdf = new \Mpdf\Mpdf();
     		$filePath = realpath(APPPATH . '../assets/uploads/');
             $pdfFileName = $filePath.'/Outstanding.pdf';
-            $stylesheet = file_get_contents(base_url('assets/css/pdf_style.css'));
+            $stylesheet = file_get_contents(base_url('assets/css/pdf_style.css?v='.time()));
             $mpdf->WriteHTML($stylesheet, 1);
             $mpdf->SetDisplayMode('fullpage');
 			$mpdf->SetWatermarkImage($logo, 0.08, array(120, 120));
@@ -779,7 +779,7 @@ class AccountingReport extends MY_Controller{
             $mpdf = new \Mpdf\Mpdf();
             $filePath = realpath(APPPATH . '../assets/uploads/');
             $pdfFileName = $filePath.'/AccountLedger.pdf';
-            $stylesheet = file_get_contents(base_url('assets/css/pdf_style.css'));
+            $stylesheet = file_get_contents(base_url('assets/css/pdf_style.css?v='.time()));
             $mpdf->WriteHTML($stylesheet, 1);
             $mpdf->SetDisplayMode('fullpage');
             $mpdf->SetWatermarkImage($logo, 0.08, array(120, 120));
@@ -877,7 +877,7 @@ class AccountingReport extends MY_Controller{
             $mpdf = new \Mpdf\Mpdf();
             $filePath = realpath(APPPATH . '../assets/uploads/');
             $pdfFileName = $filePath.'/AccountLedger.pdf';
-            $stylesheet = file_get_contents(base_url('assets/css/pdf_style.css'));
+            $stylesheet = file_get_contents(base_url('assets/css/pdf_style.css?v='.time()));
             $mpdf->WriteHTML($stylesheet, 1);
             $mpdf->SetDisplayMode('fullpage');
             $mpdf->SetWatermarkImage($logo, 0.08, array(120, 120));
@@ -1008,7 +1008,7 @@ class AccountingReport extends MY_Controller{
             $mpdf = new \Mpdf\Mpdf();
             $filePath = realpath(APPPATH . '../assets/uploads/');
             $pdfFileName = $filePath.'/TrialBalance.pdf';
-            $stylesheet = file_get_contents(base_url('assets/css/pdf_style.css'));
+            $stylesheet = file_get_contents(base_url('assets/css/pdf_style.css?v='.time()));
             $mpdf->WriteHTML($stylesheet, 1);
             $mpdf->SetDisplayMode('fullpage');
             $mpdf->SetWatermarkImage($logo, 0.08, array(120, 120));
@@ -1218,7 +1218,7 @@ class AccountingReport extends MY_Controller{
             $mpdf = new \Mpdf\Mpdf();
             $filePath = realpath(APPPATH . '../assets/uploads/');
             $pdfFileName = $filePath.'/TrialBalance.pdf';
-            $stylesheet = file_get_contents(base_url('assets/css/pdf_style.css'));
+            $stylesheet = file_get_contents(base_url('assets/css/pdf_style.css?v='.time()));
             $mpdf->WriteHTML($stylesheet, 1);
             $mpdf->SetDisplayMode('fullpage');
             $mpdf->SetWatermarkImage($logo, 0.08, array(120, 120));
@@ -1545,7 +1545,7 @@ class AccountingReport extends MY_Controller{
             $mpdf = new \Mpdf\Mpdf();
             $filePath = realpath(APPPATH . '../assets/uploads/');
             $pdfFileName = $filePath.'/TrialBalance.pdf';
-            $stylesheet = file_get_contents(base_url('assets/css/pdf_style.css'));
+            $stylesheet = file_get_contents(base_url('assets/css/pdf_style.css?v='.time()));
             $mpdf->WriteHTML($stylesheet, 1);
             $mpdf->SetDisplayMode('fullpage');
             $mpdf->SetWatermarkImage($logo, 0.08, array(120, 120));

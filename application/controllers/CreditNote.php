@@ -165,9 +165,9 @@ class CreditNote extends MY_Controller{
             
 		$mpdf = new \Mpdf\Mpdf();
 		$pdfFileName = str_replace(["/","-"," "],"_",$invData->trans_number).'.pdf';
-		$stylesheet = file_get_contents(base_url('assets/extra-libs/datatables.net-bs4/css/dataTables.bootstrap4.css'));
-		$stylesheet = file_get_contents(base_url('assets/css/style.css?v='.time()));
-		$stylesheet = file_get_contents(base_url('assets/css/pdf_style.css'));
+		/* $stylesheet = file_get_contents(base_url('assets/extra-libs/datatables.net-bs4/css/dataTables.bootstrap4.css'));
+        $stylesheet = file_get_contents(base_url('assets/css/style.css?v=' . time())); */
+        $stylesheet = file_get_contents(base_url('assets/css/pdf_style.css?v='.time()));
 		$mpdf->WriteHTML($stylesheet,1);
 		$mpdf->SetDisplayMode('fullpage');
 		$mpdf->SetWatermarkImage($logo,0.03,array(120,45));
