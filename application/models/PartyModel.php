@@ -163,7 +163,7 @@ class PartyModel extends MasterModel{
 			$this->db->trans_begin();
 			if ($this->checkDuplicate($data) > 0) :
 				$errorMessage['party_name'] = "Company name is duplicate.";
-				$result = ['status' => 0, 'message' => $errorMessage];
+				return ['status' => 0, 'message' => $errorMessage];
             endif;
 
             if($data['party_category'] != 4):

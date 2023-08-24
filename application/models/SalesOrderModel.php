@@ -51,7 +51,7 @@ class SalesOrderModel extends MasterModel{
 
             if($this->checkDuplicate($data) > 0):
                 $errorMessage['trans_number'] = "SO. No. is duplicate.";
-                $result = ['status'=>0,'message'=>$errorMessage];
+                return ['status'=>0,'message'=>$errorMessage];
             endif;
 
             if(!empty($data['id'])):

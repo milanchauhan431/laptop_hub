@@ -16,6 +16,27 @@ function getSalesDtHeader($page){
     $data['lead'][] = ["name"=>"Followup Remark","sortable"=>"FALSE"];
     $data['lead'][] = ["name"=>"Next Followup Date","sortable"=>"FALSE"];
 
+    $data['lead_won'][] = ["name"=>"Action","style"=>"width:5%;"];
+	$data['lead_won'][] = ["name"=>"#","style"=>"width:5%;","textAlign"=>"center"]; 
+	$data['lead_won'][] = ["name"=>"Approach Date"];
+	$data['lead_won'][] = ["name"=>"Approach No"];
+	$data['lead_won'][] = ["name"=>"Lead From"];
+	$data['lead_won'][] = ["name"=>"Party Name"];
+    $data['lead_won'][] = ["name"=>"Contact No."];
+    $data['lead_won'][] = ["name"=>"Sales Executive"];
+    $data['lead_won'][] = ["name"=>"Followup Date","sortable"=>"FALSE"];
+    $data['lead_won'][] = ["name"=>"Followup Remark","sortable"=>"FALSE"];
+
+    $data['lead_lost'][] = ["name"=>"Action","style"=>"width:5%;"];
+	$data['lead_lost'][] = ["name"=>"#","style"=>"width:5%;","textAlign"=>"center"]; 
+	$data['lead_lost'][] = ["name"=>"Approach Date"];
+	$data['lead_lost'][] = ["name"=>"Approach No"];
+	$data['lead_lost'][] = ["name"=>"Lead From"];
+	$data['lead_lost'][] = ["name"=>"Party Name"];
+    $data['lead_lost'][] = ["name"=>"Contact No."];
+    $data['lead_lost'][] = ["name"=>"Sales Executive"];
+    $data['lead_lost'][] = ["name"=>"Lost Remark"];
+
     /* Sales Enquiry Header */
     $data['salesEnquiry'][] = ["name"=>"Action","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"];
 	$data['salesEnquiry'][] = ["name"=>"#","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"]; 
@@ -91,7 +112,13 @@ function getLeadData($data){
 
     $action = getActionButton($enqBtn.$appointmentBtn.$followupBtn.$leadStatusButton.$editButton.$deleteButton);
 
-    $responseData = [$action,$data->sr_no,formatDate($data->lead_date),sprintf("%04d",$data->lead_no),$data->lead_from,$data->party_name,$data->party_phone,$data->emp_name,$data->appointments,$data->followupDate,$data->followupNote,$data->next_fup_date];
+    if($data->lead_status == 3):
+        $responseData = [$action,$data->sr_no,formatDate($data->lead_date),sprintf("%04d",$data->lead_no),$data->lead_from,$data->party_name,$data->party_phone,$data->emp_name,$data->followupDate,$data->followupNote];
+    elseif($data->lead_status == 4):
+        $responseData = [$action,$data->sr_no,formatDate($data->lead_date),sprintf("%04d",$data->lead_no),$data->lead_from,$data->party_name,$data->party_phone,$data->emp_name,$data->reason];
+    else:
+        $responseData = [$action,$data->sr_no,formatDate($data->lead_date),sprintf("%04d",$data->lead_no),$data->lead_from,$data->party_name,$data->party_phone,$data->emp_name,$data->appointments,$data->followupDate,$data->followupNote,$data->next_fup_date];
+    endif;
 
     return $responseData;
 }

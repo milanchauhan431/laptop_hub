@@ -41,7 +41,7 @@ class MaterialGradeModel extends MasterModel{
             $data['material_grade'] = trim($data['material_grade']);
             if($this->checkDuplicate($data) > 0):
                 $errorMessage['material_grade'] = "Material Grade is duplicate.";
-                $result = ['status'=>0,'message'=>$errorMessage];
+                return ['status'=>0,'message'=>$errorMessage];
             endif;
             
             $result = $this->store($this->materialMaster,$data,'Material Grade');            

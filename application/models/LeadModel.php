@@ -18,12 +18,21 @@ class LeadModel extends MasterModel{
         $data['searchCol'][] = "";
         $data['searchCol'][] = "lead_managment.lead_date";
         $data['searchCol'][] = "lead_managment.lead_no";
+        $data['searchCol'][] = "lead_managment.lead_from";
         $data['searchCol'][] = "party_master.party_name";
         $data['searchCol'][] = "party_master.party_phone";
         $data['searchCol'][] = "employee_master.emp_name";
-        $data['searchCol'][] = "";
-        $data['searchCol'][] = "";
-        $data['searchCol'][] = "";
+        if($data['lead_status'] == 0):
+            $data['searchCol'][] = "";
+            $data['searchCol'][] = "";
+            $data['searchCol'][] = "";
+            $data['searchCol'][] = "";
+        elseif($data['lead_status'] == 3):
+            $data['searchCol'][] = "";
+            $data['searchCol'][] = "";
+        elseif($data['lead_status'] == 4):
+            $data['searchCol'][] = "lead_managment.reason";
+        endif;
         
         $columns =array(); foreach($data['searchCol'] as $row): $columns[] = $row; endforeach;
         if(isset($data['order'])){$data['order_by'][$columns[$data['order'][0]['column']]] = $data['order'][0]['dir'];}

@@ -57,11 +57,12 @@ class ExpenseMasterModel extends MasterModel{
             endif;
 
             if($this->checkDuplicate($data) > 0):
-                $errorMessage['exp_name'] = "Expense Name is duplicate.".$this->checkDuplicate($data);
-                $result = ['status'=>0,'message'=>$errorMessage];
-            else:
-                $result = $this->store($this->expenseMaster,$data,'Expense Master');
+                $errorMessage['exp_name'] = "Expense Name is duplicate.";
+                return ['status'=>0,'message'=>$errorMessage];
             endif;
+
+            $result = $this->store($this->expenseMaster,$data,'Expense Master');
+
             if ($this->db->trans_status() !== FALSE):
                 $this->db->trans_commit();
                 return $result;
