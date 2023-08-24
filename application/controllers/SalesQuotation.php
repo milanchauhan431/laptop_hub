@@ -49,6 +49,27 @@ class SalesQuotation extends MY_Controller{
             $row->ref_id = $row->id;
             $row->entry_type = "";
             $row->id = "";
+            $row->taxable_amount = $row->amount = round(($row->qty * $row->price),2);
+            if(!empty($row->disc_per) && !empty($row->amount)):
+                $row->disc_amount = round((($row->disc_per * $row->amount) / 100),2);
+                $row->taxable_amount = $row->taxable_amount - $row->disc_amount;
+            endif;
+
+            $row->net_amount = $row->taxable_amount;
+            if(!empty($row->taxable_amount) && !empty($row->gst_per)):
+                $row->gst_amount = round((($row->gst_per * $row->taxable_amount) / 100),2);
+
+                $row->igst_per = $row->gst_per;
+                $row->igst_amount = $row->gst_amount;
+
+                $row->cgst_per = round(($row->gst_per / 2),2);
+                $row->cgst_amount = round(($row->gst_amount / 2),2);
+                $row->sgst_per = round(($row->gst_per / 2),2);
+                $row->sgst_amount = round(($row->gst_amount / 2),2);
+
+                $row->net_amount = $row->taxable_amount + $row->gst_amount;
+            endif;
+
             $itemList[] = $row;
         endforeach;
         $dataRow->itemList = $itemList;

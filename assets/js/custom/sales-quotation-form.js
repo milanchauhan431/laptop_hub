@@ -81,7 +81,6 @@ $(document).ready(function(){
             formData.taxable_amount = taxable_amount;
             formData.net_amount = net_amount;
 
-            console.log(formData);
             AddRow(formData);
             $('#itemForm')[0].reset();
             $("#itemForm input:hidden").val('')
