@@ -243,8 +243,8 @@ function resItemDetail(response = ""){
         $("#itemForm #item_type").val(itemDetail.item_type);
         $("#itemForm #unit_id").val(itemDetail.unit_id);$("#itemForm #unit_id").select2();
         $("#itemForm #unit_name").val(itemDetail.unit_name);
-		/* $("#itemForm #disc_per").val(itemDetail.defualt_disc);
-		$("#itemForm #price").val(itemDetail.price); */
+		$("#itemForm #disc_per").val(itemDetail.defualt_disc);
+		$("#itemForm #price").val(itemDetail.price);
         $("#itemForm #hsn_code").val(itemDetail.hsn_code);//$("#itemForm #hsn_code").select2();
         $("#itemForm #gst_per").val(parseFloat(itemDetail.gst_per).toFixed(0));//$("#itemForm #gst_per").select2();
     }else{

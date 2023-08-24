@@ -304,9 +304,6 @@
 <script src="<?php echo base_url(); ?>assets/js/custom/calculate.js?v=<?= time() ?>"></script>
 
 <?php
-if(empty($dataRow->id) && $dataRow->from_entry_type == 43):
-    echo '<script>$("#party_id").trigger("change");gstin();</script>';
-endif;
 if(!empty($dataRow->itemList)):
     foreach($dataRow->itemList as $row):
         $row->row_index = "";
@@ -314,5 +311,6 @@ if(!empty($dataRow->itemList)):
         //$row->attachment = (!empty($row->attachment) || $row->attachment != NULL)?$row->attachment:"";
         echo '<script>AddRow('.json_encode($row).');</script>';
     endforeach;
+    echo '<script>gstin();</script>';
 endif;
 ?>

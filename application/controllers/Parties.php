@@ -154,6 +154,7 @@ class Parties extends MY_Controller{
             $this->printJson(['status' => 0, 'message' => $errorMessage]);
         else :
             $data['party_name'] = ucwords($data['party_name']);
+            $data['gstin'] = (!empty($data['gstin']))?strtoupper($data['gstin']):"";
             $this->printJson($this->party->save($data));
         endif;
     }
