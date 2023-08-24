@@ -125,8 +125,8 @@ $(document).ready(function(){
 				type: 'post',
 				data:{vou_name_s:vou_name_s,party_id:party_id,ref_id:ref_id},
 				dataType:'json',
-				success:function(data){                    
-                    $("#ref_id").html(data.referenceData);
+				success:function(response){                    
+                    $("#ref_id").html(response.referenceData);
                     $("#ref_id").select2();
 				}
 			}); 
@@ -142,7 +142,7 @@ $(document).ready(function(){
     
 });
 
-function resOppAcc(response){
+function resOppAcc(response=""){
     if(response != ""){
         var partyDetail = response.data.partyDetail;
         $("#party_name").val(partyDetail.party_name);
@@ -158,7 +158,7 @@ function resOppAcc(response){
     }
 }
 
-function resVouAcc(response){
+function resVouAcc(response=""){
     if(response != ""){
         var partyDetail = response.data.partyDetail;
         
