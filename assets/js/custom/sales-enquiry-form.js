@@ -108,6 +108,8 @@ function AddRow(data) {
 	var refIdInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][ref_id]", value: data.ref_id });
     var itemCodeInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][item_code]", value: data.item_code });
     var itemtypeInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][item_type]", value: data.item_type });
+    var hsnCodeInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][hsn_code]", value: data.hsn_code });
+    var gstPerInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][gst_per]", value: data.gst_per });
     cell = $(row.insertCell(-1));
     cell.html(data.item_name);
     cell.append(idInput);
@@ -117,6 +119,8 @@ function AddRow(data) {
     cell.append(refIdInput);
     cell.append(itemCodeInput);
     cell.append(itemtypeInput);
+    cell.append(hsnCodeInput);
+    cell.append(gstPerInput);
 
     var qtyInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][qty]", class:"item_qty", value: data.qty });
 	var qtyErrorDiv = $("<div></div>", { class: "error qty" + countRow });
@@ -241,8 +245,8 @@ function resItemDetail(response = ""){
         $("#itemForm #unit_name").val(itemDetail.unit_name);
 		/* $("#itemForm #disc_per").val(itemDetail.defualt_disc);
 		$("#itemForm #price").val(itemDetail.price); */
-        $("#itemForm #hsn_code").val(itemDetail.hsn_code);$("#itemForm #hsn_code").select2();
-        $("#itemForm #gst_per").val(parseFloat(itemDetail.gst_per).toFixed(0));$("#itemForm #gst_per").select2();
+        $("#itemForm #hsn_code").val(itemDetail.hsn_code);//$("#itemForm #hsn_code").select2();
+        $("#itemForm #gst_per").val(parseFloat(itemDetail.gst_per).toFixed(0));//$("#itemForm #gst_per").select2();
     }else{
         $("#itemForm #item_code").val("");
         $("#itemForm #item_name").val("");
@@ -251,12 +255,12 @@ function resItemDetail(response = ""){
         $("#itemForm #unit_name").val("");
 		$("#itemForm #disc_per").val("");
 		$("#itemForm #price").val("");
-        $("#itemForm #hsn_code").val("");$("#itemForm #hsn_code").select2();
-        $("#itemForm #gst_per").val(0);$("#itemForm #gst_per").select2(); 
+        $("#itemForm #hsn_code").val("");//$("#itemForm #hsn_code").select2();
+        $("#itemForm #gst_per").val(0);//$("#itemForm #gst_per").select2(); 
     }
 }
 
-function resSaveOrder(data,formId){
+function resSaveEnquery(data,formId){
     if(data.status==1){
         $('#'+formId)[0].reset();
         toastr.success(data.message, 'Success', { "showMethod": "slideDown", "hideMethod": "slideUp", "closeButton": true, positionClass: 'toastr toast-bottom-center', containerId: 'toast-bottom-center', "progressBar": true });

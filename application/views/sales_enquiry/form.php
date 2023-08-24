@@ -8,7 +8,7 @@
                         <h4><u>Sales Enquiry</u></h4>
                     </div>
                     <div class="card-body">
-                        <form autocomplete="off" id="saveSalesOrder" data-res_function="resSaveOrder" enctype="multipart/form-data">
+                        <form autocomplete="off" id="saveSalesEnquery" data-res_function="resSaveEnquery" enctype="multipart/form-data">
                             <div class="col-md-12">
                                 <div class="row">
 
@@ -156,7 +156,7 @@
                     </div>
                     <div class="card-footer">
                         <div class="col-md-12">
-                            <button type="button" class="btn waves-effect waves-light btn-outline-success float-right save-form" onclick="customStore({'formId':'saveSalesOrder'});" ><i class="fa fa-check"></i> Save</button>
+                            <button type="button" class="btn waves-effect waves-light btn-outline-success float-right save-form" onclick="customStore({'formId':'saveSalesEnquery'});" ><i class="fa fa-check"></i> Save</button>
                             <a href="javascript:void(0)" onclick="window.location.href='<?=base_url($headData->controller)?>'" class="btn waves-effect waves-light btn-outline-secondary float-right btn-close press-close-btn save-form" style="margin-right:10px;"><i class="fa fa-times"></i> Cancel</a>
                         </div>
                     </div>
@@ -183,6 +183,8 @@
 								<input type="hidden" name="row_index" id="row_index" value="">
 								<input type="hidden" name="item_code" id="item_code" value="" />
                                 <input type="hidden" name="item_type" id="item_type" value="1" />
+                                <input type="hidden" name="hsn_code" id="hsn_code" value="" />
+                                <input type="hidden" name="gst_per" id="gst_per" value="" />
                                 <!-- <input type="hidden" name="attachment" id="attachment" value=""> -->
                             </div>
                             
