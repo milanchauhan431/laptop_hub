@@ -58,6 +58,7 @@ function getSalesDtHeader($page){
     $data['salesQuotation'][] = ["name"=>"Price"];
     $data['salesQuotation'][] = ["name"=>"Confirmed BY"];
     $data['salesQuotation'][] = ["name"=>"Confirmed Date"];
+    $data['salesQuotation'][] = ["name"=>"Confirmed Note"];
 
     /* Sales Order Header */
     $data['salesOrders'][] = ["name"=>"Action","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"];
@@ -176,7 +177,7 @@ function getSalesQuotationData($data){
         $rev_no = '<a href="javascript:void(0)" datatip="Revision History" flow="down" onclick="edit('.$revParam.');">'.sprintf("%02d",$data->quote_rev_no).'</a>';
     endif;
 
-    return [$action,$data->sr_no,$rev_no,$data->trans_number,formatDate($data->trans_date),$data->party_name,$data->item_name,$data->qty,$data->price,$data->approve_by_name,((!empty($data->approve_date))?formatDate($data->approve_date):"")];
+    return [$action,$data->sr_no,$rev_no,$data->trans_number,formatDate($data->trans_date),$data->party_name,$data->item_name,$data->qty,$data->price,$data->approve_by_name,((!empty($data->approve_date))?formatDate($data->approve_date):""),$data->close_reason];
 }
 
 /* Sales Order Table data */

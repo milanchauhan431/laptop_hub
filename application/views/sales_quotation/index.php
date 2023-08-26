@@ -14,6 +14,9 @@
                                     <li class="nav-item"> 
                                         <button onclick="statusTab('salesQuotationTable',1);" id="complete_sq" class="nav-tab btn waves-effect waves-light btn-outline-success" style="outline:0px" data-toggle="tab" aria-expanded="false">Completed</button> 
                                     </li>
+                                    <li class="nav-item"> 
+                                        <button onclick="statusTab('salesQuotationTable',2);" id="closed_sq" class="nav-tab btn waves-effect waves-light btn-outline-dark" style="outline:0px" data-toggle="tab" aria-expanded="false">Closed/Cancel</button> 
+                                    </li>
                                 </ul>
                             </div>
                             <div class="col-md-4 text-center">

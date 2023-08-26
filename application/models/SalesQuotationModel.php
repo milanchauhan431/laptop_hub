@@ -7,7 +7,7 @@ class SalesQuotationModel extends MasterModel{
 
     public function getDTRows($data){
         $data['tableName'] = $this->transChild;
-        $data['select'] = "trans_child.id as trans_child_id,trans_child.item_name,trans_child.qty,trans_child.price,trans_main.id,trans_main.trans_number,DATE_FORMAT(trans_main.trans_date,'%d-%m-%Y') as trans_date,trans_main.party_id,trans_main.sales_executive,trans_main.party_name,trans_main.sales_type,trans_child.trans_status,trans_main.is_approve,employee_master.emp_name as approve_by_name,trans_main.approve_date,trans_main.quote_rev_no";
+        $data['select'] = "trans_child.id as trans_child_id,trans_child.item_name,trans_child.qty,trans_child.price,trans_main.id,trans_main.trans_number,DATE_FORMAT(trans_main.trans_date,'%d-%m-%Y') as trans_date,trans_main.party_id,trans_main.sales_executive,trans_main.party_name,trans_main.sales_type,trans_child.trans_status,trans_main.is_approve,employee_master.emp_name as approve_by_name,trans_main.approve_date,trans_main.quote_rev_no,trans_main.close_reason";
 
         $data['leftJoin']['trans_main'] = "trans_main.id = trans_child.trans_main_id";
         $data['leftJoin']['employee_master'] = "employee_master.id = trans_main.is_approve";
@@ -19,6 +19,10 @@ class SalesQuotationModel extends MasterModel{
             $data['where']['trans_main.trans_date <='] = $this->endYearDate;
         elseif($data['status'] == 1):
             $data['where']['trans_child.trans_status'] = 1;
+            $data['where']['trans_main.trans_date >='] = $this->startYearDate;
+            $data['where']['trans_main.trans_date <='] = $this->endYearDate;
+        elseif($data['status'] == 2):
+            $data['where']['trans_child.trans_status'] = 2;
             $data['where']['trans_main.trans_date >='] = $this->startYearDate;
             $data['where']['trans_main.trans_date <='] = $this->endYearDate;
         endif;
@@ -39,6 +43,7 @@ class SalesQuotationModel extends MasterModel{
         $data['searchCol'][] = "trans_child.price";
         $data['searchCol'][] = "employee_master.emp_name";
         $data['searchCol'][] = "DATE_FORMAT(trans_main.approve_date,'%d-%m-%Y')";
+        $data['searchCol'][] = "trans_main.close_reason";
 
         $columns =array(); foreach($data['searchCol'] as $row): $columns[] = $row; endforeach;
         if(isset($data['order'])){$data['order_by'][$columns[$data['order'][0]['column']]] = $data['order'][0]['dir'];}
