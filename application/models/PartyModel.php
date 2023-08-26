@@ -197,8 +197,8 @@ class PartyModel extends MasterModel{
 
     public function checkDuplicate($data){
         $queryData['tableName'] = $this->partyMaster;
-        $data['where']['party_name'] = $data['party_name'];
-		$data['where']['party_category'] = $data['party_category'];
+        $queryData['where']['party_name'] = $data['party_name'];
+		$queryData['where']['party_category'] = $data['party_category'];
         
         if(!empty($data['id']))
             $queryData['where']['id !='] = $data['id'];

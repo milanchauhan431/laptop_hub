@@ -38,10 +38,10 @@
 									</tr>
 									<tr>
 										<th>#</th>
-										<th>Date</th>
+										<th>Vou. Date</th>
 										<th>Particulars</th>
 										<th>Voucher Type</th>
-										<th>Ref.No.</th>
+										<th>Vou. No.</th>
 										<th>Amount(CR.)</th>
 										<th>Amount(DR.)</th>
 										<th>Balance</th>

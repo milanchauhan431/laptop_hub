@@ -36,7 +36,7 @@
                         $amtFiledName = $row->map_code . "_amount";
                         if (!empty($invExpenseData) && $row->map_code != "roff") :
                             $expPer = $invExpenseData->{$perFiledName};
-                            $expAmt = $invExpenseData->{$amtFiledName};
+                            $expAmt = abs($invExpenseData->{$amtFiledName});
                         endif;
 
                         $options = '';
@@ -150,7 +150,7 @@
                         $taxAmt = 0;
                         if (!empty($dataRow->id)) :
                             $taxPer = $dataRow->{$taxRow->map_code . '_per'};
-                            $taxAmt = $dataRow->{$taxRow->map_code . '_amount'};
+                            $taxAmt = abs($dataRow->{$taxRow->map_code . '_amount'});
                         endif;
                         if ($taxRow->map_code == "cgst") :
                             $taxClass = "cgstCol";

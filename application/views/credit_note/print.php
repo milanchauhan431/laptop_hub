@@ -30,7 +30,7 @@
                     <b>GSTIN : <?= $invData->gstin?> | STATE CODE: <?=$invData->party_state_code?> | CITY : <?=$partyData->city_name?></b>
                 </td>
                 <td>
-                    <b>DN No.</b>
+                    <b>CN No.</b>
                 </td>
                 <td>
                     <?=$invData->trans_number?>
@@ -38,7 +38,7 @@
             </tr>
             <tr>
                 <td>
-                    <b>DN Date</b>
+                    <b>CN Date</b>
                 </td>
                 <td>
                     <?=date('d/m/Y', strtotime($invData->trans_date))?>
