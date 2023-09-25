@@ -175,15 +175,16 @@ $(document).ready(function(){
 		$("#gst_per").select2();
 	});*/
 	$('#itemForm #hsn_code').typeahead({
-		source: function(query, result)
-		{
+		source: function(query, result){
 			$.ajax({
-				url:base_url + controller + '/getHSNList',
+				url:base_url + 'hsnMaster/getHSNListOnType',
 				method:"POST",
 				global:false,
 				data:{query:query},
 				dataType:"json",
-				success:function(data){result($.map(data, function(hsn_code){return hsn_code;}));}
+				success:function(data){
+					result($.map(data, function(hsn_code){return hsn_code;}));
+				}
 			});
 		}
 	 });

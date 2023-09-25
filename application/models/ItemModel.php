@@ -163,11 +163,5 @@ class ItemModel extends MasterModel{
         $queryData['cm_id'] = [0];
 		return $this->row($queryData);
 	}
-
-    public function getHSNList(){
-		$data['tableName'] = 'item_master';
-		$data['select'] = 'DISTINCT(hsn_code)';
-		return $this->rows($data);
-    }
 }
 ?>

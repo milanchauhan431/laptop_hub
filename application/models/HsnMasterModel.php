@@ -94,5 +94,11 @@ class HsnMasterModel extends MasterModel{
         $queryData['tableName'] = $this->hsnMaster;
         return $this->rows($queryData);
     }
+
+    public function getHSNListOnType(){
+		$data['tableName'] = 'item_master';
+		$data['select'] = 'DISTINCT(hsn_code)';
+		return $this->rows($data);
+    }
 }
 ?>

@@ -59,4 +59,11 @@ class HsnMaster extends MY_Controller{
             $this->printJson($this->hsnModel->delete($id));
         endif;
     }
+	
+	public function getHSNListOnType(){
+        $result = $this->hsnModel->getHSNListOnType();
+		$searchResult = array();
+		foreach($result as $row){ $searchResult[] = $row->hsn_code; }
+		$this->printJson($searchResult);
+	}
 }

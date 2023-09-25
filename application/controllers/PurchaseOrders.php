@@ -64,13 +64,6 @@ class PurchaseOrders extends MY_Controller{
         $this->load->view($this->form,$this->data);
     }
 
-	public function getHSNList(){
-        $result = $this->item->getHSNList();
-		$searchResult = array();
-		foreach($result as $row){ $searchResult[] = $row->hsn_code; }
-		$this->printJson($searchResult);
-	}
-
     public function save(){
         $data = $this->input->post();
         $errorMessage = array();
