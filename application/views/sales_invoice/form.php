@@ -20,12 +20,6 @@
                                         <input type="hidden" name="gst_type" id="gst_type" value="<?=(!empty($dataRow->gst_type))?$dataRow->gst_type:""?>">
                                         <input type="hidden" name="party_state_code" id="party_state_code" value="<?=(!empty($dataRow->party_state_code))?$dataRow->party_state_code:""?>">
 										<input type="hidden" name="tax_class" id="tax_class" value="<?=(!empty($dataRow->tax_class))?$dataRow->tax_class:""?>">
-										<!-- <input type="hidden" name="memo_type" id="memo_type" value="<?=(!empty($dataRow->memo_type))?$dataRow->memo_type:"DEBIT"?>">
-										<input type="hidden" name="challan_no" id="challan_no" value="<?=(!empty($dataRow->challan_no))?$dataRow->challan_no:""?>">
-										<input type="hidden" name="doc_no" id="doc_no" value="<?=(!empty($dataRow->doc_no))?$dataRow->doc_no:""?>">
-										<input type="hidden" name="doc_date" id="doc_date" value="<?=(!empty($dataRow->doc_date))?$dataRow->doc_date:""?>">
-										<input type="hidden" name="masterDetails[t_col_1]" id="master_t_col_1" value="<?=(!empty($dataRow->contact_person))?$dataRow->contact_person:""?>">
-										<input type="hidden" name="masterDetails[t_col_2]" id="master_t_col_2" value="<?=(!empty($dataRow->contact_no))?$dataRow->contact_no:""?>"> -->
 									</div>
 
                                     <div class="col-md-2 form-group">
@@ -40,7 +34,7 @@
 
                                     <div class="col-md-2 form-group">
                                         <label for="trans_date">Inv. Date</label>
-                                        <input type="date" name="trans_date" id="trans_date" class="form-control" value="<?=(!empty($dataRow->trans_date))?$dataRow->trans_date:getFyDate()?>">
+                                        <input type="date" name="trans_date" id="trans_date" class="form-control fyDates" max="<?=getFyDate()?>" value="<?=(!empty($dataRow->trans_date))?$dataRow->trans_date:getFyDate()?>">
                                     </div>
 
                                     <div class="col-md-5 form-group">

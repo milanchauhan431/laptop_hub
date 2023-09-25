@@ -7,7 +7,7 @@
 
             <div class="col-md-3 form-group">
                 <label for="lead_date">Approch Date</label>
-                <input type="date" name="lead_date" id="lead_date" max="<?=date("Y-m-d")?>" class="form-control req" value="<?=(!empty($dataRow->lead_date))?$dataRow->lead_date:date("Y-m-d")?>" />
+                <input type="date" name="lead_date" id="lead_date" max="<?=date("Y-m-d")?>" class="form-control req fyDates" value="<?=(!empty($dataRow->lead_date))?$dataRow->lead_date:date("Y-m-d")?>" />
             </div>
 
             <div class="col-md-3 form-group">

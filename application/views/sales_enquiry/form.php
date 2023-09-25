@@ -37,7 +37,7 @@
 
                                     <div class="col-md-2 form-group">
                                         <label for="trans_date">Enquiry Date</label>
-                                        <input type="date" name="trans_date" id="trans_date" class="form-control" value="<?=(!empty($dataRow->trans_date))?$dataRow->trans_date:getFyDate()?>">
+                                        <input type="date" name="trans_date" id="trans_date" class="form-control fyDates" max="<?=getFyDate()?>" value="<?=(!empty($dataRow->trans_date))?$dataRow->trans_date:getFyDate()?>">
                                     </div>
 
                                     <div class="col-md-5 form-group">

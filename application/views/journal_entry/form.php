@@ -30,7 +30,7 @@
 
 									<div class="col-md-3">
 										<label for="trans_date">Journal Date</label>
-										<input type="date" id="trans_date" name="trans_date" class="form-control req" value="<?= (!empty($dataRow->trans_date)) ? $dataRow->trans_date : getFyDate() ?>" />
+										<input type="date" id="trans_date" name="trans_date" class="form-control req fyDates" max="<?=getFyDate()?>" value="<?= (!empty($dataRow->trans_date)) ? $dataRow->trans_date : getFyDate() ?>" />
 									</div>
 
 								</div>

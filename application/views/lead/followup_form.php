@@ -9,7 +9,7 @@
 
             <div class="col-md-3 form-group">
                 <label for="appointment_date">Followup Date</label>
-                <input type="date" name="appointment_date" id="appointment_date" max="<?=date("Y-m-d")?>" class="form-control req" value="<?=(!empty($dataRow->appointment_date))?$dataRow->appointment_date:date("Y-m-d")?>" />
+                <input type="date" name="appointment_date" id="appointment_date" max="<?=date("Y-m-d")?>" class="form-control req fyDates" value="<?=(!empty($dataRow->appointment_date))?$dataRow->appointment_date:date("Y-m-d")?>" />
             </div>
             <div class="col-md-3 form-group">
                 <label for="mode">Mode</label>
@@ -43,7 +43,7 @@
             </div>
             <div class="col-md-3 form-group">
                 <label for="next_fup_date">Next Follow UP Date</label>
-                <input type="date" name="next_fup_date" id="appointment_next_fup_datedate" class="form-control" value="<?=(!empty($dataRow->next_fup_date))?$dataRow->next_fup_date:getFyDate()?>" min="<?=getFyDate()?>">
+                <input type="date" name="next_fup_date" id="appointment_next_fup_datedate" class="form-control fyDates" value="<?=(!empty($dataRow->next_fup_date))?$dataRow->next_fup_date:getFyDate()?>" min="<?=getFyDate()?>">
             </div>
             <div class="col-md-12 form-group">
                 <label for="notes">Notes</label>

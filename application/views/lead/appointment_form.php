@@ -8,7 +8,7 @@
 
             <div class="col-md-3 form-group">
                 <label for="appointment_date">Appintment Date</label>
-                <input type="date" name="appointment_date" id="appointment_date" min="<?=date("Y-m-d")?>" class="form-control req" value="<?=(!empty($dataRow->appointment_date))?$dataRow->appointment_date:date("Y-m-d")?>" />
+                <input type="date" name="appointment_date" id="appointment_date" min="<?=date("Y-m-d")?>" class="form-control req fyDates" value="<?=(!empty($dataRow->appointment_date))?$dataRow->appointment_date:date("Y-m-d")?>" />
             </div>
             <div class="col-md-3 form-group">
                 <label for="appointment_time">Appintment Time</label>

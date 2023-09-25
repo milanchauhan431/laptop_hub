@@ -13,7 +13,7 @@
 
             <div class="col-md-4 form-group">
                 <label for="trans_date">Voucher Date</label>
-                <input type="date" class="form-control fyDates" name="trans_date" value="<?=(!empty($dataRow->trans_date))?$dataRow->trans_date:getFyDate()?>">
+                <input type="date" class="form-control fyDates" max="<?=getFyDate()?>" name="trans_date" value="<?=(!empty($dataRow->trans_date))?$dataRow->trans_date:getFyDate()?>">
             </div>
 
             <div class="col-md-4 form-group">
@@ -76,7 +76,7 @@
 
             <div class="col-md-2 form-group">
                 <label>Ref. Date</label>
-                <input type="date" class="form-control" id="doc_date" name="doc_date" max="<?=getFyDate()?>" value="<?= (!empty($dataRow->doc_date)) ? $dataRow->doc_date : getFyDate(); ?>">
+                <input type="date" class="form-control fyDates" max="<?=getFyDate()?>"  id="doc_date" name="doc_date" value="<?= (!empty($dataRow->doc_date)) ? $dataRow->doc_date : getFyDate(); ?>">
             </div>
 
             <div class="col-md-8 form-group">
