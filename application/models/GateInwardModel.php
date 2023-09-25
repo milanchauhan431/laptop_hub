@@ -14,7 +14,7 @@ class GateInwardModel extends masterModel{
             $data['select'] = "mir.id,mir.trans_number,DATE_FORMAT(mir.trans_date,'%d-%m-%Y') as trans_date,mir.qty as no_of_items,party_master.party_name,mir.inv_no,ifnull(DATE_FORMAT(mir.inv_date,'%d-%m-%Y'),'') as inv_date,mir.doc_no,ifnull(DATE_FORMAT(mir.doc_date,'%d-%m-%Y'),'') as doc_date,mir.qty_kg,mir.inward_qty,mir.trans_status,mir.trans_type";
 
             $data['where']['mir.trans_status'] = $data['trans_status'];
-            $data['where']['mir.entry_type'] = $this->data['entryData']->id;
+            $data['where']['mir.entry_type'] = 25;
         else:
             $data['tableName'] = $this->mirTrans;
 
