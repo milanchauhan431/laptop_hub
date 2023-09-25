@@ -67,7 +67,6 @@ class Lead extends MY_Controller{
 
     public function addLead(){
         $this->data['entry_type'] = $this->data['entryData']->id;
-		$this->data['customerList'] = $this->party->getPartyList(['party_type'=>"0,1",'party_category'=>1]);
 		$this->data['categoryList'] = $this->itemCategory->getCategoryList(['ref_id'=>0,'final_category'=>1]);
         $this->data['salesExecutives'] = $this->employee->getEmployeeList();
 		$this->load->view($this->leadForm, $this->data);
@@ -80,8 +79,8 @@ class Lead extends MY_Controller{
 			$errorMessage['lead_date'] = "Date is required.";
 		if (empty($data['mode']))
 			$errorMessage['mode'] = "Mode is required.";
-		if (empty($data['party_id']))
-			$errorMessage['party_id'] = "Customer is required.";
+		if (empty($data['party_name']))
+			$errorMessage['party_name'] = "Customer is required."; // Updated By :- Sweta @05-09-2023
 		if (empty($data['sales_executive']))
 			$errorMessage['sales_executive'] = "Sales Executive is required.";
 
@@ -96,7 +95,6 @@ class Lead extends MY_Controller{
     public function edit(){
 		$id = $this->input->post('id');
 		$leadData = $this->leads->getLead($id);
-		$this->data['customerList'] = $this->party->getPartyList(['party_type'=>"0,1",'party_category'=>1]);
         $this->data['salesExecutives'] = $this->employee->getEmployeeList();		
 		$this->data['dataRow'] = $leadData;
 		$this->load->view($this->leadForm, $this->data);
@@ -281,5 +279,28 @@ class Lead extends MY_Controller{
 			$this->printJson($this->leads->saveApproachStatus($data));
 		endif;
 	}
+
+	/* Created By :- Sweta @05-09-2023 */
+	public function partySearch(){
+		$this->printJson($this->party->partySearch());
+	}
+
+	/* Created By :- Sweta @05-09-2023 */
+	public function getPartyData(){
+        $data = $this->input->post();
+        $partyData = $this->party->getParty(['party_name'=>$data['party_name']]);
+        $options = "Select Sales Executive";
+		if(!empty($partyData->sales_executive)){
+			$salesExecutives = $this->employee->getEmployeeList();
+			
+			foreach($salesExecutives as $row){
+				$selected = (!empty($partyData->sales_executive) && $partyData->sales_executive == $row->id)?'selected':(($this->loginId == $row->id)?'selected':'');
+				$options .= '<option value="'.$row->id.'" '.$selected.'>'.$row->emp_name.' </option>';
+			}
+		}		
+		$contact_person = (!empty($partyData->contact_person)?$partyData->contact_person:'');
+		$contact_no = (!empty($partyData->contact_no)?$partyData->contact_no:'');
+		$this->printJson(['status'=>1,'sales_executive'=>$options,'contact_person'=>$contact_person,'contact_no'=>$contact_no]);
+    }
 }
 ?>

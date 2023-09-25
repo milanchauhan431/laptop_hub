@@ -7,15 +7,15 @@
     <body>
         <div class="row">
             <div class="col-12">
-                <table>
+                <!--<table>
                     <tr>
                         <td>
                             <img src="<?=$letter_head?>" class="img">
                         </td>
                     </tr>
-                </table>
+                </table>-->
 
-                <table class="table bg-light-grey">
+                <table class="table bg-light-grey" style="margin-left:12px;width:97%;">
                     <tr class="" style="letter-spacing: 2px;font-weight:bold;padding:2px !important; border-bottom:1px solid #000000;">
                         <td style="width:33%;" class="fs-18 text-left">
                             GSTIN: <?=$companyData->company_gst_no?>
@@ -25,7 +25,7 @@
                     </tr>
                 </table>
                 
-                <table class="table item-list-bb fs-22" style="margin-top:5px;">
+                <table class="table item-list-bb fs-22" style="margin-top:5px;width:97%;">
                     <tr>
                         <td style="width:60%; vertical-align:top;" rowspan="3">
                             <b>M/S. <?=$dataRow->party_name?></b><br>
@@ -47,7 +47,7 @@
                     </tr>
                 </table>
                 
-                <table class="table item-list-bb" style="margin-top:10px;">
+                <table class="table item-list-bb" style="margin-top:10px;width:97%;">
                     <thead>
                         <tr>
                             <th style="width:40px;">No.</th>
@@ -196,7 +196,7 @@
                     </tbody>
                 </table>
                 <h4>Terms & Conditions :-</h4>
-                <table class="table top-table" style="margin-top:10px;">
+                <table class="table top-table" style="margin-top:10px;width:92%;">
                     <?php
                         if(!empty($dataRow->termsConditions)):
                             foreach($dataRow->termsConditions as $row):
@@ -210,14 +210,14 @@
                 </table>
                 
                 <htmlpagefooter name="lastpage">
-                    <table class="table top-table" style="margin-top:10px;border-top:1px solid #545454;">
+                    <table class="table top-table" style="margin-top:0px;border-top:1px solid #545454;width:92%;">
                         <tr>
                             <td style="width:50%;"></td>
                             <td style="width:20%;"></td>
                             <th class="text-center">For, <?=$companyData->company_name?></th>
                         </tr>
                         <tr>
-                            <td colspan="3" height="50"></td>
+                            <td colspan="3" height="40"></td>
                         </tr>
                         <tr>
                             <td><br>This is a computer-generated quotation.</td>
@@ -225,13 +225,13 @@
                             <td class="text-center"><br>Authorised By</td>
                         </tr>
                     </table>
-                    <table class="table top-table" style="margin-top:10px;border-top:1px solid #545454;">
+                    <!--<table class="table top-table" style="margin-top:0px;border-top:1px solid #545454;">
 						<tr>
 							<td style="width:25%;">PO No. & Date : <?=$dataRow->trans_number.' ['.formatDate($dataRow->trans_date).']'?></td>
 							<td style="width:25%;"></td>
 							<td style="width:25%;text-align:right;">Page No. {PAGENO}/{nbpg}</td>
 						</tr>
-					</table>
+					</table>-->
                 </htmlpagefooter>
 				<sethtmlpagefooter name="lastpage" value="on" /> 
             </div>

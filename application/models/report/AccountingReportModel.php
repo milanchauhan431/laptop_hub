@@ -14,8 +14,8 @@ class AccountingReportModel extends MasterModel{
             SUM( CASE WHEN tl.trans_date >= '".$startDate."' AND tl.trans_date <= '".$endDate."' THEN CASE WHEN tl.c_or_d = 'CR' THEN tl.amount ELSE 0 END ELSE 0 END) as cr_balance,
             ((am.opening_balance) + SUM( CASE WHEN tl.trans_date <= '".$endDate."' THEN (tl.amount * tl.p_or_m) ELSE 0 END )) as cl_balance 
             FROM party_master as am 
-            LEFT JOIN trans_ledger as tl ON am.id = tl.vou_acc_id 
-            WHERE am.is_delete = 0 GROUP BY am.id, am.opening_balance) as lb 
+            LEFT JOIN trans_ledger as tl ON am.id = tl.vou_acc_id AND tl.is_delete = 0
+            WHERE am.is_delete = 0 AND am.cm_id = ".$this->cm_id." GROUP BY am.id, am.opening_balance) as lb 
         LEFT JOIN party_master as am ON lb.id = am.id WHERE am.is_delete = 0 
         ORDER BY am.party_name ")->result();
         
@@ -42,6 +42,7 @@ class AccountingReportModel extends MasterModel{
         AND tl.trans_date >= '".$data['from_date']."' 
         AND tl.trans_date <= '".$data['to_date']."'
         AND tl.is_delete = 0
+        AND tl.cm_id = ".$this->cm_id."
         ORDER BY tl.trans_date, tl.trans_number")->result();
         return $ledgerTransactions;
     }
@@ -56,6 +57,7 @@ class AccountingReportModel extends MasterModel{
         FROM party_master as am 
         LEFT JOIN trans_ledger as tl ON am.id = tl.vou_acc_id AND tl.is_delete = 0
         WHERE am.is_delete = 0 
+        AND am.cm_id = ".$this->cm_id."
         AND am.id = ".$data['acc_id']."
         GROUP BY am.id, am.opening_balance")->row();
 
@@ -128,7 +130,7 @@ class AccountingReportModel extends MasterModel{
             tl.trans_date           
             FROM party_master as am 
             LEFT JOIN trans_ledger as tl ON am.id = tl.vou_acc_id  AND tl.is_delete = 0          
-            WHERE am.group_code IN ( 'SD','SC' ) AND am.is_delete = 0 GROUP BY am.id, am.opening_balance 
+            WHERE am.group_code IN ( 'SD','SC' ) AND am.is_delete = 0 AND am.cm_id = ".$this->cm_id." GROUP BY am.id, am.opening_balance 
         ) as lb
         LEFT JOIN party_master as am ON lb.id = am.id 
         LEFT JOIN cities as ct ON ct.id = am.city_id
@@ -161,7 +163,7 @@ class AccountingReportModel extends MasterModel{
 
             FROM party_master as am 
             LEFT JOIN trans_ledger as tl ON am.id = tl.vou_acc_id AND tl.is_delete = 0
-            WHERE am.is_delete = 0 AND am.group_code IN ($groupCode) GROUP BY am.id, am.opening_balance
+            WHERE am.is_delete = 0 AND am.cm_id = ".$this->cm_id." AND am.group_code IN ($groupCode) GROUP BY am.id, am.opening_balance
             ) as lb 
         LEFT JOIN party_master as am ON lb.id = am.id WHERE am.is_delete = 0
         ORDER BY am.party_name")->result();
@@ -179,16 +181,17 @@ class AccountingReportModel extends MasterModel{
             SELECT pm.id, pm.item_type,  ost.stock_qty as op_stock, (ost.avg_price * ost.stock_qty) as op_amount, cst.stock_qty as cl_stock,(cst.avg_price * cst.stock_qty) as cl_amount 
             FROM  item_master AS pm 
             LEFT JOIN (	
-                SELECT SUM(qty * p_or_m) AS stock_qty, (SUM(CASE WHEN price > 0 THEN (qty * price) ELSE 0 END) / SUM(qty * p_or_m)) as avg_price, item_id FROM stock_transaction WHERE is_delete = 0 AND ref_date < '$from_date' GROUP BY item_id 
+                SELECT SUM(qty * p_or_m) AS stock_qty, (SUM(CASE WHEN price > 0 THEN (qty * price) ELSE 0 END) / SUM(qty * p_or_m)) as avg_price, item_id FROM stock_transaction WHERE is_delete = 0  AND cm_id = ".$this->cm_id." AND ref_date < '$from_date' GROUP BY item_id 
             ) AS ost ON ost.item_id = pm.id 
             LEFT JOIN ( 
-                SELECT SUM(qty * p_or_m) AS stock_qty, (SUM(CASE WHEN price > 0 THEN (qty * price) ELSE 0 END) / SUM(qty * p_or_m)) as avg_price, item_id FROM stock_transaction WHERE is_delete = 0 AND ref_date <= '$to_date' GROUP BY item_id 
+                SELECT SUM(qty * p_or_m) AS stock_qty, (SUM(CASE WHEN price > 0 THEN (qty * price) ELSE 0 END) / SUM(qty * p_or_m)) as avg_price, item_id FROM stock_transaction WHERE is_delete = 0 AND cm_id = ".$this->cm_id." AND ref_date <= '$to_date' GROUP BY item_id 
             ) AS cst ON cst.item_id = pm.id 
-            WHERE pm.is_delete = 0 and pm.item_type IN (1,2,3) and (ost.stock_qty <> 0 OR cst.stock_qty <> 0) GROUP BY pm.id
+            WHERE pm.is_delete = 0  AND pm.cm_id = ".$this->cm_id." and pm.item_type IN (1,2,3) and (ost.stock_qty <> 0 OR cst.stock_qty <> 0) GROUP BY pm.id
             
         ) as pl 
         LEFT JOIN item_master AS pm ON pl.id = pm.id 
         WHERE ( pl.op_amount <> 0 OR pl.cl_amount <> 0 ) 
+        AND pm.cm_id = ".$this->cm_id."
         AND pm.is_delete = 0 
         GROUP BY pl.item_type")->result();
 
@@ -205,9 +208,10 @@ class AccountingReportModel extends MasterModel{
         ifnull(lb.cl_balance,0) as cl_balance
         FROM ( party_master am LEFT JOIN group_master gm ON am.group_id = gm.id ) 
         LEFT JOIN ( 
-            SELECT am.id as id, ((am.opening_balance) + SUM( CASE WHEN tl.trans_date <= '$to_date' THEN (tl.amount * tl.p_or_m) ELSE 0 END )) as cl_balance FROM party_master as am LEFT JOIN trans_ledger as tl ON am.id = tl.vou_acc_id AND tl.is_delete = 0 WHERE am.is_delete = 0 GROUP BY am.id 
+            SELECT am.id as id, ((am.opening_balance) + SUM( CASE WHEN tl.trans_date <= '$to_date' THEN (tl.amount * tl.p_or_m) ELSE 0 END )) as cl_balance FROM party_master as am LEFT JOIN trans_ledger as tl ON am.id = tl.vou_acc_id AND tl.is_delete = 0 WHERE am.is_delete = 0 AND am.cm_id = ".$this->cm_id." GROUP BY am.id 
         ) as lb ON am.id = lb.id 
         WHERE am.is_delete = 0 
+        AND am.cm_id = ".$this->cm_id."
         AND lb.cl_balance <> 0
         ORDER BY gm.bs_type_code, am.group_name, am.party_name")->result();
 
@@ -226,7 +230,7 @@ class AccountingReportModel extends MasterModel{
         ifnull(gs.cl_balance,0) as cl_balance
         FROM  group_master as gm 
         LEFT JOIN ( 
-            SELECT am.group_id,(SUM(am.opening_balance) + SUM( CASE WHEN tl.trans_date <= '$to_date' THEN (tl.amount * tl.p_or_m) ELSE 0 END )) as cl_balance FROM ( party_master as am LEFT JOIN trans_ledger as tl ON am.id = tl.vou_acc_id AND tl.is_delete = 0) WHERE  am.is_delete = 0 GROUP BY am.group_id
+            SELECT am.group_id,(SUM(am.opening_balance) + SUM( CASE WHEN tl.trans_date <= '$to_date' THEN (tl.amount * tl.p_or_m) ELSE 0 END )) as cl_balance FROM ( party_master as am LEFT JOIN trans_ledger as tl ON am.id = tl.vou_acc_id AND tl.is_delete = 0) WHERE  am.is_delete = 0 AND am.cm_id = ".$this->cm_id." GROUP BY am.group_id
         ) AS gs on gm.id = gs.group_id 
         WHERE  gm.is_delete = 0 
         $extraWhere
@@ -249,7 +253,7 @@ class AccountingReportModel extends MasterModel{
             FROM  group_master as gm 
             LEFT JOIN ( 
                 SELECT am.id,am.group_id,
-                (SUM(am.opening_balance) + SUM( CASE WHEN tl.trans_date <= '$to_date' THEN (tl.amount * tl.p_or_m) ELSE 0 END )) as cl_balance FROM ( party_master as am LEFT JOIN trans_ledger as tl ON am.id = tl.vou_acc_id AND tl.is_delete = 0) WHERE  am.is_delete = 0 GROUP BY am.id
+                (SUM(am.opening_balance) + SUM( CASE WHEN tl.trans_date <= '$to_date' THEN (tl.amount * tl.p_or_m) ELSE 0 END )) as cl_balance FROM ( party_master as am LEFT JOIN trans_ledger as tl ON am.id = tl.vou_acc_id AND tl.is_delete = 0) WHERE  am.is_delete = 0 AND am.cm_id = ".$this->cm_id." GROUP BY am.id
             ) AS gs on gm.id = gs.group_id 
             WHERE  gm.is_delete = 0 
             $extraWhere
@@ -284,6 +288,7 @@ class AccountingReportModel extends MasterModel{
             LEFT JOIN trans_ledger as tl ON am.id = tl.vou_acc_id AND tl.is_delete = 0
             LEFT JOIN group_master AS gm ON gm.id = am.group_id
             WHERE am.is_delete = 0
+            AND am.cm_id = ".$this->cm_id."
             AND gm.nature IN ($nature)
             AND gm.bs_type_code IN ($bs_type_code)
             GROUP BY am.id
@@ -314,6 +319,7 @@ class AccountingReportModel extends MasterModel{
             LEFT JOIN trans_ledger as tl ON am.id = tl.vou_acc_id AND tl.is_delete = 0
             LEFT JOIN group_master AS gm ON gm.id = am.group_id
             WHERE am.is_delete = 0
+            AND am.cm_id = ".$this->cm_id."
             AND gm.nature IN ($nature)
             AND gm.bs_type_code IN ($bs_type_code)            
             GROUP BY am.id
@@ -337,7 +343,7 @@ class AccountingReportModel extends MasterModel{
             SUM(am.opening_balance) + SUM( CASE WHEN gm.nature = 'Expenses' AND tl.trans_date <= '$to_date' THEN (tl.amount * tl.p_or_m) ELSE 0 END) as expense 
             FROM ( ( party_master as am LEFT JOIN trans_ledger as tl ON am.id = tl.vou_acc_id AND tl.is_delete = 0) 
             LEFT JOIN group_master gm ON am.group_id = gm.id ) 
-            WHERE am.is_delete = 0 AND tl.is_delete = 0 $extraWhere 
+            WHERE am.is_delete = 0 AND am.cm_id = ".$this->cm_id." AND tl.is_delete = 0 $extraWhere 
         ) as pnl")->row();
 
         return $result;

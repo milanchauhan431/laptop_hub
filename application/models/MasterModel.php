@@ -54,6 +54,13 @@ class MasterModel extends CI_Model{
                 endif;
             endif;
             $this->db->where($data['tableName'].'.is_delete',0);
+
+            //Company ID Condition
+            if(isset($data['cm_id'])):
+                $this->db->where_in($data['tableName'].'.cm_id',$data['cm_id'],false);
+            else:
+                $this->db->where($data['tableName'].'.cm_id',$this->cm_id);
+            endif;
     
             if(isset($data['where_in'])):
                 if(!empty($data['where_in'])):
@@ -142,6 +149,13 @@ class MasterModel extends CI_Model{
                 endif;
             endif;
             $this->db->where($data['tableName'].'.is_delete',0);
+
+            //Company ID Condition
+            if(isset($data['cm_id'])):
+                $this->db->where_in($data['tableName'].'.cm_id',$data['cm_id'],false);
+            else:
+                $this->db->where($data['tableName'].'.cm_id',$this->cm_id);
+            endif;
     
             if(isset($data['where_in'])):
                 if(!empty($data['where_in'])):
@@ -262,6 +276,13 @@ class MasterModel extends CI_Model{
             endif;
 
             $this->db->where($data['tableName'].'.is_delete',0);
+
+            //Company ID Condition
+            if(isset($data['cm_id'])):
+                $this->db->where_in($data['tableName'].'.cm_id',$data['cm_id'],false);
+            else:
+                $this->db->where($data['tableName'].'.cm_id',$this->cm_id);
+            endif;
     
             if(isset($data['where_in'])):
                 if(!empty($data['where_in'])):
@@ -495,6 +516,13 @@ class MasterModel extends CI_Model{
         else:
             $this->db->where($data['tableName'].'.is_delete',0);
         endif;
+
+        //Company ID Condition
+        if(isset($data['cm_id'])):
+            $this->db->where_in($data['tableName'].'.cm_id',$data['cm_id'],false);
+        else:
+            $this->db->where($data['tableName'].'.cm_id',$this->cm_id);
+        endif;
         
         //$this->db->where($data['tableName'].'.is_delete',0);
         $result = $this->db->get($data['tableName'])->result();
@@ -542,6 +570,13 @@ class MasterModel extends CI_Model{
             endif;
         endif;
         $this->db->where($data['tableName'].'.is_delete',0);
+
+        //Company ID Condition
+        if(isset($data['cm_id'])):
+            $this->db->where_in($data['tableName'].'.cm_id',$data['cm_id'],false);
+        else:
+            $this->db->where($data['tableName'].'.cm_id',$this->cm_id);
+        endif;
 
         if(isset($data['where_in'])):
             if(!empty($data['where_in'])):
@@ -652,6 +687,13 @@ class MasterModel extends CI_Model{
         
         $this->db->where($data['tableName'].'.is_delete',0);
 
+        //Company ID Condition
+        if(isset($data['cm_id'])):
+            $this->db->where_in($data['tableName'].'.cm_id',$data['cm_id'],false);
+        else:
+            $this->db->where($data['tableName'].'.cm_id',$this->cm_id);
+        endif;
+
         if(isset($data['where_in'])):
             if(!empty($data['where_in'])):
                 foreach($data['where_in'] as $key=>$value):
@@ -724,6 +766,7 @@ class MasterModel extends CI_Model{
     public function store($tableName,$data,$msg = "Record"){
         $id = $data['id'];
         unset($data['id']);
+        $data['cm_id'] = $this->cm_id;
         if(empty($id)):
             $data['created_by'] = (isset($data['created_by']))?$data['created_by']:$this->loginId;
             $data['created_at'] = date("Y-m-d H:i:s");
@@ -746,6 +789,7 @@ class MasterModel extends CI_Model{
 
     /* Update Row */
     public function edit($tableName,$where,$data,$msg = "Record"){
+        $data['cm_id'] = $this->cm_id;
         $data['updated_by'] = $this->loginId;
         $data['updated_at'] = date("Y-m-d H:i:s");
 
@@ -760,6 +804,7 @@ class MasterModel extends CI_Model{
 
     /* Update Row */
     public function editCustom($tableName,$customWhere,$data,$where=Array()){
+        $data['cm_id'] = $this->cm_id;
         $data['updated_by'] = $this->loginId;
         $data['updated_at'] = date("Y-m-d H:i:s");
 
@@ -825,6 +870,13 @@ class MasterModel extends CI_Model{
                 endif;
             endif;
 
+            //Company ID Condition
+            if(isset($data['cm_id'])):
+                $this->db->where_in($data['tableName'].'.cm_id',$data['cm_id'],false);
+            else:
+                $this->db->where($data['tableName'].'.cm_id',$this->cm_id);
+            endif;
+
             if(isset($data['where_not_in'])):
                 if(!empty($data['where_not_in'])):
                     foreach($data['where_not_in'] as $key=>$value):
@@ -881,7 +933,8 @@ class MasterModel extends CI_Model{
         $data['leftJoin']['states as dstate'] = "company_info.delivery_state_id = dstate.id";
         $data['leftJoin']['cities as dcity'] = "company_info.delivery_city_id = dcity.id";
 
-		$data['where']['company_info.id'] = 1;
+		$data['where']['company_info.id'] = $this->cm_id;
+        $data['cm_id'] = [0,$this->cm_id];
 		return $this->row($data);
 	}
 

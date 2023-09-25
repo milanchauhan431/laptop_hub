@@ -1,4 +1,5 @@
 $(document).ready(function(){
+	$("#itemForm .select2").select2();
 	$(document).on('click','.getPendingOrders',function(){
 		var party_id = $('#party_id').val();
 		var party_name = $('#party_id :selected').text();
@@ -47,12 +48,17 @@ $(document).ready(function(){
 	});
 
     $(document).on('click', '.saveItem', function () {
-        
-		var fd = $('#itemForm').serializeArray();
+		/*var fd = $('#itemForm').serializeArray();
 		var formData = {};
 		$.each(fd, function (i, v) {
 			formData[v.name] = v.value;
+		});*/
+		
+        var formData = {};
+		$.each($(".itemFormInput"),function(){
+			formData[$(this).attr('id')] = $(this).val();
 		});
+		
         $("#itemForm .error").html("");
 
         if (formData.item_id == "") {
@@ -67,7 +73,6 @@ $(document).ready(function(){
         if (formData.price == "" || parseFloat(formData.price) == 0) {
             $(".price").html("Price is required.");
         }
-
 		if(formData.packing_qty == "" || parseInt(formData.packing_qty) == 0){
 			$(".packing_qty").html("Packing standard is required.");
 		}
@@ -114,6 +119,10 @@ $(document).ready(function(){
 
             net_amount = parseFloat(parseFloat(taxable_amount) + parseFloat(igst_amt)).toFixed(2);
 
+			formData.id = formData.trans_id;
+			formData.from_entry_type = formData.trans_from_entry_type;
+			formData.ref_id = formData.trans_ref_id;
+			
 			formData.gst_per = parseFloat(formData.gst_per);
             formData.qty = parseFloat(formData.qty).toFixed(2);
             formData.cgst_per = cgst_per;
@@ -128,7 +137,8 @@ $(document).ready(function(){
             formData.net_amount = net_amount;
 
             AddRow(formData);
-            $('#itemForm')[0].reset();
+            //$('#itemForm')[0].reset();
+			resetFormByClass('itemForm');
             $("#itemForm input:hidden").val('')
             $('#itemForm #row_index').val("");
             $('#itemForm #stock_eff').val(1);
@@ -160,10 +170,23 @@ $(document).ready(function(){
 		if($(this).val()){ $("#unit_name").val($("#unit_id :selected").text()); }
 	});
 
-	$(document).on('change','#hsn_code',function(){
+	/*$(document).on('change','#hsn_code',function(){
 		$("#gst_per").val(($("#hsn_code :selected").data('gst_per') || 0));
 		$("#gst_per").select2();
-	});
+	});*/
+	$('#itemForm #hsn_code').typeahead({
+		source: function(query, result)
+		{
+			$.ajax({
+				url:base_url + controller + '/getHSNList',
+				method:"POST",
+				global:false,
+				data:{query:query},
+				dataType:"json",
+				success:function(data){result($.map(data, function(hsn_code){return hsn_code;}));}
+			});
+		}
+	 });
 
 	//on change Bill Per.
 	$(document).on('keyup change','#master_i_col_1',function(){
@@ -433,12 +456,20 @@ function AddRow(data) {
 
 function Edit(data, button) {
 	var row_index = $(button).closest("tr").index();
-	$("#itemModel").modal();
-	//$("#itemModel .btn-close").hide();
-	$("#itemModel .btn-save").hide();
+	//$("#itemModel").modal();
+	//$("#itemModel .btn-save").hide();
+	var trans_id = ''; var from_entry_type = ''; var ref_id = '';
 	$.each(data, function (key, value) {
 		$("#itemForm #" + key).val(value);
+		
+		if(key=="id"){ trans_id = value; }
+		if(key=="from_entry_type"){ from_entry_type = from_entry_type; }
+		if(key=="ref_id"){ ref_id = ref_id; }
 	});
+	$("#itemForm #trans_id").val(trans_id);
+	$("#itemForm #trans_from_entry_type").val(from_entry_type);
+	$("#itemForm #trans_ref_id").val(ref_id);
+	
 	$("#itemForm #price").val(data.org_price);
 	$("#itemForm .select2").select2();
 	$("#itemForm #row_index").val(row_index);
@@ -498,7 +529,7 @@ function resItemDetail(response = ""){
 		$("#itemForm #price").val(itemDetail.price);
 		$("#itemForm #org_price").val(itemDetail.price);
 		$("#itemForm #packing_qty").val(itemDetail.packing_standard);
-        $("#itemForm #hsn_code").val(itemDetail.hsn_code);$("#itemForm #hsn_code").select2();
+        $("#itemForm #hsn_code").val(itemDetail.hsn_code);//$("#itemForm #hsn_code").select2();
         $("#itemForm #gst_per").val(parseFloat(itemDetail.gst_per).toFixed(0));$("#itemForm #gst_per").select2();
     }else{
         $("#itemForm #item_code").val("");
@@ -510,7 +541,7 @@ function resItemDetail(response = ""){
 		$("#itemForm #price").val("");
 		$("#itemForm #org_price").val("");
 		$("#itemForm #packing_qty").val("");
-        $("#itemForm #hsn_code").val("");$("#itemForm #hsn_code").select2();
+        $("#itemForm #hsn_code").val("");//$("#itemForm #hsn_code").select2();
         $("#itemForm #gst_per").val(0);$("#itemForm #gst_per").select2(); 
     }
 }

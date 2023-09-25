@@ -8,7 +8,8 @@ class PermissionModel extends MasterModel{
     public function getMainMenus($is_report = 0){
         $queryData = array();
         $queryData['tableName'] = $this->menuMaster;
-        $queryData['customWhere'][] = "menu_master.id IN (SELECT menu_id FROM sub_menu_master WHERE sub_menu_master.is_report=" . $is_report . " AND is_delete='0' GROUP BY menu_id)";
+        $queryData['customWhere'][] = "menu_master.id IN (SELECT menu_id FROM sub_menu_master WHERE sub_menu_master.is_report=" . $is_report . " AND is_delete='0' AND cm_id IN (0,".$this->cm_id.") GROUP BY menu_id)";
+        $queryData['cm_id'] = [0,$this->cm_id];
         $queryData['order_by']['menu_seq'] = "ASC";
         $result = $this->rows($queryData);
         return $result;
@@ -19,6 +20,7 @@ class PermissionModel extends MasterModel{
         $queryData['tableName'] = $this->subMenuMaster;
         $queryData['where']['menu_id'] = $menu_id;
         $queryData['where']['is_report'] = $is_report;
+        $queryData['cm_id'] = [0,$this->cm_id];
         $queryData['order_by']['sub_menu_seq'] = "ASC";
         return $this->rows($queryData);
     }
@@ -51,11 +53,13 @@ class PermissionModel extends MasterModel{
         $queryData = array();
         $queryData['tableName'] = $this->menuPermission;
         $queryData['where']['emp_id'] = $emp_id;
+        $queryData['cm_id'] = [0,$this->cm_id];
         $result['mainPermission'] = $this->rows($queryData);
 
         $queryData = array();
         $queryData['tableName'] = $this->subMenuPermission;
         $queryData['where']['emp_id'] = $emp_id;
+        $queryData['cm_id'] = [0,$this->cm_id];
         $result['subMenuPermission'] = $this->rows($queryData);
         return $result;
     }
@@ -255,6 +259,7 @@ class PermissionModel extends MasterModel{
         $queryData['select'] = 'menu_permission.*,menu_master.menu_name,menu_master.controller_name,menu_master.menu_icon';
         $queryData['leftJoin']['menu_master'] = "menu_master.id = menu_permission.menu_id";
         $queryData['where']['menu_permission.emp_id'] = $this->loginId;
+        $queryData['cm_id'] = [0,$this->cm_id];
         $queryData['order_by']['menu_master.menu_seq'] = "ASC";
         $menuData = $this->rows($queryData);
 
@@ -275,10 +280,11 @@ class PermissionModel extends MasterModel{
                 $queryData['tableName'] = $this->subMenuPermission;
                 $queryData['select'] = 'sub_menu_permission.*,sub_menu_master.sub_menu_name,sub_menu_master.sub_controller_name,sub_menu_master.sub_menu_icon';
                 $queryData['leftJoin']['sub_menu_master'] = "sub_menu_master.id = sub_menu_permission.sub_menu_id";
-                $queryData['where']['sub_menu_permission.emp_id'] = $this->loginId;
+                $queryData['where']['sub_menu_permission.emp_id'] = $this->loginId;                
                 $queryData['where']['sub_menu_permission.menu_id'] = $row->menu_id;
                 $queryData['where']['sub_menu_master.is_report'] = 0;
                 $queryData['where']['sub_menu_master.is_delete'] = 0;
+                $queryData['cm_id'] = [0,$this->cm_id];
                 $queryData['order_by']['sub_menu_master.sub_menu_seq'] = "ASC";
                 $subMenuData = $this->rows($queryData);
 
@@ -332,6 +338,7 @@ class PermissionModel extends MasterModel{
             $queryData['where']['sub_menu_permission.menu_id'] = $menu->id;
             $queryData['where']['sub_menu_master.is_report'] = 1;
             $queryData['where']['sub_menu_master.is_delete'] = 0;
+            $queryData['cm_id'] = [0,$this->cm_id];
             $queryData['order_by']['sub_menu_master.sub_menu_seq'] = "ASC";
             $subMenuData = $this->rows($queryData);
             $show_menu = false;

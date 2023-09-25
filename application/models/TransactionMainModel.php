@@ -7,6 +7,7 @@ class TransactionMainModel extends MasterModel{
 	public function getEntryType($data){
 		$queryData['tableName'] = "sub_menu_master";
 		$queryData['where']['sub_controller_name'] = $data['controller'];
+		$queryData['cm_id'] = [0];
 		$result = $this->row($queryData);
 
 		$nextNo = $this->nextTransNo($result->id,1,$result->vou_name_short);
@@ -26,7 +27,8 @@ class TransactionMainModel extends MasterModel{
 		endif;
 		$data['where']['trans_main.trans_date >='] = $this->startYearDate;
 		$data['where']['trans_main.trans_date <='] = $this->endYearDate;
-        $data['tableName'] = $this->transMain;
+        $data['cm_id'] = $this->cm_id;
+		$data['tableName'] = $this->transMain;
 		$trans_no = $this->specificRow($data)->trans_no;
 		$trans_no = (empty($last_no))?($trans_no + 1):$trans_no;
 		return $trans_no;
@@ -38,6 +40,7 @@ class TransactionMainModel extends MasterModel{
         $queryData['where']['trans_type'] = $type;
         $queryData['where']['trans_date >='] = $this->startYearDate;
         $queryData['where']['trans_date <='] = $this->endYearDate;
+		$queryData['cm_id'] = $this->cm_id;
         return $this->row($queryData)->next_no;
     }
 
@@ -48,6 +51,7 @@ class TransactionMainModel extends MasterModel{
 		$queryData['where']['item_id'] = $data['item_id'];
 		$queryData['where']['location_id'] = $data['location_id'];
 		$queryData['where']['batch_no'] = $data['batch_no'];
+		$queryData['cm_id'] = $this->cm_id;
 		$result = $this->row($queryData);
 
 		if(!empty($result->unique_id)):
@@ -57,6 +61,7 @@ class TransactionMainModel extends MasterModel{
 		$queryData = array();
 		$queryData['tableName'] = "stock_transaction";
 		$queryData['select'] = "ifnull((MAX(unique_id) + 1),1) as unique_id";
+		$queryData['cm_id'] = $this->cm_id;
 		return $this->row($queryData)->unique_id;
 	}
 	

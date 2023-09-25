@@ -23,14 +23,14 @@ $(document).ready(function(){
         }
 	});
 
-	$(document).on('change','#itemForm #hsn_code',function(){
+	/*$(document).on('change','#itemForm #hsn_code',function(){
 		if($(this).val()){ 
 			$("#itemForm #gst_per").val($("#itemForm #hsn_code :selected").data('gst_per')); 
 			$("#itemForm #gst_per").select2(); 
 		}else{
 			$("#itemForm #gst_per").val("0"); $("#itemForm #gst_per").select2();
 		}
-	});
+	});*/
 
     $(document).on('click', '.saveItem', function () {
         
@@ -117,6 +117,19 @@ $(document).ready(function(){
 		$("#itemForm .select2").select2();
 	});   
 
+	$('#itemForm #hsn_code').typeahead({
+		source: function(query, result)
+		{
+			$.ajax({
+				url:base_url + controller + '/getHSNList',
+				method:"POST",
+				global:false,
+				data:{query:query},
+				dataType:"json",
+				success:function(data){result($.map(data, function(hsn_code){return hsn_code;}));}
+			});
+		}
+	 });
 });
 
 function AddRow(data) {
@@ -344,7 +357,7 @@ function resItemDetail(response = ""){
         $("#itemForm #disc_per").val(itemDetail.defualt_disc);
         $("#itemForm #price").val(itemDetail.price);
         $("#itemForm #make").val(itemDetail.make_brand);
-        $("#itemForm #hsn_code").val(itemDetail.hsn_code);$("#itemForm #hsn_code").select2();
+        $("#itemForm #hsn_code").val(itemDetail.hsn_code); //$("#itemForm #hsn_code").select2();
         $("#itemForm #gst_per").val(parseFloat(itemDetail.gst_per).toFixed(0));$("#itemForm #gst_per").select2();
     }else{
         $("#itemForm #item_code").val("");
@@ -355,7 +368,7 @@ function resItemDetail(response = ""){
 		$("#itemForm #disc_per").val("");
         $("#itemForm #price").val("");
 		$("#itemForm #make").val("");
-        $("#itemForm #hsn_code").val("");$("#itemForm #hsn_code").select2();
+        $("#itemForm #hsn_code").val(""); //$("#itemForm #hsn_code").select2();
         $("#itemForm #gst_per").val(0);$("#itemForm #gst_per").select2(); 
     }
 }

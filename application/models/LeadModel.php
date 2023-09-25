@@ -48,32 +48,83 @@ class LeadModel extends MasterModel{
 		return $nextNo;
     }
     
+    /* Updated By :- Sweta 05-09-2023 */
     public function saveLead($data){
         try{
             $this->db->trans_begin();
-            $leadNo = $this->getNextLeadNo();
-            $leadData = [
-                'id'=>$data['id'],
-                'party_id'=>$data['party_id'],
-                'lead_date'=>$data['lead_date'],
-                'sales_executive'=>$data['sales_executive'],
-                'mode'=>$data['mode'],
-                'lead_no'=>$leadNo,
-                'lead_status'=>$data['status'],
-                'lead_from'=>$data['lead_from'],
-                'next_fup_date'=>$data['next_fup_date']
-            ];
-            $result = $this->store($this->lead_managment,$leadData);
-            
-            if(empty($data['id'])):
-                $data['lead_id'] = $result['id'];
-                $data['entry_type'] = 1;
-                $data['appointment_date'] = $data['lead_date'];
-                $data['next_fup_date'] = $data['next_fup_date'];
-                unset($data['lead_date'],$data['lead_from']);
-                $this->saveFollowup($data);
-            endif;
 
+            $leadNo = $this->getNextLeadNo();
+            if ($this->party->checkDuplicate($data) > 0) :
+                $partyData = $this->party->getParty(['party_name'=>$data['party_name']]);
+
+                $leadData = [
+                    'id'=>$data['id'],
+                    'lead_date'=>$data['lead_date'],
+                    'lead_from'=>$data['lead_from'],
+                    'mode'=>$data['mode'],
+                    'sales_executive'=>$data['sales_executive'],
+                    'party_name'=>$partyData->party_name,
+                    'party_id'=>$partyData->id,
+                    'contact_person'=>$data['contact_person'],
+                    'contact_no'=>$data['contact_no'],
+                    'lead_no'=>$leadNo,
+                    'lead_status'=>$data['status'],
+                    'next_fup_date'=>$data['next_fup_date'],
+                    'created_by'=>$this->loginId
+                ];
+                $result = $this->store($this->lead_managment,$leadData);
+
+                if(empty($data['id'])):
+                    $data['lead_id'] = $result['id'];
+                    $data['party_id'] = $partyData->id;
+                    $data['entry_type'] = 1;
+                    $data['appointment_date'] = $data['lead_date'];
+                    $data['next_fup_date'] = $data['next_fup_date'];
+                    unset($data['lead_date'],$data['lead_from'],$data['party_name'],$data['contact_no']);
+                    $this->saveFollowup($data);
+                endif;
+            else:
+                $party = [
+                    'id'=>'',
+                    'party_code'=>$this->party->getPartyCode(1),
+                    'party_category'=>1,
+                    'party_type'=>2,
+                    'party_name'=>$data['party_name'],
+                    'contact_phone'=>$data['contact_no'],
+                    'contact_person'=>$data['contact_person'],
+                    'sales_executive'=>$data['sales_executive'],
+                    'created_by'=>$this->loginId
+                ];
+                $partyMasterSave = $this->store($this->partyMaster,$party);
+
+                $leadData = [
+                    'id'=>$data['id'],
+                    'lead_date'=>$data['lead_date'],
+                    'lead_from'=>$data['lead_from'],
+                    'mode'=>$data['mode'],
+                    'sales_executive'=>$data['sales_executive'],
+                    'party_name'=>$data['party_name'],
+                    'party_id'=>$partyMasterSave['insert_id'],
+                    'contact_person'=>$data['contact_person'],
+                    'contact_no'=>$data['contact_no'],
+                    'lead_no'=>$leadNo,
+                    'lead_status'=>$data['status'],
+                    'next_fup_date'=>$data['next_fup_date'],
+                    'created_by'=>$this->loginId
+                ];
+                $result = $this->store($this->lead_managment,$leadData);
+
+                if(empty($data['id'])):
+                    $data['lead_id'] = $result['id'];
+                    $data['party_id'] = $partyMasterSave['insert_id'];
+                    $data['entry_type'] = 1;
+                    $data['appointment_date'] = $data['lead_date'];
+                    $data['next_fup_date'] = $data['next_fup_date'];
+                    unset($data['lead_date'],$data['lead_from'],$data['party_name'],$data['contact_no']);
+                    $this->saveFollowup($data);
+                endif;
+            endif;           
+            
             if ($this->db->trans_status() !== FALSE):
                 $this->db->trans_commit();
                 return $result;
@@ -186,10 +237,12 @@ class LeadModel extends MasterModel{
         }	
     }
 
+    /* Updated By :- Sweta @05-09-2023 */
     public function getLead($id){
-        $data['select'] = "lead_managment.*,party_master.party_name,employee_master.emp_name as sales_executive_name";
+        $data['select'] = "lead_managment.*,party_master.party_name,employee_master.emp_name as sales_executive_name,crm_appointments.notes";
         $data['leftJoin']['party_master'] = "party_master.id = lead_managment.party_id";
         $data['leftJoin']['employee_master'] = "employee_master.id = lead_managment.sales_executive";
+        $data['leftJoin']['crm_appointments'] = "crm_appointments.lead_id = lead_managment.id";
         $data['where']['lead_managment.id'] = $id;
         $data['tableName'] = $this->lead_managment;
         return $this->row($data);

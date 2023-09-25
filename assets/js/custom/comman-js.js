@@ -1,6 +1,6 @@
 $(document).ready(function(){
 
-	var lastActivityTime = new Date();;
+	var lastActivityTime = new Date();
 
 	// Update last activity time on user interaction events //mousemove
 	$(document).on('click change keydown', function() {
@@ -1179,4 +1179,13 @@ function resItemMaster(response,formId){
             toastr.error(response.message, 'Error', { "showMethod": "slideDown", "hideMethod": "slideUp", "closeButton": true, positionClass: 'toastr toast-bottom-center', containerId: 'toast-bottom-center', "progressBar": true });
         }			
     }	
+}
+
+function resetFormByClass(cls) {
+    $('.' + cls + " input").each(function(){
+		if($(this).data('resetval')){$(this).val($(this).data('resetval'));}else{$(this).val('');}
+	});
+    $('.' + cls).find('select').val('');
+    $('.' + cls).find('textarea').val('');
+    $(".select2").select2();
 }

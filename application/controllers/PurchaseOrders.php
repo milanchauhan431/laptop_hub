@@ -36,7 +36,7 @@ class PurchaseOrders extends MY_Controller{
         $this->data['trans_number'] = $this->data['trans_prefix'].$this->data['trans_no'];
         $this->data['partyList'] = $this->party->getPartyList(['party_category'=>"2,3"]);
         $this->data['itemList'] = $this->item->getItemList(['item_type'=>"2,3"]);
-        $this->data['hsnList'] = $this->hsnModel->getHSNList();
+        //$this->data['hsnList'] = $this->hsnModel->getHSNList();
 		$this->data['taxList'] = $this->taxMaster->getActiveTaxList(1);
         $this->data['expenseList'] = $this->expenseMaster->getActiveExpenseList(1);
         $this->data['orderItemList'] = $this->purchaseIndent->getRequestItems($ids);
@@ -54,7 +54,7 @@ class PurchaseOrders extends MY_Controller{
         $this->data['trans_number'] = $this->data['trans_prefix'].$this->data['trans_no'];
         $this->data['partyList'] = $this->party->getPartyList(['party_category'=>"2,3"]);
         $this->data['itemList'] = $this->item->getItemList(['item_type'=>"2,3"]);
-        $this->data['hsnList'] = $this->hsnModel->getHSNList();
+        //$this->data['hsnList'] = $this->hsnModel->getHSNList();
 		$this->data['taxList'] = $this->taxMaster->getActiveTaxList(1);
         $this->data['expenseList'] = $this->expenseMaster->getActiveExpenseList(1);
         $this->data['termsList'] = $this->terms->getTermsList(['type'=>'Purchase']);
@@ -63,6 +63,13 @@ class PurchaseOrders extends MY_Controller{
         $this->data['transportList'] = $this->transport->getTransportList();
         $this->load->view($this->form,$this->data);
     }
+
+	public function getHSNList(){
+        $result = $this->item->getHSNList();
+		$searchResult = array();
+		foreach($result as $row){ $searchResult[] = $row->hsn_code; }
+		$this->printJson($searchResult);
+	}
 
     public function save(){
         $data = $this->input->post();
@@ -87,7 +94,7 @@ class PurchaseOrders extends MY_Controller{
         $this->data['gstinList'] = $this->party->getPartyGSTDetail(['party_id' => $dataRow->party_id]);
         $this->data['partyList'] = $this->party->getPartyList(['party_category'=>"2,3"]);
         $this->data['itemList'] = $this->item->getItemList(['item_type'=>"2,3"]);
-        $this->data['hsnList'] = $this->hsnModel->getHSNList();
+        //$this->data['hsnList'] = $this->hsnModel->getHSNList();
 		$this->data['taxList'] = $this->taxMaster->getActiveTaxList(2);
         $this->data['expenseList'] = $this->expenseMaster->getActiveExpenseList(2);
         $this->data['termsList'] = $this->terms->getTermsList(['type'=>'Purchase']);

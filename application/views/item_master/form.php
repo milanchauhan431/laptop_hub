@@ -11,70 +11,6 @@
                 <input type="text" name="item_code" class="form-control" value="<?= (!empty($dataRow->item_code)) ? $dataRow->item_code : ""; ?>" />
             </div>
 
-            <?php
-                if((!empty($dataRow->item_type) && $dataRow->item_type == 1) || (empty($dataRow) && $item_type == 1)):
-            ?>
-                <div class="col-md-9 form-group">
-                    <label for="item_name">Item Name</label>
-                    <div class="input-group">
-                        <div class="input-group-append" style="width:20%;">
-                            <select name="brand_id" id="brand_id" class="form-control select2">
-                                <option value="">Select Brand</option>
-                                <?php
-                                    foreach($brandList as $row):
-                                        $selected = (!empty($dataRow->brand_id) && $dataRow->brand_id == $row->id)?"selected":"";
-                                        echo '<option value="'.$row->id.'" '.$selected.'>'.$row->brand_name.'</option>';
-                                    endforeach;
-                                ?>
-                            </select>
-                        </div>
-                        <div class="input-group-append" style="width:20%;">
-                            <select name="category_id" id="category_id" class="form-control select2 req">
-                                <option value="0">Select</option>
-                                <?php
-                                    foreach ($categoryList as $row) :
-                                        $selected = (!empty($dataRow->category_id) && $dataRow->category_id == $row->id) ? "selected" : "";
-                                        echo '<option value="' . $row->id . '" ' . $selected . '>' . $row->category_name . '</option>';
-                                    endforeach;
-                                ?>
-                            </select>
-                        </div>
-                        <div class="input-group-append" style="width:20%;">
-                            <select name="size_id" id="size_id" class="form-control select2">
-                                <option value="">Select Size</option>
-                                <?php
-                                    foreach($sizeList as $row):
-                                        $selected = (!empty($dataRow->size_id) && $dataRow->size_id == $row->id)?"selected":"";
-                                        echo '<option value="'.$row->id.'" '.$selected.'>'.$row->size.'</option>';
-                                    endforeach;
-                                ?>
-                            </select>
-                        </div>
-                        <div class="input-group-append" style="width:20%;">
-                            <select name="capacity" id="capacity" class="form-control select2">
-                                <?php
-                                    foreach($this->fgCapacity as $capacity=>$text):
-                                        $selected = (!empty($dataRow->capacity) && $dataRow->capacity == $capacity)?"selected":"";
-                                        echo '<option value="'.$capacity.'" '.$selected.'>'.$capacity.'</option>';
-                                    endforeach;
-                                ?>
-                            </select>
-                        </div>
-                        <div class="input-group-append" style="width:20%;">
-                            <select name="color" id="color" class="form-control select2">
-                                <?php
-                                    foreach($this->fgColorCode as $color=>$text):
-                                        $selected = (!empty($dataRow->color) && $dataRow->color == $color)?"selected":"";
-                                        echo '<option value="'.$color.'" '.$selected.'>'.$color.'</option>';
-                                    endforeach;
-                                ?>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="error item_name"></div>
-                </div>
-            <?php else: ?>
-
             <div class="col-md-6 form-group">
                 <label for="item_name">Item Name</label>
                 <input type="text" name="item_name" class="form-control req" value="<?=htmlentities((!empty($dataRow->item_name)) ? $dataRow->item_name : "")?>" />
@@ -91,9 +27,7 @@
                         endforeach;
                     ?>
                 </select>
-            </div>
-
-            <?php endif; ?>            
+            </div>       
 
             <div class="col-md-2 form-group">
                 <label for="unit_id">Unit</label>

@@ -8,7 +8,7 @@ class StoreReportModel extends MasterModel{
         $queryData['tableName'] = $this->itemMaster;
         $queryData['select'] = "item_master.id,item_master.item_code,item_master.item_name,ifnull(st.stock_qty,0) as stock_qty";
 
-        $queryData['leftJoin']['(SELECT SUM(qty * p_or_m) as stock_qty,item_id FROM stock_transaction WHERE is_delete = 0 GROUP BY item_id) as st'] = "item_master.id = st.item_id";
+        $queryData['leftJoin']['(SELECT SUM(qty * p_or_m) as stock_qty,SUM(CASE WHEN p_or_m = 1 THEN qty ELSE 0 END) rec_qty,SUM(CASE WHEN p_or_m = -1 THEN qty ELSE 0 END) issue_qty,item_id FROM stock_transaction WHERE is_delete = 0 GROUP BY item_id) as st'] = "item_master.id = st.item_id";
 
         $queryData['where']['item_master.item_type'] = $data['item_type'];
         if(!empty($data['stock_type'])):

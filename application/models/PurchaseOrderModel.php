@@ -101,6 +101,8 @@ class PurchaseOrderModel extends MasterModel{
 
             foreach($itemData as $row):
                 $row['entry_type'] = $data['entry_type'];
+				$row['trans_date'] = $data['trans_date'];
+				$row['party_id'] = $data['party_id'];
                 $row['trans_main_id'] = $result['id'];
                 $row['is_delete'] = 0;
                 $this->store($this->transChild,$row);

@@ -153,13 +153,21 @@ class ItemModel extends MasterModel{
 
     public function itemUnits(){
         $queryData['tableName'] = $this->unitMaster;
+        $queryData['cm_id'] = [0];
 		return $this->rows($queryData);
 	}
 
     public function itemUnit($id){
         $queryData['tableName'] = $this->unitMaster;
 		$queryData['where']['id'] = $id;
+        $queryData['cm_id'] = [0];
 		return $this->row($queryData);
 	}
+
+    public function getHSNList(){
+		$data['tableName'] = 'item_master';
+		$data['select'] = 'DISTINCT(hsn_code)';
+		return $this->rows($data);
+    }
 }
 ?>

@@ -188,6 +188,7 @@ class SalesQuotation extends MY_Controller{
         
         $logo = base_url('assets/images/logo.png');
         $this->data['letter_head'] =  base_url('assets/images/letterhead-top.png');
+        $lh_bg =  base_url('assets/images/lh_bg.jpg');
         
         $pdfData = $this->load->view('sales_quotation/print', $this->data, true);
         
@@ -211,8 +212,12 @@ class SalesQuotation extends MY_Controller{
         $mpdf->SetDisplayMode('fullpage');
         $mpdf->SetWatermarkImage($logo, 0.03, array(120, 120));
         $mpdf->showWatermarkImage = true;
-        $mpdf->SetHTMLFooter($htmlFooter);
-		$mpdf->AddPage('P','','','','',7,5,5,5,3,3,'','','','','','','','','','A4-P');
+       // $mpdf->SetHTMLFooter($htmlFooter);
+        
+        $mpdf->SetDefaultBodyCSS('background', "url('".$lh_bg."')");
+        $mpdf->SetDefaultBodyCSS('background-image-resize', 6);
+        
+		$mpdf->AddPage('P','','','','',7,5,43,7,3,15,'','','','','','','','','','A4-P');
         $mpdf->WriteHTML($pdfData);
 		
 		ob_clean();

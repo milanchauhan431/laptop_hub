@@ -45,7 +45,7 @@ class PartyModel extends MasterModel{
 			$data['searchCol'][] = "party_master.party_address";
         elseif($data['party_category'] == 4):
             $data['select'] = "party_master.*,(CASE WHEN tl.op_balance > 0 THEN CONCAT(ABS(tl.op_balance), ' Cr.') WHEN tl.op_balance < 0 THEN CONCAT(ABS(tl.op_balance), ' Dr.') ELSE 0 END) as op_balance,(CASE WHEN tl.cl_balance > 0 THEN CONCAT(ABS(tl.cl_balance), ' Cr.') WHEN tl.cl_balance < 0 THEN CONCAT(ABS(tl.cl_balance), ' Dr.') ELSE 0 END) as cl_balance";
-            $data['leftJoin']["(SELECT tl.vou_acc_id , (am.opening_balance + SUM( CASE WHEN tl.trans_date < '".$this->startYearDate."' THEN (tl.amount * tl.p_or_m) ELSE 0 END )) as op_balance, (am.opening_balance  + SUM( CASE WHEN tl.trans_date <= '".$this->endYearDate."' THEN (tl.amount * tl.p_or_m) ELSE 0 END )) as cl_balance FROM party_master as am LEFT JOIN trans_ledger as tl ON am.id = tl.vou_acc_id WHERE am.is_delete = 0 AND tl.is_delete = 0 GROUP BY am.id) as tl"] = 'tl.vou_acc_id = party_master.id';
+            $data['leftJoin']["(SELECT tl.vou_acc_id , (am.opening_balance + SUM( CASE WHEN tl.trans_date < '".$this->startYearDate."' THEN (tl.amount * tl.p_or_m) ELSE 0 END )) as op_balance, (am.opening_balance  + SUM( CASE WHEN tl.trans_date <= '".$this->endYearDate."' THEN (tl.amount * tl.p_or_m) ELSE 0 END )) as cl_balance FROM party_master as am LEFT JOIN trans_ledger as tl ON am.id = tl.vou_acc_id WHERE am.is_delete = 0 AND tl.is_delete = 0 AND tl.cm_id = ".$this->cm_id." GROUP BY am.id) as tl"] = 'tl.vou_acc_id = party_master.id';
 
             $data['searchCol'][] = "party_master.party_name";
             $data['searchCol'][] = "party_master.group_name";
@@ -112,22 +112,30 @@ class PartyModel extends MasterModel{
         if(!empty($data['system_code'])):
             $queryData['where']['party_master.system_code'] = $data['system_code'];
         endif;
+
+        /* Updated By :- Sweta @05-09-2023 */
+        if(!empty($data['party_name'])):
+            $queryData['where']['party_master.party_name'] = $data['party_name'];
+        endif;
         return $this->row($queryData);
     }
 
     public function getCurrencyList(){
 		$queryData['tableName'] = 'currency';
+        $queryData['cm_id'] = [0];
 		return $this->rows($queryData);
 	}
 
     public function getCountries(){
 		$queryData['tableName'] = $this->countries;
+        $queryData['cm_id'] = [0];
 		$queryData['order_by']['name'] = "ASC";
 		return $this->rows($queryData);
 	}
 
     public function getCountry($data){
 		$queryData['tableName'] = $this->countries;
+        $queryData['cm_id'] = [0];
 		$queryData['where']['id'] = $data['id'];
 		return $this->row($queryData);
 	}
@@ -135,12 +143,14 @@ class PartyModel extends MasterModel{
     public function getStates($data=array()){
         $queryData['tableName'] = $this->states;
 		$queryData['where']['country_id'] = $data['country_id'];
+        $queryData['cm_id'] = [0];
 		$queryData['order_by']['name'] = "ASC";
 		return $this->rows($queryData);
     }
 
     public function getState($data){
         $queryData['tableName'] = $this->states;
+        $queryData['cm_id'] = [0];
 		$queryData['where']['id'] = $data['id'];
 		return $this->row($queryData);
     }
@@ -148,6 +158,7 @@ class PartyModel extends MasterModel{
     public function getCities($data=array()){
         $queryData['tableName'] = $this->cities;
 		$queryData['where']['state_id'] = $data['state_id'];
+        $queryData['cm_id'] = [0];
 		$queryData['order_by']['name'] = "ASC";
 		return $this->rows($queryData);
     }
@@ -155,6 +166,7 @@ class PartyModel extends MasterModel{
     public function getCity($data){
         $queryData['tableName'] = $this->cities;
 		$queryData['where']['id'] = $data['id'];
+        $queryData['cm_id'] = [0];
 		return $this->row($queryData);
     }
 
@@ -198,7 +210,9 @@ class PartyModel extends MasterModel{
     public function checkDuplicate($data){
         $queryData['tableName'] = $this->partyMaster;
         $queryData['where']['party_name'] = $data['party_name'];
-		$queryData['where']['party_category'] = $data['party_category'];
+
+		if(!empty($data['party_category'])) 
+            $queryData['where']['party_category'] = $data['party_category']; 
         
         if(!empty($data['id']))
             $queryData['where']['id !='] = $data['id'];
@@ -350,6 +364,8 @@ class PartyModel extends MasterModel{
         $queryData['where']['group_code'] = $groupCode;
         if($defualtGroup == true)
             $queryData['where']['is_default'] = 1;
+
+        $queryData['cm_id'] = [0];
         $groupData = $this->row($queryData);
         return $groupData;
     }
@@ -358,6 +374,7 @@ class PartyModel extends MasterModel{
         $queryData = array();
         $queryData['tableName'] = $this->groupMaster;
         $queryData['customWhere'][] = $groupCode;
+        $queryData['cm_id'] = [0];
         $groupData = $this->rows($queryData);
         return $groupData;
     }
@@ -366,6 +383,7 @@ class PartyModel extends MasterModel{
         $queryData = array();
         $queryData['tableName'] = $this->groupMaster;
         $queryData['where']['id'] = $id;
+        $queryData['cm_id'] = [0];
         $groupData = $this->row($queryData);
         return $groupData;
     }
@@ -373,8 +391,20 @@ class PartyModel extends MasterModel{
     public function getGroupList(){
         $queryData = array();
         $queryData['tableName'] = $this->groupMaster;
+        $queryData['cm_id'] = [0];
         $groupData = $this->rows($queryData);
         return $groupData;
+    }
+
+    /* Created By :- Sweta @05-09-2023 */
+    public function partySearch(){
+		$data['tableName'] = $this->partyMaster;
+		$data['select'] = 'party_name';
+		$data['where']['party_category != '] = 4;
+		$result = $this->rows($data);
+		$searchResult = array();
+		foreach($result as $row){$searchResult[] = $row->party_name;}
+		return  $searchResult;
     }
 }
 ?>

@@ -37,7 +37,7 @@ class SalesInvoice extends MY_Controller{
         $this->data['partyList'] = $this->party->getPartyList(['party_category'=>1]);
         $this->data['itemList'] = $this->item->getItemList(['item_type'=>1]);
         $this->data['unitList'] = $this->item->itemUnits();
-        $this->data['hsnList'] = $this->hsnModel->getHSNList();
+        //$this->data['hsnList'] = $this->hsnModel->getHSNList();
         $this->data['salesAccounts'] = $this->party->getPartyList(['system_code'=>$this->salesTypeCodes]);
 		$this->data['taxList'] = $this->taxMaster->getActiveTaxList(2);
         $this->data['expenseList'] = $this->expenseMaster->getActiveExpenseList(2);
@@ -45,6 +45,13 @@ class SalesInvoice extends MY_Controller{
 		$this->data['ledgerList'] = $this->party->getPartyList(['group_code'=>["'DT'","'ED'","'EI'","'ID'","'II'"]]);
         $this->load->view($this->form,$this->data);
     }
+	
+	public function getHSNList(){
+        $result = $this->item->getHSNList();
+		$searchResult = array();
+		foreach($result as $row){ $searchResult[] = $row->hsn_code; }
+		$this->printJson($searchResult);
+	}
 
     public function save(){
         $data = $this->input->post();
@@ -94,7 +101,7 @@ class SalesInvoice extends MY_Controller{
                 endif;
             endforeach;
         endif;
-        
+	
         if(!empty($errorMessage)):
             $this->printJson(['status'=>0,'message'=>$errorMessage]);
         else:
@@ -110,7 +117,7 @@ class SalesInvoice extends MY_Controller{
         $this->data['partyList'] = $this->party->getPartyList(['party_category' => 1]);
         $this->data['itemList'] = $this->item->getItemList(['item_type'=>1]);
         $this->data['unitList'] = $this->item->itemUnits();
-        $this->data['hsnList'] = $this->hsnModel->getHSNList();
+        //$this->data['hsnList'] = $this->hsnModel->getHSNList();
         $this->data['salesAccounts'] = $this->party->getPartyList(['system_code'=>$this->salesTypeCodes]);
 		$this->data['taxList'] = $this->taxMaster->getActiveTaxList(2);
         $this->data['expenseList'] = $this->expenseMaster->getActiveExpenseList(2);

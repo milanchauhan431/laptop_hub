@@ -209,7 +209,21 @@
 
                             <div class="col-md-12 form-group">
 								<label for="item_id">Product Name</label>
-                                <select name="item_id" id="item_id" class="form-control select2 itemDetails itemOptions" data-res_function="resItemDetail">
+								<div class="float-right">	
+                                    <span class="dropdown float-right">
+                                        <a class="text-primary font-bold waves-effect waves-dark" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" datatip="Progress" flow="down">+ Add New</a>
+
+                                        <div class="dropdown-menu dropdown-menu-left user-dd animated flipInY" x-placement="start-left">
+                                            <div class="d-flex no-block align-items-center p-10 bg-primary text-white">ACTION</div>
+                                            
+                                            <!--<a class="dropdown-item addNew" href="javascript:void(0)" data-button="both" data-modal_id="modal-xl" data-function="addItem" data-controller="items" data-postdata='{"item_type" : 1 }' data-res_function="resItemMaster" data-js_store_fn="customStore" data-form_title="Add Finish Goods">+ Finish Good</a>-->
+                                            <a class="dropdown-item addNew" href="javascript:void(0)" data-button="both" data-modal_id="modal-xl" data-function="addItem" data-controller="items" data-postdata='{"item_type" : 2 }' data-res_function="resItemMaster" data-js_store_fn="customStore" data-form_title="Add Consumable">+ Consumable</a>
+                                            <a class="dropdown-item addNew" href="javascript:void(0)" data-button="both" data-modal_id="modal-xl" data-function="addItem" data-controller="items" data-postdata='{"item_type" : 3 }' data-res_function="resItemMaster" data-js_store_fn="customStore" data-form_title="Add Raw Material">+ Raw Material </a>
+                                            
+                                        </div>
+                                    </span>
+                                </div>
+                                <select name="item_id" id="item_id" class="form-control select2 itemDetails itemOptions" data-res_function="resItemDetail" data-item_type="2,3">
                                     <option value="">Select Product Name</option>
                                     <?=getItemListOption($itemList)?>
                                 </select>
@@ -236,10 +250,11 @@
                             </div>
 							<div class="col-md-4 form-group">
                                 <label for="hsn_code">HSN Code</label>
-                                <select name="hsn_code" id="hsn_code" class="form-control select2">
+                                <input type="text" name="hsn_code" id="hsn_code" class="form-control numericOnly req" value="" />
+                                <!--<select name="hsn_code" id="hsn_code" class="form-control select2">
                                     <option value="">Select HSN Code</option>
                                     <?=getHsnCodeListOption($hsnList)?>
-                                </select>
+                                </select>-->
                             </div>
                             <div class="col-md-4 form-group">
                                 <label for="gst_per">GST Per.(%)</label>

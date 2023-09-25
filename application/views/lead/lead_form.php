@@ -5,24 +5,6 @@
             <input type="hidden" name="entry_type" id="entry_type" value="1">
             <input type="hidden" name="status" id="status" value="<?=(!empty($dataRow->status))?$dataRow->status:0?>">
 
-            <div class="col-md-6 form-group">
-                <label for="party_id">Customer</label>
-                <span class="dropdown float-right m-r-5">
-                    <a class="text-primary font-bold waves-effect waves-dark" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" datatip="Progress" flow="down">+ Add New</a>
-
-                    <div class="dropdown-menu dropdown-menu-left user-dd animated flipInY" x-placement="start-left">
-                        <div class="d-flex no-block align-items-center p-10 bg-primary text-white">ACTION</div>
-                        
-                        <a class="dropdown-item addNew" href="javascript:void(0)" data-button="both" data-modal_id="modal-xl" data-function="addParty" data-controller="parties" data-postdata='{"party_category" : 1,"party_type":0 }' data-res_function="resPartyMaster" data-js_store_fn="customStore" data-form_title="Add Customer">+ Customer</a>
-                        
-                    </div>
-                </span>
-                <select class="form-control select2 partyOptions" name="party_id" id="party_id" data-res_function="resPartyDetail" data-party_category="1" data-party_type="0,1">
-                    <option value="">Select Customer</option>
-                    <?=getPartyListOption($customerList,((!empty($dataRow->party_id))?$dataRow->party_id:0))?>
-                </select>
-            </div>
-
             <div class="col-md-3 form-group">
                 <label for="lead_date">Approch Date</label>
                 <input type="date" name="lead_date" id="lead_date" max="<?=date("Y-m-d")?>" class="form-control req" value="<?=(!empty($dataRow->lead_date))?$dataRow->lead_date:date("Y-m-d")?>" />
@@ -41,19 +23,19 @@
                 </select>
             </div>
 
-            <div class="col-md-4 form-group">
+            <div class="col-md-3 form-group">
                 <label for="mode">Mode</label>
                 <select name="mode" id="mode" class="form-control req select2">
                     <?php
                         foreach($this->appointmentMode as $key=>$row):
-							$selected = (!empty($dataRow->mode) && $dataRow->mode == $key)?"selected":"";
+                            $selected = (!empty($dataRow->mode) && $dataRow->mode == $key)?"selected":"";
                             echo '<option value="'.$key.'" '.$selected .'>'.$row.'</option>';
                         endforeach;
                     ?>
                 </select>
             </div>
 
-			<div class="col-md-4 form-group">
+			<div class="col-md-3 form-group">
                 <label for="sales_executive">Sales Executives</label>
                 <select class="form-control select2" name="sales_executive" id="sales_executive">
                     <option value="">Select Sales Executive</option>
@@ -67,14 +49,25 @@
                     }
                     ?>
                 </select>
+            </div>            
+
+            <div class="col-md-3 form-group">
+                <label for="party_name">Customer</label>
+                <input type="text" name="party_name" id="party_name" value="<?=(!empty($dataRow->party_name))?$dataRow->party_name:""?>" class="form-control req" />
+                <input type="hidden" name="party_id" id="party_id" value="<?=(!empty($dataRow->party_id))?$dataRow->party_id:""?>" />
             </div>
-            
-            <div class="col-md-4 form-group hidden">
+
+            <div class="col-md-3 form-group">
                 <label for="contact_person">Contact Person</label>
                 <input type="text" name="contact_person" id="contact_person" class="form-control" value="<?=(!empty($dataRow->contact_person))?$dataRow->contact_person:""?>">
             </div>
 
-            <div class="col-md-4 form-group <?=(!empty($dataRow->id))?"hidden":""?>">
+            <div class="col-md-3 form-group">
+                <label for="contact_no">Contact No.</label>
+                <input type="text" name="contact_no" id="contact_no" class="form-control" value="<?=(!empty($dataRow->contact_no))?$dataRow->contact_no:""?>">
+            </div>
+
+            <div class="col-md-3 form-group">
                 <label for="next_fup_date">Next Follow UP Date</label>
                 <input type="date" name="next_fup_date" id="appointment_next_fup_datedate" class="form-control" value="<?=(!empty($dataRow->next_fup_date))?$dataRow->next_fup_date:getFyDate()?>" min="<?=getFyDate()?>">
             </div>
@@ -89,3 +82,39 @@
         </div>
     </div>    
 </form>
+<script>
+    $(document).ready(function(){
+
+        $('#party_name').typeahead({
+            source: function(query, result)
+            {
+                $.ajax({
+                    url:base_url + controller + '/partySearch',
+                    method:"POST",
+                    global:false,
+                    data:{query:query},
+                    dataType:"json",
+                    success:function(data){
+                        result($.map(data, function(party){ return party; }));
+                    }
+                });
+            }
+        });
+        
+        $(document).on('change','#party_name',function(){
+            var party_name = $(this).val();
+            $.ajax({
+                    url:base_url + controller + '/getPartyData',
+                    data:{party_name:party_name},
+                    method:"POST",
+                    dataType:"json",
+                    success:function(data){
+                        $("#sales_executive").html(data.sales_executive);
+                        $("#sales_executive").select2();
+                        $("#contact_person").val(data.contact_person);
+                        $("#contact_no").val(data.contact_no);
+                    }
+                });
+        });
+	});
+</script>

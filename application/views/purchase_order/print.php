@@ -20,7 +20,7 @@
 						<td style="width:33%;" class="fs-18 text-left">
 							GSTIN: <?=$companyData->company_gst_no?>
 						</td>
-						<td style="width:33%;" class="fs-18 text-center">Sales Order</td>
+						<td style="width:33%;" class="fs-18 text-center">Purchase Order</td>
 						<td style="width:33%;" class="fs-18 text-right"></td>
 					</tr>
 				</table>               

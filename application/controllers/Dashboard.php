@@ -4,13 +4,11 @@ class Dashboard extends MY_Controller{
 	private $hbd_msg = 'The warmest wishes to a great member of our team. May your special day be full of happiness, fun and cheer!\r\n-APPLIED AUTO PARTS PVT LTD';
 	public function __construct()	{
 		parent::__construct();
-		$this->isLoggedin();
 		$this->data['headData']->pageTitle = "Dashboard";
 		$this->data['headData']->controller = "dashboard";
 	}
 	
-	public function index(){
-	    
+	public function index(){	    
 		$this->data['lastSyncedAt'] = "";
 		//$this->data['lastSyncedAt'] = $this->biometric->getDeviceData()[0]->last_sync_at;
 		$this->data['lastSyncedAt'] = (!empty($this->data['lastSyncedAt'])) ? date('j F Y, g:i a',strtotime($this->data['lastSyncedAt'])) : "";

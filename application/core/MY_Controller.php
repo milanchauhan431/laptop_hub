@@ -121,6 +121,7 @@ class MY_Controller extends CI_Controller{
 		$this->userName = $this->session->userdata('user_name');
 		$this->userRole = $this->session->userdata('role');
 		$this->userRoleName = $this->session->userdata('roleName');
+		$this->cm_id = $this->session->userdata('cm_id');
 
 		$this->RTD_STORE = $this->session->userdata('RTD_STORE');
 
@@ -138,6 +139,7 @@ class MY_Controller extends CI_Controller{
 			$this->{$modelName}->userName = $this->userName;
 			$this->{$modelName}->userRole = $this->userRole;
 			$this->{$modelName}->userRoleName = $this->userRoleName;
+			$this->{$modelName}->cm_id = $this->cm_id;
 
 			$this->{$modelName}->RTD_STORE = $this->RTD_STORE;
 		endforeach;

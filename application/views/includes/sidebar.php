@@ -1,6 +1,6 @@
 <aside class="left-sidebar">
     <!-- Sidebar scroll-->
-    <div class="scroll-sidebar">
+    <div class="scroll-sidebar" style="padding-top: 50px;">
         <!-- Sidebar navigation-->
         <nav class="sidebar-nav">
             <ul id="sidebarnav">
