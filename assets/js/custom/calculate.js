@@ -114,7 +114,7 @@ function gstin(){
 				$("#tax_class").val("PURGSTACC");
 			}
 		}else{
-			gst_type = 2;stateCode = 96;
+			gst_type = 2;//stateCode = 96;
 			if(inv_type == "SALES"){
 				$('#sp_acc_id').find('option[data-tax_class="SALESIGSTACC"]').prop('selected', true);
 				$("#tax_class").val("SALESIGSTACC");

@@ -1,6 +1,7 @@
 <?php 
 class PaymentVoucherModel extends MasterModel{
 	private $transMain = "trans_main";
+    private $transDetails = "trans_details";
 	private $transLedger = "trans_ledger";
 
 	public function getDtRows($data){
@@ -37,14 +38,42 @@ class PaymentVoucherModel extends MasterModel{
 
     public function getPartyInvoiceList($data){
         $queryData['tableName'] = $this->transMain;
-        $queryData['select'] = "id,trans_number,(net_amount - rop_amount) as due_amount";
-        $queryData['where']['party_id'] = $data['party_id'];
-        $queryData['where']['vou_name_s'] = $data['vou_name_s'];
-        if(empty($data['ref_id'])):
-            $queryData['where']['(net_amount - rop_amount) >'] = 0;
-        else:
-            $queryData['cusomWhere'][] = "((net_amount - rop_amount) > 0 OR id = ".$data['ref_id'].")";
+        $queryData['select'] = "trans_main.id,trans_main.trans_number,(trans_main.net_amount - trans_main.rop_amount) as due_amount";
+
+        if(!empty($data['ref_id'])):
+            $queryData['select'] = "trans_main.id,trans_main.trans_number,(trans_main.net_amount - (trans_main.rop_amount - ifnull(blr.amount,0))) as due_amount";
+
+            $queryData['leftJoin']["(SELECT i_col_1 as inv_id, SUM(d_col_1) as amount FROM trans_details WHERE table_name = 'trans_main' AND description = 'PAYMENT BILL WISE DETAILS' AND cm_id = ".$this->cm_id." AND is_delete = 0 GROUP BY i_col_1) as blr"] = "trans_main.id = blr.inv_id";
         endif;
+
+        if(!empty($data['party_id'])):
+            $queryData['where']['trans_main.party_id'] = $data['party_id'];
+        endif;
+
+        if(!empty($data['vou_name_s'])):
+            $queryData['where_in']['trans_main.vou_name_s'] = $data['vou_name_s'];
+        endif;
+
+        if(empty($data['ref_id'])):
+            $queryData['where']['(trans_main.net_amount - trans_main.rop_amount) >'] = 0;
+        elseif(!empty($data['ref_id'])):
+            $queryData['cusomWhere'][] = "((trans_main.net_amount - trans_main.rop_amount) > 0 OR trans_main.id IN (".$data['ref_id']."))";
+        endif;
+
+        if(!empty($data['only_ref_id'])):
+            $queryData['where_in']['trans_main.id'] = $data['only_ref_id'];
+        endif;
+
+        return $this->rows($queryData);
+    }
+
+    public function getPaymentRefDetails($data){
+        $queryData = array();
+        $queryData['tableName'] = $this->transDetails;
+        $queryData['select'] = "id,main_ref_id,i_col_1 as inv_id,d_col_1 as amount";
+        $queryData['where']['table_name'] = $this->transMain;
+        $queryData['where']['description'] = "PAYMENT BILL WISE DETAILS";
+        $queryData['where']['main_ref_id'] = $data['id'];
         return $this->rows($queryData);
     }
 
@@ -55,25 +84,63 @@ class PaymentVoucherModel extends MasterModel{
             if(!empty($data['id'])):
                 $vouData = $this->getVoucher($data['id']);
                 if(!empty($vouData->ref_id)):
-                    $setData = array();
+                    $refList = $this->getPaymentRefDetails(['id'=>$data['id']]);
+                    foreach($refList as $row):
+                        $setData = array();
+                        $setData['tableName'] = $this->transMain;
+                        $setData['where']['id'] = $row->inv_id;
+                        $setData['set']['rop_amount'] = 'rop_amount, - '.$row->amount;
+                        $this->setValue($setData);
+
+                        $this->remove($this->transDetails,['id'=>$row->id]);
+                    endforeach;
+
+                    /* $setData = array();
                     $setData['tableName'] = $this->transMain;
                     $setData['where']['id'] = $vouData->ref_id;
                     $setData['set']['rop_amount'] = 'rop_amount, - '.$vouData->net_amount;
-                    $this->setValue($setData);
+                    $this->setValue($setData); */
                 endif;
             endif;
 
 			$data['doc_date'] = (!empty($data['doc_date']))?$data['doc_date']:null;
 
 			$result = $this->store($this->transMain,$data,'Voucher');
-			$data['id'] = $result['id'];	
+			$data['id'] = $result['id'];
 
             if(!empty($data['ref_id'])):
-                $setData = array();
+                $invoiceList = $this->getPartyInvoiceList(['only_ref_id'=>$data['ref_id']]);
+                
+                $totalAmount = $data['net_amount'];
+                foreach($invoiceList as $row):
+                    $dueAmt = ($totalAmount > $row->due_amount)?$row->due_amount:$totalAmount;
+
+                    $setData = array();
+                    $setData['tableName'] = $this->transMain;
+                    $setData['where']['id'] = $row->id;
+                    $setData['set']['rop_amount'] = 'rop_amount, + '.$dueAmt;
+                    $this->setValue($setData);
+
+                    $totalAmount -= $dueAmt;
+
+                    $refDetails = [
+                        'id' => '',
+                        'table_name' => $this->transMain,
+                        'description' => 'PAYMENT BILL WISE DETAILS',
+                        'main_ref_id' => $result['id'],
+                        'i_col_1' => $row->id, // invoice id
+                        'd_col_1' => $dueAmt // received/paid amount against invoice
+                    ];
+                    $this->store($this->transDetails,$refDetails);
+
+                    if($totalAmount <= 0): break; endif;
+                endforeach;
+
+                /* $setData = array();
                 $setData['tableName'] = $this->transMain;
                 $setData['where']['id'] = $data['ref_id'];
                 $setData['set']['rop_amount'] = 'rop_amount, + '.$data['net_amount'];
-                $this->setValue($setData);
+                $this->setValue($setData); */
             endif;
 
 			$this->transMainModel->ledgerEffects($data);
@@ -103,11 +170,22 @@ class PaymentVoucherModel extends MasterModel{
 
             $vouData = $this->getVoucher($id);
             if(!empty($vouData->ref_id)):
-                $setData = array();
+                $refList = $this->getPaymentRefDetails(['id'=>$id]);
+                foreach($refList as $row):
+                    $setData = array();
+                    $setData['tableName'] = $this->transMain;
+                    $setData['where']['id'] = $row->inv_id;
+                    $setData['set']['rop_amount'] = 'rop_amount, - '.$row->amount;
+                    $this->setValue($setData);
+
+                    $this->remove($this->transDetails,['id'=>$row->id]);
+                endforeach;
+
+                /* $setData = array();
                 $setData['tableName'] = $this->transMain;
                 $setData['where']['id'] = $vouData->ref_id;
                 $setData['set']['rop_amount'] = 'rop_amount, - '.$vouData->net_amount;
-                $this->setValue($setData);
+                $this->setValue($setData); */
             endif;
 			
 			$result= $this->trash($this->transMain,['id'=>$id],'PaymentVoucher');

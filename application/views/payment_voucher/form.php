@@ -45,10 +45,11 @@
 
             <div class="col-md-4 form-group">
                 <label>Inv. Referance</label>
-                <select name="ref_id" id="ref_id" class="form-control select2" data-selected="<?=(!empty($dataRow->ref_id))?$dataRow->ref_id:""?>">
-                    <option value="">Select Reference</option>
+                <select id="select_ref_id"  data-input_id="ref_id" class="form-control jp_multiselect"  multiple="multiple">
+                    <!-- <option value="">Select Reference</option> -->
                     <?=(!empty($optionsHtml)?$optionsHtml:"")?>
                 </select>
+                <input type="hidden" name="ref_id" id="ref_id" value="<?=(!empty($dataRow->ref_id))?$dataRow->ref_id:""?>">
             </div>
 
             <div class="col-md-4 form-group">
@@ -89,8 +90,9 @@
 </form>
 <script>
 $(document).ready(function(){
-
-    $(".partyDetails").trigger('change');
+    <?php if(!empty($dataRow->id)): ?>
+        $(".partyDetails").trigger('change');
+    <?php endif; ?>
 	
 	$(document).on("change","#vou_name_s",function(){       
         var vou_name_s = $("#vou_name_s").val();
@@ -113,12 +115,12 @@ $(document).ready(function(){
     });
 
     $(document).on('change',"#opp_acc_id",function(){
-        $("#ref_id").html(''); $("#ref_id").select2();
+        $("#select_ref_id").html(''); reInitMultiSelect();//$("#ref_id").select2();
         $(".vou_name_s").html("");
         $(".opp_acc_id").html("");
         var vou_name_s = $("#vou_name_s").val();
         var party_id = $(this).val();
-        var ref_id = $("#ref_id").data('selected');
+        var ref_id = $("#ref_id").val();//$("#ref_id").data('selected');
         if(vou_name_s != '' && party_id != ''){
 		    $.ajax({
 				url : base_url + controller + '/getReference',
@@ -126,8 +128,9 @@ $(document).ready(function(){
 				data:{vou_name_s:vou_name_s,party_id:party_id,ref_id:ref_id},
 				dataType:'json',
 				success:function(response){                    
-                    $("#ref_id").html(response.referenceData);
-                    $("#ref_id").select2();
+                    $("#select_ref_id").html(response.referenceData);
+                    //$("#ref_id").select2();
+                    reInitMultiSelect();
 				}
 			}); 
         }else{
@@ -140,6 +143,13 @@ $(document).ready(function(){
         }        
     });
     
+    $(document).on('click change',".form-check-input",function(){
+        var amountSum = 0;
+        $.each($("#select_ref_id option:selected"),function(){  
+            amountSum += parseFloat($(this).data('due_amount')) || 0;
+        });
+        $("#net_amount").val(amountSum);
+    });
 });
 
 function resOppAcc(response=""){

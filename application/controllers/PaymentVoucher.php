@@ -55,13 +55,15 @@ class PaymentVoucher extends MY_Controller{
     public function getReference($data=array()){
 		$postData = (!empty($data))?$data:$this->input->post();
 
-        $postData['vou_name_s'] = (($postData['vou_name_s'] == "BCRct")?"Sale":"Purc");
+        $postData['vou_name_s'] = (($postData['vou_name_s'] == "BCRct")?"'Sale','C.N.','D.N.','GInc'":"'Purc','C.N.','D.N.','GExp'");
 		$referenceData = $this->paymentVoucher->getPartyInvoiceList($postData);		
 		
-		$optionsHtml = '<option value="">Select Reference</option>';
+		$optionsHtml = '';//'<option value="">Select Reference</option>';
+		$postData['ref_id'] = explode(",",$postData['ref_id']);
 		foreach($referenceData as $row):
-            $selected = (!empty($postData['ref_id']) && $row->id == $postData['ref_id'])?"selected":"";
-			$optionsHtml .= '<option value="'.$row->id.'" '.$selected.'>'.$row->trans_number.'</option>';
+            //$selected = (!empty($postData['ref_id']) && $row->id == $postData['ref_id'])?"selected":"";
+            $selected = (!empty($postData['ref_id']) && in_array($row->id,$postData['ref_id']))?"selected":"";
+			$optionsHtml .= '<option value="'.$row->id.'" data-due_amount="'.$row->due_amount.'" '.$selected.'>'.$row->trans_number.'</option>';
 		endforeach;
 		
         if(!empty($data)):

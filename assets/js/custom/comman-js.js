@@ -153,13 +153,14 @@ $(document).ready(function(){
                 $("#"+modalId+" .modal-footer .btn-save").show();
             }
 
+			$("#"+formId+" .error").html("");
 			initModalSelect();
 			$(".single-select").comboSelect();
 	        $('.select2').select2({with:null});
 			//$('.model-select2').select2({ dropdownParent: $('.model-select2').parent() });
 			$("#processDiv").hide();
 			$("#"+modalId+" .scrollable").perfectScrollbar({suppressScrollX: true});
-			setTimeout(function(){ initMultiSelect();setPlaceHolder(); }, 5);
+			initMultiSelect();setPlaceHolder();
         });
     });	
 
