@@ -14,7 +14,7 @@
 
             <div class="col-md-3 form-group">
                 <label for="trans_date">GI Date</label>
-                <input type="datetime-local" name="trans_date" id="trans_date" class="form-control" max="<?=getFyDate("Y-m-d H:i:s")?>" value="<?=(!empty($gateInwardData->trans_date))?$gateInwardData->trans_date:getFyDate("Y-m-d H:i:s")?>">
+                <input type="datetime-local" name="trans_date" id="trans_date" class="form-control fyDates" max="<?=getFyDate("Y-m-d H:i:s")?>" value="<?=(!empty($gateInwardData->trans_date))?$gateInwardData->trans_date:getFyDate("Y-m-d H:i:s")?>">
             </div>
 
             <div class="col-md-6 form-group">
