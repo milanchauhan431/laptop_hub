@@ -323,9 +323,9 @@ function resPartyDetail(response = ""){
     if(response != ""){
         var partyDetail = response.data.partyDetail;
         $("#party_name").val(partyDetail.party_name);
-		$("#master_t_col_1").val(partyDetail.delivery_contact_person);
-        $("#master_t_col_2").val(partyDetail.delivery_contact_no);
-        $("#master_t_col_3").val(partyDetail.delivery_address);
+		$("#master_t_col_1").val(partyDetail.contact_person);
+        $("#master_t_col_2").val(partyDetail.party_mobile);
+        $("#master_t_col_3").val(partyDetail.party_address);
 		
         var gstDetails = response.data.gstDetails;var i = 1;
         $.each(gstDetails,function(index,row){  

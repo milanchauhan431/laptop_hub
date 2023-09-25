@@ -251,12 +251,12 @@ $(document).ready(function(){
 	
 	$(document).ajaxStart(function(){
 		$('.ajaxModal').show();$('.centerImg').show();$(".error").html("");
-		$('.btn-save').attr('disabled','disabled');
+		$('.save-form').attr('disabled','disabled');
 	});
 	
 	$(document).ajaxComplete(function(){
 		$('.ajaxModal').hide();$('.centerImg').hide();
-		$('.btn-save').removeAttr('disabled');
+		$('.save-form').removeAttr('disabled');
 		checkPermission();
 	});
 	
@@ -313,8 +313,9 @@ $(document).ready(function(){
 		lDate = Date.parse(maxAttr);
 		cDate = Date.parse(date);
 
-		$("."+inputName).html("");
+		$("."+inputName).html("");$('.save-form').removeAttr('disabled');
 		if((cDate < fDate || cDate > lDate)) {
+			$('.save-form').attr('disabled','disabled');
 			$("."+inputName).html("Please select valid Date.");
 			$(this).val("");
 		}
