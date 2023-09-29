@@ -19,6 +19,10 @@ class StoreReportModel extends MasterModel{
             endif;
         endif;
 
+        if(!empty($data['cm_id'])):
+            $queryData['cm_id'] = $data['cm_id'];
+        endif;
+
         $result = $this->rows($queryData);
         return $result;
     }

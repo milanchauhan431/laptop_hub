@@ -33,7 +33,7 @@ class GateEntry extends MY_Controller{
         $this->data['transportList'] = $this->transport->getTransportList();
         $this->data['vehicleTypeList'] = $this->vehicleType->getVehicleTypeList();
         $this->data['partyList'] = $this->party->getPartyList(['party_category'=>[1,2,3]]);
-        $this->data['itemList'] = $this->item->getItemList(['item_type'=>[2,3]]);
+        $this->data['itemList'] = $this->item->getItemList(['item_type'=>[1,2,3]]);
         $this->data['trans_no'] = $this->transMainModel->getMirNextNo();
         $this->data['trans_prefix'] = $this->data['entryData']->trans_prefix;//n2y(getFyDate("Y"));
         $this->data['trans_number'] = $this->data['trans_prefix'].sprintf("%04d",$this->data['trans_no']);
@@ -91,7 +91,7 @@ class GateEntry extends MY_Controller{
         $this->data['transportList'] = $this->transport->getTransportList();
         $this->data['vehicleTypeList'] = $this->vehicleType->getVehicleTypeList();
         $this->data['partyList'] = $this->party->getPartyList(['party_category'=>[1,2,3]]);
-        $this->data['itemList'] = $this->item->getItemList(['item_type'=>[2,3]]);
+        $this->data['itemList'] = $this->item->getItemList(['item_type'=>[1,2,3]]);
         $this->data['dataRow'] = $this->gateEntry->getGateEntry($id);
         $this->load->view($this->form,$this->data);
     }

@@ -79,6 +79,11 @@ class DbUtility extends CI_Controller{
         endif;        
     }
 
+    /* 
+    *   Created BY : Milan Chauhan
+    *   Created AT : 18-08-2023
+    *   Note : Load Form for sync live database
+    */
     public function dbForm(){
         $this->load->view("db_form");
     }
@@ -146,7 +151,96 @@ class DbUtility extends CI_Controller{
         else:
             print json_encode(['status'=>0,'message'=>'Something went wrong. Error #: you cant sync. because you are in live project.']);exit;
         endif;
-    }    
+    } 
+    
+    /* 
+    *   Created BY : Milan Chauhan
+    *   Created AT : 27-09-2023
+    *   Post Data : password,db_name,querys
+    *   Note : Get SQL Querys from Local and Execute in Live Database
+    */
+    public function performSqlQuerys(){
+        $data = json_decode(file_get_contents('php://input'), true);
+        $password = $data['password'];
+        $db_name = $data['db_name'];
+
+        if($password == "Nbt-".date("dmY")):
+            $NAME=$this->db->database;
+            if($NAME == SERVER_PREFIX.$db_name):
+                try{
+                    $this->db->trans_begin();
+
+                    $this->db->query($data['querys']);
+
+                    if ($this->db->trans_status() !== FALSE):
+                        $this->db->trans_commit();
+                        print json_encode(['status'=>1,'message'=>"SQL Querys Executed successfully."]);exit;
+                    endif;
+                }catch(\Throwable $e){
+                    $this->db->trans_rollback();
+                    print json_encode(['status'=>2,'message'=>"somthing is wrong. Error : ".$e->getMessage()]);exit;
+                }
+            else:
+                print json_encode(['status'=>0,'message'=>"Invalid DB name."]);exit;
+            endif;
+        else:
+            print json_encode(['status'=>0,'message'=>"Invalid Password."]);exit;
+        endif;    
+    }
+
+    /* 
+    *   Created BY : Milan Chauhan
+    *   Created AT : 27-09-2023
+    *   Note : Load Form for sql querys execution local to live
+    */
+    public function loadQueryForm(){
+        $this->load->view("sql_query_form");
+    }
+
+    /* 
+    *   Created BY : Milan Chauhan
+    *   Created AT : 27-09-2023
+    *   Post Data : password,db_name,querys
+    *   Note : Send SQL Querys from Local and Execute in Live Database
+    */
+    public function executeSqlQuerys(){
+        if($_SERVER['HTTP_HOST'] == 'localhost'):
+            $data = $this->input->post();
+            $data['db_name'] = MASTER_DB;
+
+            $curlSync = curl_init();
+            curl_setopt_array($curlSync, array(
+                CURLOPT_URL => LIVE_LINK."dbUtility/performSqlQuerys",
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_ENCODING => "",
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => "POST",
+                CURLOPT_HTTPHEADER => array('Content-Type: application/json'),
+                CURLOPT_POSTFIELDS => json_encode($data)
+            ));
+
+            $response = curl_exec($curlSync);
+            $error = curl_error($curlSync);
+            curl_close($curlSync);
+
+            if(!empty($error)):
+                print json_encode(['status'=>0,'message'=>'Somthing went wrong. cURL Error #: '. $error]);exit;
+            else:
+                $response = json_decode($response);	
+                
+                if($response->status == 0):
+                    print json_encode(['status'=>0,'message'=>'Somthing went wrong. Error #: '. $response->message]);exit;
+                else:
+                    print json_encode(['status'=>1,'message'=>'SQL Querys Executed successfully.']);exit;                    
+                endif;
+            endif;   
+        else:
+            print json_encode(['status'=>0,'message'=>'Something went wrong. Error #: you cant sync. because you are in live project.']);exit;
+        endif;
+    }
 
     /* 
     *   Created By : Milan Chauhan

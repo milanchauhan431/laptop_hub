@@ -2,7 +2,6 @@
 class StoreReport extends MY_Controller{
     public function __construct(){
 		parent::__construct();
-		$this->isLoggedin();
 		$this->data['headData']->pageTitle = "Store Report";
 		$this->data['headData']->controller = "reports/storeReport";
     }

@@ -34,8 +34,8 @@ class PurchaseInvoice extends MY_Controller{
         $this->data['trans_prefix'] = $this->data['entryData']->trans_prefix;
         $this->data['trans_no'] = $this->data['entryData']->trans_no;
         $this->data['trans_number'] = $this->data['trans_prefix'].$this->data['trans_no'];
-        $this->data['partyList'] = $this->party->getPartyList(['party_category'=>[2,3]]);
-        $this->data['itemList'] = $this->item->getItemList(['item_type'=>"2,3"]);
+        $this->data['partyList'] = $this->party->getPartyList(['party_category'=>[1,2,3]]);
+        $this->data['itemList'] = $this->item->getItemList(['item_type'=>"1,2,3"]);
         $this->data['unitList'] = $this->item->itemUnits();
         $this->data['hsnList'] = $this->hsnModel->getHSNList();
         $this->data['purchaseAccounts'] = $this->party->getPartyList(['system_code'=>$this->purchaseTypeCodes]);
@@ -72,8 +72,8 @@ class PurchaseInvoice extends MY_Controller{
     public function edit($id){
         $this->data['dataRow'] = $dataRow = $this->purchaseInvoice->getPurchaseInvoice(['id'=>$id,'itemList'=>1]);
         $this->data['gstinList'] = $this->party->getPartyGSTDetail(['party_id' => $dataRow->party_id]);
-        $this->data['partyList'] = $this->party->getPartyList(['party_category'=>[2,3]]);
-        $this->data['itemList'] = $this->item->getItemList(['item_type'=>"2,3"]);
+        $this->data['partyList'] = $this->party->getPartyList(['party_category'=>[1,2,3]]);
+        $this->data['itemList'] = $this->item->getItemList(['item_type'=>"1,2,3"]);
         $this->data['unitList'] = $this->item->itemUnits();
         $this->data['hsnList'] = $this->hsnModel->getHSNList();
         $this->data['purchaseAccounts'] = $this->party->getPartyList(['system_code'=>$this->purchaseTypeCodes]);
