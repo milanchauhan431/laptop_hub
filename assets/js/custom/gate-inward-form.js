@@ -1,3 +1,4 @@
+var itemCount = 0;
 $(document).ready(function(){
     $("#party_id").trigger('change');
     $(document).on('change',"#party_id",function(){
@@ -176,11 +177,11 @@ function AddBatchRow(data){
 	cell.html(countRow);
 	cell.attr("style","width:5%;");	
 
-    var poIdInput = $("<input/>",{type:"hidden",name:"batchData["+countRow+"][po_id]",value:data.po_id});
-    var poTransIdInput = $("<input/>",{type:"hidden",name:"batchData["+countRow+"][po_trans_id]",value:data.po_trans_id});
-    var itemIdInput = $("<input/>",{type:"hidden",name:"batchData["+countRow+"][item_id]",value:data.item_id});
-    var itemTypeInput = $("<input/>",{type:"hidden",name:"batchData["+countRow+"][item_type]",value:data.item_type});
-    var itemStockInput = $("<input/>",{type:"hidden",name:"batchData["+countRow+"][item_stock_type]",value:data.item_stock_type});
+    var poIdInput = $("<input/>",{type:"hidden",name:"batchData["+itemCount+"][po_id]",value:data.po_id});
+    var poTransIdInput = $("<input/>",{type:"hidden",name:"batchData["+itemCount+"][po_trans_id]",value:data.po_trans_id});
+    var itemIdInput = $("<input/>",{type:"hidden",name:"batchData["+itemCount+"][item_id]",value:data.item_id});
+    var itemTypeInput = $("<input/>",{type:"hidden",name:"batchData["+itemCount+"][item_type]",value:data.item_type});
+    var itemStockInput = $("<input/>",{type:"hidden",name:"batchData["+itemCount+"][item_stock_type]",value:data.item_stock_type});
     var cell = $(row.insertCell(-1));
 	cell.html(data.po_number);
 	cell.attr("style","width:5%;");	
@@ -194,33 +195,33 @@ function AddBatchRow(data){
 	cell.html(data.item_name);
 	cell.attr("style","width:5%;");	
 
-    var mirIdInput = $("<input/>",{type:"hidden",name:"batchData["+countRow+"][mir_id]",value:data.mir_id});
-    var mirTransIdInput = $("<input/>",{type:"hidden",name:"batchData["+countRow+"][id]",value:data.id});
-    /* var locationIdInput = $("<input/>",{type:"hidden",name:"batchData["+countRow+"][location_id]",value:data.location_id});
+    var mirIdInput = $("<input/>",{type:"hidden",name:"batchData["+itemCount+"][mir_id]",value:data.mir_id});
+    var mirTransIdInput = $("<input/>",{type:"hidden",name:"batchData["+itemCount+"][id]",value:data.id});
+    /* var locationIdInput = $("<input/>",{type:"hidden",name:"batchData["+itemCount+"][location_id]",value:data.location_id});
     cell = $(row.insertCell(-1));
 	cell.html(data.location_name); */
     cell.append(mirIdInput);
     cell.append(mirTransIdInput);
 	//cell.append(locationIdInput);
 
-    /* var batchNoInput = $("<input/>",{type:"hidden",name:"batchData["+countRow+"][batch_no]",value:data.batch_no});
+    /* var batchNoInput = $("<input/>",{type:"hidden",name:"batchData["+itemCount+"][batch_no]",value:data.batch_no});
     cell = $(row.insertCell(-1));
 	cell.html(data.batch_no);
     cell.append(batchNoInput); */
 
-    var heatNoInput = $("<input/>",{type:"hidden",name:"batchData["+countRow+"][heat_no]",value:data.heat_no});
+    var heatNoInput = $("<input/>",{type:"hidden",name:"batchData["+itemCount+"][heat_no]",value:data.heat_no});
     /* cell = $(row.insertCell(-1));
 	cell.html(data.heat_no); */
     cell.append(heatNoInput);
     
-    var millHeatNoInput = $("<input/>",{type:"hidden",name:"batchData["+countRow+"][mill_heat_no]",value:data.mill_heat_no});
+    var millHeatNoInput = $("<input/>",{type:"hidden",name:"batchData["+itemCount+"][mill_heat_no]",value:data.mill_heat_no});
     /* cell = $(row.insertCell(-1));
 	cell.html(data.mill_heat_no); */
     cell.append(millHeatNoInput);
 
-    var batchQtyInput = $("<input/>",{type:"hidden",name:"batchData["+countRow+"][qty]",value:data.qty});   
-    var discPerInput = $("<input/>",{type:"hidden",name:"batchData["+countRow+"][disc_per]",value:data.disc_per});   
-    var priceInput = $("<input/>",{type:"hidden",name:"batchData["+countRow+"][price]",value:data.price});   
+    var batchQtyInput = $("<input/>",{type:"hidden",name:"batchData["+itemCount+"][qty]",value:data.qty});   
+    var discPerInput = $("<input/>",{type:"hidden",name:"batchData["+itemCount+"][disc_per]",value:data.disc_per});   
+    var priceInput = $("<input/>",{type:"hidden",name:"batchData["+itemCount+"][price]",value:data.price});   
     cell = $(row.insertCell(-1));
 	cell.html(data.qty);
     cell.append(batchQtyInput);
@@ -243,6 +244,8 @@ function AddBatchRow(data){
     }
     cell.attr("class","text-center");
     cell.attr("style","width:10%;");
+
+    itemCount++;
 }
 
 function batchRemove(button){
