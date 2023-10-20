@@ -12,7 +12,7 @@
                             <th>Received Qty</th>
                             <th style="width:10%;">Ok Qty</th>
                             <th style="width:10%;">Reject Qty</th>
-                            <th style="width:10%;">Short Qty</th>
+                            <th style="width:12%;">Repairable Qty</th>
                         </tr>
                     </thead>
                     <tbody>

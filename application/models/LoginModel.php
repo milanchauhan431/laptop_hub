@@ -24,8 +24,16 @@ class LoginModel extends CI_Model{
 					$this->session->set_userdata('cm_id',$resData->cm_id);
 
 					//Defualt Store
+					//Ready To Dispatch Store
 					$RTD_STORE = $this->db->where('store_type',1)->where('cm_id',$resData->cm_id)->get('location_master')->row();
+					//Repairing Store
+					$REP_STORE = $this->db->where('store_type',2)->where('cm_id',$resData->cm_id)->get('location_master')->row();
+					//Rejection Or Scrap Store
+					$REJ_STORE = $this->db->where('store_type',3)->where('cm_id',$resData->cm_id)->get('location_master')->row();
+					
 					$this->session->set_userdata("RTD_STORE",$RTD_STORE);
+					$this->session->set_userdata("REP_STORE",$REP_STORE);
+					$this->session->set_userdata("REJ_STORE",$REJ_STORE);
 					
 					//FY Data
 					$fyData=$this->db->where('is_active',1)->get('financial_year')->row();

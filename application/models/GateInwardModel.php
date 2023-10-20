@@ -114,12 +114,12 @@ class GateInwardModel extends masterModel{
                 $row['is_delete'] = 0;
 
                 if($row['item_stock_type'] == 1):
-                    $nextBatchNo = $this->gateReceipt->getNextBatchOrSerialNo(['trans_id'=>$row['id'],'item_id'=>$row['item_id'],'heat_no'=>$row['heat_no']]);
+                    /* $nextBatchNo = $this->getNextBatchOrSerialNo(['trans_id'=>$row['id'],'item_id'=>$row['item_id'],'heat_no'=>$row['heat_no']]); */
 
-                    $row['batch_no'] = $nextBatchNo['batch_no'];                    
-                    $row['serial_no'] = $nextBatchNo['serial_no'];
-                elseif($row['item_stock_type'] == 2):
-                    $row['batch_no'] = $itemData->item_code.sprintf(n2y(date('Y'))."%03d",$data['trans_no']);
+                    $row['batch_no'] = $data['trans_number'];//$nextBatchNo['batch_no'];
+                    //$row['serial_no'] = $nextBatchNo['serial_no'];
+                /* elseif($row['item_stock_type'] == 2):
+                    $row['batch_no'] = $itemData->item_code.sprintf(n2y(date('Y'))."%03d",$data['trans_no']); */
                 else:
                     $row['batch_no'] = "GB";
                     $row['serial_no'] = 0;
@@ -322,17 +322,61 @@ class GateInwardModel extends masterModel{
                     $stockData = [
                         'id' => "",
                         'entry_type' => $this->data['entryData']->id,
-                        'unique_id' => 0,//$this->transMainModel->getStockUniqueId(['location_id' => $mirItem->location_id,'batch_no' => $mirItem->batch_no,'item_id' => $mirItem->item_id]),
+                        'unique_id' => $this->transMainModel->getStockUniqueId(['location_id' => $mirItem->location_id,'batch_no' => $mirData->trans_number,'item_id' => $mirItem->item_id]),
                         'ref_date' => $mirData->trans_date,
                         'ref_no' => $mirData->trans_number,
                         'main_ref_id' => $mirData->id,
                         'child_ref_id' => $mirItem->id,
                         'location_id' => $mirItem->location_id,
-                        'batch_no' => $mirItem->batch_no,
+                        'batch_no' => $mirData->trans_number,
                         'party_id' => $mirData->party_id,
                         'item_id' => $mirItem->item_id,
                         'p_or_m' => 1,
                         'qty' => $row['ok_qty'],
+                        'price' => $mirItem->price
+                    ];
+
+                    $this->store($this->stockTrans,$stockData);
+                endif;
+
+                //Scrape Or Rejection entry
+                if(!empty($row['reject_qty'])):
+                    $stockData = [
+                        'id' => "",
+                        'entry_type' => $this->data['entryData']->id,
+                        'unique_id' => $this->transMainModel->getStockUniqueId(['location_id' => $this->REJ_STORE->id,'batch_no' => $mirData->trans_number,'item_id' => $mirItem->item_id]),
+                        'ref_date' => $mirData->trans_date,
+                        'ref_no' => $mirData->trans_number,
+                        'main_ref_id' => $mirData->id,
+                        'child_ref_id' => $mirItem->id,
+                        'location_id' => $this->REJ_STORE->id,
+                        'batch_no' => $mirData->trans_number,
+                        'party_id' => $mirData->party_id,
+                        'item_id' => $mirItem->item_id,
+                        'p_or_m' => 1,
+                        'qty' => $row['reject_qty'],
+                        'price' => $mirItem->price
+                    ];
+
+                    $this->store($this->stockTrans,$stockData);
+                endif;
+
+                //Repairable entry
+                if(!empty($row['short_qty'])):
+                    $stockData = [
+                        'id' => "",
+                        'entry_type' => $this->data['entryData']->id,
+                        'unique_id' => $this->transMainModel->getStockUniqueId(['location_id' => $this->REP_STORE->id,'batch_no' => $mirData->trans_number,'item_id' => $mirItem->item_id]),
+                        'ref_date' => $mirData->trans_date,
+                        'ref_no' => $mirData->trans_number,
+                        'main_ref_id' => $mirData->id,
+                        'child_ref_id' => $mirItem->id,
+                        'location_id' => $this->REP_STORE->id,
+                        'batch_no' => $mirData->trans_number,
+                        'party_id' => $mirData->party_id,
+                        'item_id' => $mirItem->item_id,
+                        'p_or_m' => 1,
+                        'qty' => $row['short_qty'],
                         'price' => $mirItem->price
                     ];
 

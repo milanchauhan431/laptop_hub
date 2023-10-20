@@ -21,7 +21,7 @@ class MY_Controller extends CI_Controller{
 	public $vendorTypes = ['Manufacture', 'Service'];
 
 	public $itemTypes = [1 => "Finish Goods", 2 => "Consumable", 3 => "Raw Material"/* , 4 => "Capital Goods", 5 => "Machineries", 6 => "Instruments", 7 => "Gauges", 8 => "Services", 9 => "Packing Material", 10 => "Scrap" */];
-	public $stockTypes = [0=>"None",1=>'Batch Wise',2=>"Serial Wise"];
+	public $stockTypes = [0=>"None",1=>'Batch Wise'/* ,2=>"Serial Wise" */];
 	public $fgColorCode = ["WHITE"=>"W","GREY"=>"G"];
 	public $fgCapacity = ["3 Ton"=>"3T","5 Ton"=>"5T"];
 
@@ -124,6 +124,8 @@ class MY_Controller extends CI_Controller{
 		$this->cm_id = $this->session->userdata('cm_id');
 
 		$this->RTD_STORE = $this->session->userdata('RTD_STORE');
+		$this->REP_STORE = $this->session->userdata('REP_STORE');
+		$this->REJ_STORE = $this->session->userdata('REJ_STORE');
 
 		$models = $modelNames;
 		foreach($models as $modelName):
@@ -142,6 +144,8 @@ class MY_Controller extends CI_Controller{
 			$this->{$modelName}->cm_id = $this->cm_id;
 
 			$this->{$modelName}->RTD_STORE = $this->RTD_STORE;
+			$this->{$modelName}->REP_STORE = $this->REP_STORE;
+			$this->{$modelName}->REJ_STORE = $this->REJ_STORE;
 		endforeach;
 		return true;
 	}

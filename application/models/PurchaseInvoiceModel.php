@@ -92,7 +92,7 @@ class PurchaseInvoiceModel extends MasterModel{
                 $this->trash($this->transExpense,['trans_main_id'=>$data['id']]);
                 $this->remove($this->transDetails,['main_ref_id'=>$data['id'],'table_name'=>$this->transMain,'description'=>"PURINV TERMS"]);
                 $this->remove($this->transDetails,['main_ref_id'=>$data['id'],'table_name'=>$this->transMain,'description'=>"PURINV MASTER DETAILS"]);
-                $this->remove($this->stockTrans,['main_ref_id'=>$data['id'],'entry_type'=>$data['entry_type']]);
+                //$this->remove($this->stockTrans,['main_ref_id'=>$data['id'],'entry_type'=>$data['entry_type']]);
             endif;
             
             if($data['memo_type'] == "CASH"):
@@ -155,7 +155,7 @@ class PurchaseInvoiceModel extends MasterModel{
                 $row['is_delete'] = 0;
                 $itemTrans = $this->store($this->transChild,$row);
 
-                if($row['stock_eff'] == 1):
+                /* if($row['stock_eff'] == 1):
                     $stockData = [
                         'id' => "",
                         'entry_type' => $data['entry_type'],
@@ -174,7 +174,7 @@ class PurchaseInvoiceModel extends MasterModel{
                     ];
 
                     $this->store($this->stockTrans,$stockData);
-                endif;
+                endif; */
 
                 if(!empty($row['ref_id']) && $row['from_entry_type'] == 26):
                     $setData = array();
@@ -346,7 +346,7 @@ class PurchaseInvoiceModel extends MasterModel{
             $this->remove($this->transDetails,['main_ref_id'=>$id,'table_name'=>$this->transMain,'description'=>"PURINV TERMS"]);
             $this->remove($this->transDetails,['main_ref_id'=>$id,'table_name'=>$this->transMain,'description'=>"PURINV MASTER DETAILS"]);
 
-            $this->remove($this->stockTrans,['main_ref_id'=>$dataRow->id,'entry_type'=>$dataRow->entry_type]);
+            //$this->remove($this->stockTrans,['main_ref_id'=>$dataRow->id,'entry_type'=>$dataRow->entry_type]);
 
             $result = $this->trash($this->transMain,['id'=>$id],'Purchase Invoice');
 
