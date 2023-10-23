@@ -125,7 +125,7 @@ class ServicesModel extends MasterModel{
                     $stockData = [
                         'id' => "",
                         'entry_type' => $this->data['entryData']->id,
-                        'unique_id' => $this->transMainModel->getStockUniqueId(['location_id' => $this->REJ_STORE->id,'batch_no' => $row['batch_no'],'item_id' => $row['kit_item_id']]),
+                        'unique_id' => $this->transMainModel->getStockUniqueId(['location_id' => $this->REJ_STORE->id,'batch_no' => $data['batch_no'],'item_id' => $row['kit_item_id']]),
                         'ref_date' => $data['trans_date'],
                         'ref_no' => $data['trans_number'],
                         'main_ref_id' => $result['id'],
@@ -138,7 +138,6 @@ class ServicesModel extends MasterModel{
                         'qty' => $row['qty'],
                         'price' => 0,//$row['price']
                     ];
-
                     $this->store($this->stockTrans,$stockData);
 
                     $stockData = [
@@ -157,7 +156,6 @@ class ServicesModel extends MasterModel{
                         'qty' => $row['qty'],
                         'price' => $row['price']
                     ];
-
                     $this->store($this->stockTrans,$stockData);
                 endif;
             endforeach;
@@ -198,12 +196,99 @@ class ServicesModel extends MasterModel{
         return $result;
     }
 
+    public function getServiceTransaction($data){
+        $queryData = array();
+        $queryData['tableName'] = $this->serviceTrans;
+        $queryData['select'] = "service_transaction.*,item_master.item_code,item_master.item_name";
+        $queryData['where']['service_id'] = $data['service_id'];
+        $result = $this->row($queryData);
+        return $result;
+    }
+
     public function delete($id){
         try{
             $this->db->trans_begin();
 
             $serviceData = $this->getService(['id'=>$id]);
-            //print_r($serviceData);exit;
+            $setviceTrans = $this->getServiceTrans(['service_id'=>$id]);
+            
+            //check reparing stock
+            if($serviceData->trans_type == 1):
+                $postData = ['location_id' => $this->RTD_STORE->id,'batch_no' => $serviceData->batch_no,'item_id' => $serviceData->kit_item_id,'stock_required'=>1,'single_row'=>1];                    
+                $stockData = $this->itemStock->getItemStockBatchWise($postData);
+                $stockQty = (!empty($stockData->qty))?$stockData->qty:0;
+
+                if(empty($stockQty)):
+                    return ['status'=>0,'message'=>"Product Stock not availabel. you can not delete it."];
+                else:
+                    if($serviceData->qty > $stockQty):
+                        return ['status'=>0,'message'=>"Product Stock not availabel. you can not delete it."];
+                    endif;
+                endif;
+
+                $stockQty = 0;
+                foreach($serviceTrans as $row):
+                    if($row->kit_status == 1):
+                        $postData = ['location_id' => $this->REJ_STORE->id,'batch_no' => $serviceData->batch_no,'item_id' => $row->kit_item_id,'stock_required'=>1,'single_row'=>1];                    
+                        $stockData = $this->itemStock->getItemStockBatchWise($postData);
+                        $stockQty = (!empty($stockData->qty))?$stockData->qty:0;
+
+                        if(empty($stockQty)):
+                            return ['status'=>0,'message'=>"Part Stock not availabel. you can not delete it."];
+                        else:
+                            if($row->qty > $stockQty):
+                                return ['status'=>0,'message'=>"Part Stock not availabel. you can not delete it."];
+                            endif;
+                        endif;
+                    endif;
+                endforeach;
+            endif;
+
+            //check customized stock
+            if($serviceData->trans_type == 2):
+                $postData = ['location_id' => $this->CUSTSYS_STORE->id,'batch_no' => $serviceData->batch_no,'item_id' => $serviceData->kit_item_id,'stock_required'=>1,'single_row'=>1];                    
+                $stockData = $this->itemStock->getItemStockBatchWise($postData);
+                $stockQty = (!empty($stockData->qty))?$stockData->qty:0;
+
+                if(empty($stockQty)):
+                    return ['status'=>0,'message'=>"Product Stock not availabel. you can not delete it."];
+                else:
+                    if($serviceData->qty > $stockQty):
+                        return ['status'=>0,'message'=>"Product Stock not availabel. you can not delete it."];
+                    endif;
+                endif;
+
+                $stockQty = 0;
+                foreach($serviceTrans as $row):
+                    if($row->kit_status == 1):
+                        $postData = ['location_id' => $this->REJ_STORE->id,'batch_no' => $serviceData->batch_no,'item_id' => $row->kit_item_id,'stock_required'=>1,'single_row'=>1];                    
+                        $stockData = $this->itemStock->getItemStockBatchWise($postData);
+                        $stockQty = (!empty($stockData->qty))?$stockData->qty:0;
+
+                        if(empty($stockQty)):
+                            return ['status'=>0,'message'=>"Part Stock not availabel. you can not delete it."];
+                        else:
+                            if($row->qty > $stockQty):
+                                return ['status'=>0,'message'=>"Part Stock not availabel. you can not delete it."];
+                            endif;
+                        endif;
+                    endif;
+
+                    if($row->kit_status == 3):
+                        $postData = ['location_id' => $this->RTD_STORE->id,'batch_no' => $row->batch_no,'item_id' => $row->kit_item_id,'stock_required'=>1,'single_row'=>1];                    
+                        $stockData = $this->itemStock->getItemStockBatchWise($postData);
+                        $stockQty = (!empty($stockData->qty))?$stockData->qty:0;
+
+                        if(empty($stockQty)):
+                            return ['status'=>0,'message'=>"Part Stock not availabel. you can not delete it."];
+                        else:
+                            if($row->qty > $stockQty):
+                                return ['status'=>0,'message'=>"Part Stock not availabel. you can not delete it."];
+                            endif;
+                        endif;
+                    endif;
+                endforeach;
+            endif;
 
             $result = $this->trash($this->serviceMaster,['id'=>$id]);
             $this->trash($this->serviceTrans,['service_id'=>$id]);
@@ -303,7 +388,7 @@ class ServicesModel extends MasterModel{
                     $stockData = [
                         'id' => "",
                         'entry_type' => $data['entry_type'],
-                        'unique_id' => $this->transMainModel->getStockUniqueId(['location_id' => $this->REJ_STORE->id,'batch_no' => $row['batch_no'],'item_id' => $row['kit_item_id']]),
+                        'unique_id' => $this->transMainModel->getStockUniqueId(['location_id' => $this->REJ_STORE->id,'batch_no' => $data['batch_no'],'item_id' => $row['kit_item_id']]),
                         'ref_date' => $data['trans_date'],
                         'ref_no' => $data['trans_number'],
                         'main_ref_id' => $result['id'],
