@@ -30,7 +30,10 @@ $(document).ready(function(){
         }
     }); */
 
-    $(document).on('click','.addBatch',function(){
+    $(document).on('click','.addBatch',function(e){
+        e.stopImmediatePropagation();
+        e.preventDefault();
+        
         var formData = {};
 
         formData.mir_id = "";

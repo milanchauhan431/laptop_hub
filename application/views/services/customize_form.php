@@ -5,15 +5,15 @@
             <input type="hidden" name="ref_id" id="ref_id" value="<?=(!empty($dataRow->ref_id))?$dataRow->ref_id:""?>">
             <input type="hidden" name="trans_type" id="trans_type" value="<?=(!empty($dataRow->trans_type))?$dataRow->trans_type:"2"?>">
 
-            <div class="col-md-4 form-group">
-                <label for="item_id">Item Name</label>
+            <div class="col-md-5 form-group">
+                <label for="item_id">Product Name</label>
                 <select name="item_id" id="item_id" class="form-control select2 req">
                     <option value="">Select Item</option>
                     <?=getItemListOption($itemList)?>
                 </select>
             </div>
 
-            <div class="col-md-3 form-group">
+            <div class="col-md-4 form-group">
                 <label for="batch_no">Batch No.</label>
                 <select name="batch_no" id="batch_no" class="form-control select2 req">
                     <option value="">Select Batch No.</option>
@@ -22,14 +22,14 @@
                 <input type="hidden" name="purchase_price" id="purchase_price" value="">
             </div>
 
-            <div class="col-md-2 form-group">
+            <div class="col-md-3 form-group">
                 <label for="qty">Qty</label>
                 <input type="text" name="qty" id="qty" class="form-control numericOnly req" value="<?=(!empty($dataRow->qty))?$dataRow->qty:''?>">
             </div>
 
-            <div class="col-md-3 form-group">
+            <div class="col-md-3 form-group hidden">
                 <label for="price">Price</label>
-                <input type="text" name="price" id="price" class="form-control floatOnly req" value="<?=(!empty($dataRow->price))?$dataRow->price:''?>">
+                <input type="text" name="price" id="price" class="form-control floatOnly req" value="<?=(!empty($dataRow->price))?$dataRow->price:''?>" readonly>
             </div>
 
             <div class="col-md-12 form-group">
@@ -54,53 +54,9 @@
                             </tr>
                         </thead>
                         <tbody id="itemKitData">
-                            <?php
-                                if(!empty($kitList)):
-                                    $i=1;
-                                    foreach($kitList as $row):
-                                        $row->id = "";
-                                        $row->kit_item_name = ((!empty($row->item_code))?"[".$row->item_code."] ":"").$row->item_name;
-                                        echo '<tr>
-                                            <td>
-                                                '.$i.'
-                                            </td>
-                                            <td>
-                                                '.$row->kit_item_name.'
-                                                <input type="hidden" name="kitData['.$i.'][id]" id="id_'.$i.'" value="'.$row->id.'">
-                                                <input type="hidden" name="kitData['.$i.'][kit_item_id]" id="kit_item_id_'.$i.'" value="'.$row->kit_item_id.'">
-                                            </td>
-                                            <td>
-                                                '.floatVal($row->qty).'
-                                                <input type="hidden" name="kitData['.$i.'][qty]" id="qty_'.$i.'" value="'.$row->qty.'">
-                                            </td>
-                                            <td>
-                                                <select name="kitData['.$i.'][kit_status]" id="kit_status_'.$i.'" class="form-control kitStatus" data-row_id="'.$i.'">
-                                                    <option value="">Select</option>
-                                                    <option value="1">Replace</option>
-                                                    <option value="2">Repair</option>
-                                                </select>
-                                                <div class="error kit_status_'.$i.'"></div>
-                                            </td>
-                                            <td>
-                                                <select name="kitData['.$i.'][batch_no]" id="batch_no_'.$i.'" class="form-control select2 batchNo"  data-row_id="'.$i.'">
-                                                    <option value="">Select</option>
-                                                </select>
-                                                <input type="hidden" name="kitData['.$i.'][unique_id]" id="unique_id_'.$i.'" value="">
-                                                <div class="error batch_no_'.$i.'"></div>
-                                            </td>
-                                            <td>
-                                                <input type="text" name="kitData['.$i.'][price]" id="price_'.$i.'" class="form-control floatOnly" value="'.((!empty($row->price))?$row->price:"").'">
-                                                <div class="error price_'.$i.'"></div>
-                                            </td>
-                                        </tr>';
-                                        $i++;
-                                    endforeach;
-                                else:
-                                    echo '<tr>
-                                        <td class="text-center" colspan="6">No data available in table</td>
-                                    </tr>';
-                                endif;
-                            ?>                            
+                            <tr>
+                                <td class="text-center" colspan="6">No data available in table</td>
+                            </tr>                        
                         </tbody>
                     </table>
                 </div>
@@ -282,7 +238,10 @@ $(document).ready(function(){
         }
     });
 
-    $(document).on('click','#NewkitForm #addKit',function(){
+    $(document).on('click','#NewkitForm #addKit',function(e){
+        e.stopImmediatePropagation();
+        e.preventDefault();
+
         $("#NewkitForm .error").html("");
         var kit_item_id = $("#NewkitForm #kit_item_id").val();
         var kit_item_name = $("#NewkitForm #kit_item_id :selected").text();
@@ -354,6 +313,7 @@ function addKitItem(data){
     cell.html(data.kit_item_name);	
     cell.append(idInput);
     cell.append(itemIdInput);
+    cell.append('<div class="error kit_item_id_'+kitItemCount+'"></div>');
 
     var batchNoInput = $("<input/>",{type:"hidden",name:"newKitData["+kitItemCount+"][batch_no]",value:data.batch_no});
     var uniqueIdInput = $("<input/>",{type:"hidden",name:"newKitData["+kitItemCount+"][unique_id]",value:data.unique_id});
@@ -361,11 +321,13 @@ function addKitItem(data){
     cell.html(data.batch_no);
     cell.append(batchNoInput);
     cell.append(uniqueIdInput);
+    cell.append('<div class="error kit_batch_no_'+kitItemCount+'"></div>');
 
     var qtyInput = $("<input/>",{type:"hidden",name:"newKitData["+kitItemCount+"][qty]",value:data.qty});
     cell = $(row.insertCell(-1));
     cell.html(data.qty);
     cell.append(qtyInput);
+    cell.append('<div class="error kit_qty_'+kitItemCount+'"></div>');
 
     var priceInput = $("<input/>",{type:"hidden",name:"newKitData["+kitItemCount+"][price]",value:data.price});
     var amountInput = $("<input/>",{type:"hidden",name:"newKitData["+kitItemCount+"][amount]",class:'amount',value:data.amount});
@@ -373,6 +335,7 @@ function addKitItem(data){
     cell.html(data.price);
     cell.append(priceInput);
     cell.append(amountInput);
+    cell.append('<div class="error kit_price_'+kitItemCount+'"></div>');
 
     var remarkInput = $("<input/>",{type:"hidden",name:"newKitData["+kitItemCount+"][remark]",value:data.remark});
     cell = $(row.insertCell(-1));

@@ -14,9 +14,13 @@ class TransactionMainModel extends MasterModel{
 		$nextNo = (!empty($nextNo))?($nextNo + 1):$result->auto_start_no;
 
 		$result->trans_no = $nextNo;
-		$result->trans_prefix = $result->vou_prefix.getFyDate("Y").'/';
+		$result->trans_prefix = $this->getPrefix($result->vou_prefix);
 
 		return $result;
+	}
+
+	public function getPrefix($prefix){
+		return $prefix.getFyDate("Y").'/';
 	}
 
     public function nextTransNo($entry_type,$last_no = 0,$vouNameS = ""){
@@ -33,6 +37,23 @@ class TransactionMainModel extends MasterModel{
 		$trans_no = (empty($last_no))?($trans_no + 1):$trans_no;
 		return $trans_no;
     }
+
+	public function getNextTransNo($data=array()){
+		$no_column = (!empty($data['no_column']))?$data['no_column']:"trans_no";
+		$date_column = (!empty($data['date_column']))?$data['date_column']:"trans_date";
+		
+		$queryData = array();
+		$queryData['tableName'] = $data['table_name'];
+        $queryData['select'] = "ifnull(MAX(".$no_column." + 1),1) as next_no";
+        $queryData['where'][$date_column.' >='] = $this->startYearDate;
+        $queryData['where'][$date_column.' <='] = $this->endYearDate;
+
+		if(!empty($data['customWhere'])):
+			$queryData['customWhere'][] = $data['customWhere'];
+		endif;
+
+        return $this->row($queryData)->next_no;
+	}
 
 	public function getMirNextNo($type = 1){
         $queryData['tableName'] = $this->mir;

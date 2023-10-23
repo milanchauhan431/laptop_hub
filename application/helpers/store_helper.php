@@ -67,9 +67,9 @@ function getStoreDtHeader($page){
 
     $data['service'][] = ["name" => "Action", "style" => "width:5%;", "textAlign" => "center"];
     $data['service'][] = ["name" => "#", "style" => "width:5%;", "textAlign" => "center"];
-    $data['service'][] = ["name"=> "SRC No.", "textAlign" => "center"];
-    $data['service'][] = ["name" => "SRC Date", "textAlign" => "center"];
-    $data['service'][] = ["name" => "Item Name"];
+    $data['service'][] = ["name"=> "Entry No.", "textAlign" => "center"];
+    $data['service'][] = ["name" => "Entry Date", "textAlign" => "center"];
+    $data['service'][] = ["name" => "Product Name"];
     $data['service'][] = ["name" => "Qty"];
     $data['service'][] = ["name" => "Amount"];
     $data['service'][] = ["name" => "Remark"];

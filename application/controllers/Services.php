@@ -198,5 +198,135 @@ class Services extends MY_Controller{
 
         $this->printJson(['status'=>1,'kitHtml'=>$html]);
     }
+
+    public function saveCustomize(){
+        $data = $this->input->post();
+        $errorMessage = array();
+
+        if(empty($data['item_id']))
+            $errorMessage['item_id'] = "Product Name is required.";
+        if(empty($data['batch_no']))
+            $errorMessage['batch_no'] = "Batch No. is required.";
+        if(empty($data['qty']))
+            $errorMessage['qty'] = "Qty is required.";
+        
+
+        if(!empty($data['batch_no']) && !empty($data['qty'])):
+            $postData = ['location_id' => $this->RTD_STORE->id,'batch_no' => $data['batch_no'],'item_id' => $data['item_id'],'stock_required'=>1,'single_row'=>1];                    
+            $stockData = $this->itemStock->getItemStockBatchWise($postData);
+            $stockQty = (!empty($stockData->qty))?$stockData->qty:0;
+            
+            if(empty($stockQty)):
+                $errorMessage['qty'] = "Stock not available.";
+            else:
+                if($data['qty'] > $stockQty):
+                    $errorMessage['qty'] = "Stock not available.";
+                endif;
+            endif;
+        endif;
+
+        $kitData = $bQty = array();$amount = $partAmount = 0;
+        if(empty($data['kitData'])):
+            $errorMessage['kit_error'] = "Product Configration is required.";
+        else:
+            foreach($data['kitData'] as $key => $row):
+                if($row['kit_status'] == 1):
+                    if(empty($row['price'])):
+                        $errorMessage['price_'.$key] = "Price is required.";
+                    else:
+                        $row['location_id'] = $this->RTD_STORE->id;
+                        $row['amount'] = round(($row['qty'] * $row['price']),2);
+                        $partAmount += $data['qty'] * $row['amount'];
+                    endif;
+
+                    if(empty($row['batch_no'])):
+                        $errorMessage['batch_no_'.$key] = "Batch No. is required.";
+                    else:
+                        $postData = ['location_id' => $this->RTD_STORE->id,'batch_no' => $row['batch_no'],'item_id' => $row['kit_item_id'],'stock_required'=>1,'single_row'=>1];                    
+                        $stockData = $this->itemStock->getItemStockBatchWise($postData);
+                        $stockQty = (!empty($stockData->qty))?$stockData->qty:0;
+
+                        
+                        if(empty($stockQty)):
+                            $errorMessage['qty_'.$key] = "Stock not available.";
+                        else:
+                            if(!isset($bQty[$stockData->unique_id])):
+                                $bQty[$stockData->unique_id] = $row['qty'] ;
+                            else:
+                                $bQty[$stockData->unique_id] += $row['qty'];
+                            endif;
+
+                            if($bQty[$stockData->unique_id] > $stockQty):
+                                $errorMessage['qty_'.$key] = "Stock not available.";
+                            endif;
+                        endif;
+                    endif;
+
+                endif;
+
+                if($row['kit_status'] == 3):
+                    if(empty($row['price'])):
+                        $errorMessage['price_'.$key] = "Price is required.";
+                    else:
+                        $row['amount'] = round(($row['qty'] * $row['price']),2);
+                        $partAmount -= $data['qty'] * $row['amount'];
+                    endif;
+                endif;
+
+                $kitData[] = $row;
+            endforeach;
+        endif;
+
+        $newKitData = $bQty = array();
+        if(!empty($data['newKitData'])):
+            foreach($data['newKitData'] as $key => $row):                
+                if(empty($row['price'])):
+                    $errorMessage['kit_price_'.$key] = "Price is required.";
+                else:
+                    $row['location_id'] = $this->RTD_STORE->id;
+                    $row['amount'] = round(($row['qty'] * $row['price']),2);
+                    $partAmount += $data['qty'] * $row['amount'];
+                endif;
+
+                if(empty($row['batch_no'])):
+                    $errorMessage['kit_batch_no_'.$key] = "Batch No. is required.";
+                else:
+                    $postData = ['location_id' => $this->RTD_STORE->id,'batch_no' => $row['batch_no'],'item_id' => $row['kit_item_id'],'stock_required'=>1,'single_row'=>1];                    
+                    $stockData = $this->itemStock->getItemStockBatchWise($postData);
+                    $stockQty = (!empty($stockData->qty))?$stockData->qty:0;
+                    
+                    if(empty($stockQty)):
+                        $errorMessage['kit_qty_'.$key] = "Stock not available.";
+                    else:
+                        if(!isset($bQty[$stockData->unique_id])):
+                            $bQty[$stockData->unique_id] = $row['qty'] ;
+                        else:
+                            $bQty[$stockData->unique_id] += $row['qty'];
+                        endif;
+
+                        if($bQty[$stockData->unique_id] > $stockQty):
+                            $errorMessage['kit_qty_'.$key] = "Stock not available.";
+                        endif;
+                    endif;
+                endif;    
+                
+                $newKitData[] = $row;
+            endforeach;
+        endif;
+
+        if(!empty($errorMessage)):
+            $this->printJson(['status'=>0,'message'=>$errorMessage]);
+        else:
+            $data['newKitData'] = $newKitData;
+            $data['kitData'] = $kitData;
+            $data['part_amount'] = $partAmount;
+            $data['amount'] = $data['purchase_price'] + $partAmount;
+            $data['price'] = round(($data['amount'] / $data['qty']),2);
+            $data['entry_type'] = $this->data['entryData']->id;
+            $data['trans_date'] = date("Y-m-d");
+            //print_r($data);exit;
+            $this->printJson($this->services->saveCustomize($data));
+        endif;
+    }
 }
 ?>
