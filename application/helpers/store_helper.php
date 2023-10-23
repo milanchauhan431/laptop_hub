@@ -55,6 +55,25 @@ function getStoreDtHeader($page){
     $data['stockTrans'][] = ["name" => "Packing Standard"];
     $data['stockTrans'][] = ["name" => "Remark"];
 
+    /* Service Table Header */
+    $data['serviceGI'][] = ["name" => "Action", "style" => "width:5%;", "textAlign" => "center"];
+    $data['serviceGI'][] = ["name" => "#", "style" => "width:5%;", "textAlign" => "center"];
+    $data['serviceGI'][] = ["name"=> "GI No.", "textAlign" => "center"];
+    $data['serviceGI'][] = ["name" => "GI Date", "textAlign" => "center"];
+    $data['serviceGI'][] = ["name" => "Item Name"];
+    $data['serviceGI'][] = ["name" => "Qty"];
+    $data['serviceGI'][] = ["name" => "Repaired Qty"];
+    $data['serviceGI'][] = ["name" => "Pending Qty"];
+
+    $data['service'][] = ["name" => "Action", "style" => "width:5%;", "textAlign" => "center"];
+    $data['service'][] = ["name" => "#", "style" => "width:5%;", "textAlign" => "center"];
+    $data['service'][] = ["name"=> "SRC No.", "textAlign" => "center"];
+    $data['service'][] = ["name" => "SRC Date", "textAlign" => "center"];
+    $data['service'][] = ["name" => "Item Name"];
+    $data['service'][] = ["name" => "Qty"];
+    $data['service'][] = ["name" => "Amount"];
+    $data['service'][] = ["name" => "Remark"];
+
     return tableHeader($data[$page]);
 }
 
@@ -123,12 +142,22 @@ function getGateInwardData($data){
             $deleteButton = '<a class="btn btn-danger btn-delete permission-remove" href="javascript:void(0)" onclick="trash('.$deleteParam.');" datatip="Remove" flow="down"><i class="ti-trash"></i></a>';
         endif;
 
+        $itemKitParam = "{'postData':{'id' : ".$data->mir_trans_id.",'item_id':".$data->item_id."},'modal_id' : 'modal-xl', 'form_id' : 'itemKitForm', 'title' : 'Item Kit [Item Name : ".$data->item_name."]','fnedit':'addItemKit','fnsave':'saveItemKit'}";
+        $itemKit = '<a href="javascript:void(0);" type="button" class="btn btn-info permission-modify" datatip="Item Kit" flow="down" onclick="edit('.$itemKitParam.');"><i class="fas fa-plus"></i></a>';
+        if($data->item_stock_type == 1):
+            $itemKit = "";
+        endif;
+
         $insParam = "{'postData':{'id' : ".$data->id."},'modal_id' : 'modal-xl', 'form_id' : 'materialInspection', 'title' : 'Material Inspection','fnedit':'materialInspection','fnsave':'saveInspectedMaterial'}";
-        $inspection = '<a href="javscript:voide(0);" type="button" class="btn btn-warning permission-modify" datatip="Inspection" flow="down" onclick="edit('.$insParam.');"><i class="fas fa-search"></i></a>';
+        $inspection = '<a href="javascript:void(0);" type="button" class="btn btn-warning permission-modify" datatip="Inspection" flow="down" onclick="edit('.$insParam.');"><i class="fas fa-search"></i></a>';
+
+        if($data->short_qty > 0 && empty(floatval($data->reparing_pending_qty))):
+            $itemKit = $inspection = "";
+        endif;
 
 	    $iirPrint = '<a href="'.base_url('gateInward/ir_print/'.$data->id).'" type="button" class="btn btn-primary" datatip="IIR Print" flow="down" target="_blank"><i class="fas fa-print"></i></a>';
 
-	    $action = getActionButton($iirPrint.$inspection.$editButton.$deleteButton);
+	    $action = getActionButton($iirPrint.$itemKit.$inspection.$editButton.$deleteButton);
 
         return [$action,$data->sr_no,$data->trans_number,formatDate($data->trans_date),$data->party_name,$data->item_name,$data->qty,$data->po_number];
     endif;
@@ -142,6 +171,23 @@ function getStockTransData($data){
     $action = getActionButton($deleteButton);
 
     return [$action,$data->sr_no,formatDate($data->ref_date),$data->item_code,$data->item_name,$data->qty,$data->size,$data->remark];
+}
+
+/* Service Table Data */
+function getServicesData($data){
+    if($data->entry_type == 26):
+        $serviceParam = "{'postData':{'ref_id' : ".$data->mir_trans_id.",'item_id':".$data->item_id.",'item_name':'".$data->item_name."','trans_type':1,'batch_no':'".$data->trans_number."'},'modal_id' : 'modal-xl', 'form_id' : 'serviceForm', 'title' : 'Service','fnedit':'addService','fnsave':'saveService'}";
+        $service = '<a href="javascript:void(0);" type="button" class="btn btn-warning permission-modify" datatip="Service" flow="down" onclick="edit('.$serviceParam.');"><i class="fa fa-plus"></i></a>';
+        $action = getActionButton($service);
+
+        return [$action,$data->sr_no,$data->trans_number,formatDate($data->trans_date),$data->item_name,$data->short_qty,$data->repaired_qty,$data->pending_qty];
+    else:
+        $deleteParam = "{'postData':{'id' : ".$data->id."},'message' : 'Record'}";
+        $deleteButton = '<a class="btn btn-danger btn-delete permission-remove" href="javascript:void(0)" onclick="trash('.$deleteParam.');" datatip="Remove" flow="down"><i class="ti-trash"></i></a>';
+        $action = getActionButton($deleteButton);
+
+        return [$action,$data->sr_no,$data->trans_number,formatDate($data->trans_date),$data->item_name,$data->qty,$data->total_amount,$data->remark];
+    endif;
 }
 
 ?>

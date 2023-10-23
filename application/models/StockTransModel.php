@@ -68,7 +68,36 @@ class StockTransModel extends MasterModel{
 
     public function getStockTrans($data){
         $queryData['tableName'] = $this->stockTrans;
-        $queryData['where']['id'] = $data['id'];
+
+        $queryData['select'] = "stock_transaction.*, item_master.item_code, item_master.item_name, lm.location, lm.store_name";
+
+        $queryData['leftJoin']['location_master as lm'] = "lm.id=stock_transaction.location_id";
+        $queryData['leftJoin']['item_master'] = "stock_transaction.item_id = item_master.id";
+
+        if(!empty($data['id'])):
+            $queryData['where']['stock_transaction.id'] = $data['id'];
+        endif;
+
+        if(!empty($data['item_id'])): 
+            $queryData['where']['stock_transaction.item_id'] = $data['item_id'];           
+        endif;
+
+        if(!empty($data['location_id'])):
+            $queryData['where']['stock_transaction.location_id'] = $data['location_id'];
+        endif;
+
+        if(!empty($data['p_or_m'])):
+            $queryData['where']['stock_transaction.p_or_m'] = $data['p_or_m'];
+        endif;
+
+        if(!empty($data['ref_no'])):
+            $queryData['where']['stock_transaction.ref_no'] = $data['ref_no'];
+        endif;
+
+        if(!empty($data['unique_id'])):
+            $queryData['where']['stock_transaction.unique_id'] = $data['unique_id'];
+        endif;
+
         return $this->row($queryData);
     }
 
@@ -83,7 +112,7 @@ class StockTransModel extends MasterModel{
     /* Created At : 09-12-2022 [Milan Chauhan] */
     public function getItemStockBatchWise($data){
         $queryData['tableName'] = $this->stockTrans;
-        $queryData['select'] = "stock_transaction.item_id, item_master.item_code, item_master.item_name, SUM(stock_transaction.qty * stock_transaction.p_or_m) as qty, stock_transaction.unique_id, stock_transaction.batch_no,  stock_transaction.location_id, lm.location, lm.store_name";
+        $queryData['select'] = "stock_transaction.item_id, item_master.item_code, item_master.item_name, SUM(stock_transaction.qty * stock_transaction.p_or_m) as qty, stock_transaction.price, stock_transaction.unique_id, stock_transaction.batch_no,  stock_transaction.location_id, stock_transaction.child_ref_id, lm.location, lm.store_name";
         
         $queryData['leftJoin']['location_master as lm'] = "lm.id=stock_transaction.location_id";
         $queryData['leftJoin']['item_master'] = "stock_transaction.item_id = item_master.id";
@@ -118,6 +147,10 @@ class StockTransModel extends MasterModel{
 
         if(!empty($data['ref_no'])):
             $queryData['where']['stock_transaction.ref_no'] = $data['ref_no'];
+        endif;
+
+        if(!empty($data['unique_id'])):
+            $queryData['where']['stock_transaction.unique_id'] = $data['unique_id'];
         endif;
 
         if(!empty($data['customWhere'])):

@@ -3,6 +3,7 @@ class GateInward extends MY_Controller{
     private $indexPage = "gate_inward/index";
     private $form = "gate_inward/form";
     private $inspectionFrom = "gate_inward/material_inspection";
+    private $itemKitForm = "gate_inward/item_kit_form";
 
     public function __construct(){
         parent::__construct();
@@ -172,12 +173,12 @@ class GateInward extends MY_Controller{
                     <th>Batch Qty</th>
                     <td>'.$row->qty.' </td>
                 </tr>
-                <tr> 
+                <!--<tr> 
                     <th>Heat No </th>
                     <td>'.$row->heat_no.' </td>
                     <th>Pallate No.</th>
                     <td>'.$i.'/'.$countData.'</td>
-                </tr>
+                </tr>-->
                 <tr> 
                     <th>Printed At</th>
                     <td colspan="3">'.date("d-m-Y h:i:s a").'</td>
@@ -213,6 +214,29 @@ class GateInward extends MY_Controller{
         $data = $this->input->post();
         $this->data['orderItems'] = $this->gateInward->getPendingInwardItems($data);
         $this->load->view('purchase_invoice/create_invoice',$this->data);
+    }
+
+    public function addItemKit(){
+        $data = $this->input->post();
+        $this->data['mir_trans_id'] = $data['id'];
+        $this->data['item_id'] = $data['item_id'];
+        $this->data['itemList'] = $this->item->getItemList();
+        $this->data['kitList'] = $this->gateInward->getItemKitList(['mir_trans_id'=>$data['id']]);
+        $this->load->view($this->itemKitForm,$this->data);
+    }
+
+    public function saveItemKit(){
+        $data = $this->input->post();
+        $errorMessage = array();
+
+        if(empty($data['kitData']))
+            $errorMessage['item_error'] = "Please add at least one item.";
+
+        if(!empty($errorMessage)):
+            $this->printJson(['status'=>0,'message'=>$errorMessage]);
+        else:
+            $this->printJson($this->gateInward->saveItemKit($data));
+        endif;
     }
 }
 ?>

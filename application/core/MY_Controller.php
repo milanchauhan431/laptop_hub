@@ -86,6 +86,7 @@ class MY_Controller extends CI_Controller{
 		$this->load->model('StoreLocationModel','storeLocation');
 		$this->load->model('GateEntryModel','gateEntry');
 		$this->load->model('GateInwardModel','gateInward');
+		$this->load->model('ServicesModel','services');
 
 		/* Accounting Model */
 		$this->load->model("PurchaseInvoiceModel","purchaseInvoice");
@@ -106,7 +107,7 @@ class MY_Controller extends CI_Controller{
 		/* Estimation Model [Cash Entry] */
 		$this->load->model("EstimateModel",'estimate');
 
-		$this->setSessionVariables(["masterModel","dashboard","permission","terms","transport","hsnModel","materialGrade","itemCategory","brandMaster","sizeMaster","item","department","designation","employeeCategory","shiftModel","employee","party","transMainModel","taxMaster","expenseMaster","salesOrder","purchaseOrder","purchaseIndent","vehicleType","storeLocation","gateEntry","gateInward","salesInvoice","estimate","paymentVoucher","leads","salesEnquiry","salesQuotation","gstExpense","gstIncome","journalEntry","creditNote","debitNote"]);
+		$this->setSessionVariables(["masterModel","dashboard","permission","terms","transport","hsnModel","materialGrade","itemCategory","brandMaster","sizeMaster","item","department","designation","employeeCategory","shiftModel","employee","party","transMainModel","taxMaster","expenseMaster","salesOrder","purchaseOrder","purchaseIndent","vehicleType","storeLocation","gateEntry","gateInward","salesInvoice","estimate","paymentVoucher","leads","salesEnquiry","salesQuotation","gstExpense","gstIncome","journalEntry","creditNote","debitNote","services"]);
 	}
 
 	public function setSessionVariables($modelNames){
@@ -212,6 +213,19 @@ class MY_Controller extends CI_Controller{
 		$result['sortable'] = (isset($response[3])) ? $response[3] : '';
 
 		$this->printJson(['status'=>1,'data'=>$result]);
+	}
+
+	public function getItemBtachList(){
+		$data = $this->input->post();
+		$data['location_id'] = $this->RTD_STORE->id;
+		$result = $this->itemStock->getItemStockBatchWise($data);
+
+		$html = '<option value="">Select</option>';
+		foreach($result as $row):
+			$html .= '<option value="'.$row->batch_no.'" data-mir_trans_id="'.$row->child_ref_id.'" data-unique_id="'.$row->unique_id.'" data-price="'.$row->price.'">'.$row->batch_no.'</option>';
+		endforeach;
+
+		$this->printJson(['status'=>1,'batchOption'=>$html]);
 	}
 }
 ?>

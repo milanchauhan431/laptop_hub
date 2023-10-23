@@ -5,6 +5,7 @@ class GateInwardModel extends masterModel{
     private $transMain = "trans_main";
     private $transChild = "trans_child";
     private $stockTrans = "stock_transaction";
+    private $itemKit = "item_kit";
 
 
     public function getDTRows($data){
@@ -18,7 +19,7 @@ class GateInwardModel extends masterModel{
         else:
             $data['tableName'] = $this->mirTrans;
 
-            $data['select'] = "mir.id,mir.trans_number,DATE_FORMAT(mir.trans_date,'%d-%m-%Y') as trans_date,mir.qty as no_of_items,party_master.party_name,item_master.item_name,mir.inv_no,ifnull(DATE_FORMAT(mir.inv_date,'%d-%m-%Y'),'') as inv_date,mir.doc_no,ifnull(DATE_FORMAT(mir.doc_date,'%d-%m-%Y'),'') as doc_date,trans_main.trans_number as po_number,mir.qty_kg,mir.inward_qty,mir_transaction.trans_status,mir.trans_type,mir_transaction.qty,mir_transaction.id as mir_trans_id";
+            $data['select'] = "mir.id,mir.trans_number,DATE_FORMAT(mir.trans_date,'%d-%m-%Y') as trans_date,mir.qty as no_of_items,party_master.party_name,item_master.item_name,mir.inv_no,ifnull(DATE_FORMAT(mir.inv_date,'%d-%m-%Y'),'') as inv_date,mir.doc_no,ifnull(DATE_FORMAT(mir.doc_date,'%d-%m-%Y'),'') as doc_date,trans_main.trans_number as po_number,mir.qty_kg,mir.inward_qty,mir_transaction.trans_status,mir.trans_type,mir_transaction.qty,mir_transaction.id as mir_trans_id,mir_transaction.item_id,mir_transaction.short_qty,(mir_transaction.short_qty - mir_transaction.repaired_qty) as reparing_pending_qty,mir_transaction.item_stock_type";
 
             $data['leftJoin']['mir'] = "mir.id = mir_transaction.mir_id";
             $data['leftJoin']['item_master'] = "item_master.id = mir_transaction.item_id";
@@ -407,6 +408,41 @@ class GateInwardModel extends masterModel{
         $queryData['where']['mir_transaction.entry_type'] = $this->data['entryData']->id;
         $queryData['where']['(mir_transaction.qty - mir_transaction.inv_qty) >'] = 0;
         return $this->rows($queryData);
+    }
+
+    public function getItemKitList($data){
+        $queryData = array();
+        $queryData['tableName'] = $this->itemKit;
+        $queryData['select'] = "item_kit.*,item_master.item_code,item_master.item_name";
+        $queryData['leftJoin']['item_master'] = "item_master.id = item_kit.kit_item_id";
+        $queryData['where']['item_kit.mir_trans_id'] = $data['mir_trans_id'];
+        $result = $this->rows($queryData);        
+        return $result;
+    }
+
+    public function saveItemKit($data){
+        try{
+            $this->db->trans_begin();
+
+            $this->trash($this->itemKit,['mir_trans_id'=>$data['mir_trans_id']]);
+
+            foreach($data['kitData'] as $row):
+                $row['mir_trans_id'] = $data['mir_trans_id'];
+                $row['item_id'] = $data['item_id'];
+                $row['is_delete'] = 0;
+
+                $this->store($this->itemKit,$row);
+            endforeach;
+            $result = ['status'=>1,'message'=>'Item Kit saved successfully.'];
+
+            if ($this->db->trans_status() !== FALSE):
+                $this->db->trans_commit();
+                return $result;
+            endif;
+        }catch(\Exception $e){
+            $this->db->trans_rollback();
+            return ['status'=>2,'message'=>"somthing is wrong. Error : ".$e->getMessage()];
+        }	
     }
 }
 ?>
