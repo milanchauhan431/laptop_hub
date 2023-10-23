@@ -129,7 +129,7 @@ class ServicesModel extends MasterModel{
                         'main_ref_id' => $result['id'],
                         'child_ref_id' => $itemTrans['id'],
                         'location_id' => $this->REJ_STORE->id,
-                        'batch_no' => $row['batch_no'],
+                        'batch_no' => $data['batch_no'],
                         'party_id' => 0,
                         'item_id' => $row['kit_item_id'],
                         'p_or_m' => 1,

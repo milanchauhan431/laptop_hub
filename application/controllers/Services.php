@@ -55,6 +55,7 @@ class Services extends MY_Controller{
             $errorMessage['item_name'] = "Item Name is required.";
         if(empty($data['qty'])):
             $errorMessage['qty'] = "Qty is required.";
+            $data['qty'] = 0;
         else:
             $giItem = $this->gateInward->getInwardItem(['id'=>$data['ref_id']]);
             if($data['qty'] > $giItem->short_qty):
