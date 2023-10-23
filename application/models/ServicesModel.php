@@ -200,8 +200,9 @@ class ServicesModel extends MasterModel{
         $queryData = array();
         $queryData['tableName'] = $this->serviceTrans;
         $queryData['select'] = "service_transaction.*,item_master.item_code,item_master.item_name";
-        $queryData['where']['service_id'] = $data['service_id'];
-        $result = $this->row($queryData);
+        $queryData['leftJoin']['item_master'] = "service_transaction.kit_item_id = item_master.id";
+        $queryData['where']['service_transaction.service_id'] = $data['service_id'];
+        $result = $this->rows($queryData);
         return $result;
     }
 
@@ -210,7 +211,7 @@ class ServicesModel extends MasterModel{
             $this->db->trans_begin();
 
             $serviceData = $this->getService(['id'=>$id]);
-            $setviceTrans = $this->getServiceTrans(['service_id'=>$id]);
+            $serviceTrans = $this->getServiceTransaction(['service_id'=>$id]);
             
             //check reparing stock
             if($serviceData->trans_type == 1):
@@ -246,7 +247,7 @@ class ServicesModel extends MasterModel{
 
             //check customized stock
             if($serviceData->trans_type == 2):
-                $postData = ['location_id' => $this->CUSTSYS_STORE->id,'batch_no' => $serviceData->batch_no,'item_id' => $serviceData->kit_item_id,'stock_required'=>1,'single_row'=>1];                    
+                $postData = ['location_id' => $this->CUSTSYS_STORE->id,'batch_no' => $serviceData->batch_no,'item_id' => $serviceData->item_id,'stock_required'=>1,'single_row'=>1];                    
                 $stockData = $this->itemStock->getItemStockBatchWise($postData);
                 $stockQty = (!empty($stockData->qty))?$stockData->qty:0;
 
