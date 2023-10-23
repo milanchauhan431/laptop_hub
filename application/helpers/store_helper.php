@@ -144,7 +144,7 @@ function getGateInwardData($data){
 
         $itemKitParam = "{'postData':{'id' : ".$data->mir_trans_id.",'item_id':".$data->item_id."},'modal_id' : 'modal-xl', 'form_id' : 'itemKitForm', 'title' : 'Item Kit [Item Name : ".$data->item_name."]','fnedit':'addItemKit','fnsave':'saveItemKit'}";
         $itemKit = '<a href="javascript:void(0);" type="button" class="btn btn-info permission-modify" datatip="Item Kit" flow="down" onclick="edit('.$itemKitParam.');"><i class="fas fa-plus"></i></a>';
-        if($data->item_stock_type == 1):
+        if($data->item_stock_type != 1):
             $itemKit = "";
         endif;
 
