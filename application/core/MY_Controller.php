@@ -127,6 +127,7 @@ class MY_Controller extends CI_Controller{
 		$this->RTD_STORE = $this->session->userdata('RTD_STORE');
 		$this->REP_STORE = $this->session->userdata('REP_STORE');
 		$this->REJ_STORE = $this->session->userdata('REJ_STORE');
+		$this->CUSTSYS_STORE = $this->session->userdata('CUSTSYS_STORE');
 
 		$models = $modelNames;
 		foreach($models as $modelName):
@@ -147,6 +148,7 @@ class MY_Controller extends CI_Controller{
 			$this->{$modelName}->RTD_STORE = $this->RTD_STORE;
 			$this->{$modelName}->REP_STORE = $this->REP_STORE;
 			$this->{$modelName}->REJ_STORE = $this->REJ_STORE;
+			$this->{$modelName}->CUSTSYS_STORE = $this->CUSTSYS_STORE;
 		endforeach;
 		return true;
 	}

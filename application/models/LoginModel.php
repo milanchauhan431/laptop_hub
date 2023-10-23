@@ -30,10 +30,13 @@ class LoginModel extends CI_Model{
 					$REP_STORE = $this->db->where('store_type',2)->where('cm_id',$resData->cm_id)->get('location_master')->row();
 					//Rejection Or Scrap Store
 					$REJ_STORE = $this->db->where('store_type',3)->where('cm_id',$resData->cm_id)->get('location_master')->row();
+					//Customized System Store
+					$CUSTSYS_STORE = $this->db->where('store_type',4)->where('cm_id',$resData->cm_id)->get('location_master')->row();
 					
 					$this->session->set_userdata("RTD_STORE",$RTD_STORE);
 					$this->session->set_userdata("REP_STORE",$REP_STORE);
 					$this->session->set_userdata("REJ_STORE",$REJ_STORE);
+					$this->session->set_userdata("CUSTSYS_STORE",$CUSTSYS_STORE);
 					
 					//FY Data
 					$fyData=$this->db->where('is_active',1)->get('financial_year')->row();
