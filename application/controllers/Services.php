@@ -17,7 +17,7 @@ class Services extends MY_Controller{
 		$this->load->view($this->index,$this->data);
     }
 
-    public function getDTRows($type=2,$entry_type = 0){
+    public function getDTRows($type=2,$entry_type = 26){
         $data = $this->input->post();
         $data['trans_type'] = $type;
         $data['entry_type'] = $entry_type;
