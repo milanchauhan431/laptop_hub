@@ -35,7 +35,7 @@ class ServicesModel extends MasterModel{
             $data['searchCol'][] = "(mir_transaction.short_qty - mir_transaction.repaired_qty)";
         else:
             $data['tableName'] = $this->serviceMaster;
-            $data['select'] = "service_master.id,service_master.entry_type,service_master.trans_number,service_master.trans_date,service_master.item_id,item_master.item_name,service_master.qty,service_master.amount,(service_master.amount + service_master.part_amount) as total_amount,service_master.remark";
+            $data['select'] = "service_master.id,service_master.entry_type,service_master.trans_number,service_master.trans_date,service_master.item_id,item_master.item_name,service_master.qty,service_master.amount,(CASE WHEN service_master.trans_type = 1 THEN (service_master.amount + service_master.part_amount) ELSE service_master.amount END) as total_amount,service_master.remark";
 
             $data['leftJoin']['item_master'] = "service_master.item_id = item_master.id";
             
@@ -51,7 +51,7 @@ class ServicesModel extends MasterModel{
             $data['searchCol'][] = "DATE_FORMAT(service_master.trans_date,'%d-%m-%Y')";
             $data['searchCol'][] = "item_master.item_name";
             $data['searchCol'][] = "service_master.qty";
-            $data['searchCol'][] = "(service_master.amount + service_master.part_amount)";
+            $data['searchCol'][] = "(CASE WHEN service_master.trans_type = 1 THEN (service_master.amount + service_master.part_amount) ELSE service_master.amount END)";
             $data['searchCol'][] = "service_master.remark";
         endif;
 

@@ -15,7 +15,7 @@
                                         <button onclick="statusTab('serviceTable','1/58','getStoreDtHeader','service');" class="nav-tab btn waves-effect waves-light btn-outline-success" id="completed_ser" style="outline:0px" data-toggle="tab" aria-expanded="false">Completed Repairing</button>
                                     </li>
                                     <li class="nav-item">
-                                        <button onclick="statusTab('serviceTable','2/58','getStoreDtHeader','service');" class="nav-tab btn waves-effect waves-light btn-outline-warning" id="completed_ser" style="outline:0px" data-toggle="tab" aria-expanded="false">Customized</button>
+                                        <button onclick="statusTab('serviceTable','2/58','getStoreDtHeader','service');" class="nav-tab btn waves-effect waves-light btn-outline-warning" id="completed_csm" style="outline:0px" data-toggle="tab" aria-expanded="false">Customized</button>
                                     </li>
                                 </ul>
                             </div>
