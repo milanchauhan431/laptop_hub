@@ -91,7 +91,8 @@ class PermissionModel extends MasterModel{
                     'is_modify' => $menuModify,
                     'is_remove' => $menuDelete,
                     'is_master' => $data['is_master'][$key],
-                    'created_by' => $this->loginId
+                    'created_by' => $this->loginId,
+                    'cm_id' => $this->cm_id
                 ];
                 if(in_array($value,$data['main_id'])):
                     $subPermission = array();
@@ -111,7 +112,8 @@ class PermissionModel extends MasterModel{
                                 'is_modify' => $subMenuModify,
                                 'is_remove' => $subMenuDelete,
                                 'is_approve' => $subMenuApprove,
-                                'created_by' => $this->loginId
+                                'created_by' => $this->loginId,
+                                'cm_id' => $this->cm_id
                             ];
                             $this->db->where('menu_id',$value)->where('sub_menu_id',$subValue)->where('emp_id',$data['emp_id'])->update($this->subMenuPermission,$subPermission);
                         else:
@@ -129,7 +131,8 @@ class PermissionModel extends MasterModel{
                                 'is_modify' => $subMenuModify,
                                 'is_remove' => $subMenuDelete,
                                 'is_approve' => $subMenuApprove,
-                                'created_by' => $this->loginId
+                                'created_by' => $this->loginId,
+                                'cm_id' => $this->cm_id
                             ];
                             $this->db->insert($this->subMenuPermission,$subPermission);
                         endif;
@@ -149,7 +152,8 @@ class PermissionModel extends MasterModel{
                     'is_modify' => $menuModify,
                     'is_remove' => $menuDelete,
                     'is_master' => $data['is_master'][$key],
-                    'created_by' => $this->loginId
+                    'created_by' => $this->loginId,
+                    'cm_id' => $this->cm_id
                 ];
                 if(in_array($value,$data['main_id'])):
                     $subPermission = array();
@@ -168,7 +172,8 @@ class PermissionModel extends MasterModel{
                             'is_modify' => $subMenuModify,
                             'is_remove' => $subMenuDelete,
                             'is_approve' => $subMenuApprove,
-                            'created_by' => $this->loginId
+                            'created_by' => $this->loginId,
+                            'cm_id' => $this->cm_id
                         ];
                         $this->db->insert($this->subMenuPermission,$subPermission);
                         
@@ -198,7 +203,8 @@ class PermissionModel extends MasterModel{
                 'is_write' => $row->is_write,
                 'is_modify' => $row->is_modify,
                 'is_remove' => $row->is_remove,
-                'creted_by' => $this->loginId
+                'creted_by' => $this->loginId,
+                'cm_id' => $this->cm_id
             ]; 
             $result = $this->store($this->menuPermission,$mainPermission);
         endforeach;
@@ -215,7 +221,8 @@ class PermissionModel extends MasterModel{
                 'is_modify' => $row->is_modify,
                 'is_remove' => $row->is_remove,
                 'is_approve' => $row->is_approve,
-                'creted_by' => $this->loginId
+                'creted_by' => $this->loginId,
+                'cm_id' => $this->cm_id
             ];
             $result = $this->store($this->subMenuPermission,$subPermission);
         endforeach;
