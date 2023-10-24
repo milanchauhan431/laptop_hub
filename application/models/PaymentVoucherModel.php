@@ -81,6 +81,17 @@ class PaymentVoucherModel extends MasterModel{
 		try{
 			$this->db->trans_begin();
 
+            if(empty($data['id'])):
+                if($data['vou_name_s'] == "BCRct"):
+                    $data['trans_prefix'] = $this->data['entryData']->trans_prefix;
+                else:
+                    $data['trans_prefix'] = str_replace("R","P",$this->data['entryData']->trans_prefix);
+                endif;
+                
+                $data['trans_no'] = $this->transMainModel->nextTransNo($this->data['entryData']->id,0,$data['vou_name_s']);
+                $data['trans_number']	= $data['trans_prefix'].$data['trans_no'];
+            endif;
+
             if(!empty($data['id'])):
                 $vouData = $this->getVoucher($data['id']);
                 if(!empty($vouData->ref_id)):

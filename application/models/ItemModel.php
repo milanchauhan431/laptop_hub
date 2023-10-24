@@ -67,6 +67,10 @@ class ItemModel extends MasterModel{
             $queryData['where']['item_master.active'] = 1;
         endif;
 
+        if(!empty($data['cm_id'])):
+            $queryData['cm_id'] = $data['cm_id'];
+        endif;
+
         return $this->rows($queryData);
     }
 
