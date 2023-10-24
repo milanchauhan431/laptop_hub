@@ -244,5 +244,10 @@ class MY_Controller extends CI_Controller{
 
 		$this->printJson(['status'=>1,'batchOption'=>$html]);
 	}
+
+	public function getPartyInvoiceList(){
+        $data = $this->input->post();
+        $this->printJson($this->transMainModel->getPartyInvoiceList($data));
+    }
 }
 ?>

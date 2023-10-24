@@ -2059,6 +2059,11 @@ span.multiselect-native-select select {
 .typeahead.dropdown-menu{width:95.5% !important;padding:0px !important;border: 1px solid #999999 !important;box-shadow: 0 2px 5px 0 rgb(0 0 0 / 26%); !important}
 .typeahead.dropdown-menu li{border-bottom: 1px solid #999999 !important;}
 .typeahead.dropdown-menu li .dropdown-item{padding: 8px 1em;margin:0 !important;}
+.typeahead .active {
+    color: #fff !important;
+    text-decoration: none !important;
+    background-color: #abd4fd !important;
+}
 
 /*** jp card panel with isotop ***/
 

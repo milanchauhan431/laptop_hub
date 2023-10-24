@@ -107,6 +107,9 @@
 
                                     <div class="col-md-2 form-group">
                                         <label for="doc_no">Inv. No.</label>
+                                        <div class="float-right" id="invItemLink">
+                                            <a class="text-primary font-bold waves-effect waves-dark getInvoiceItem" href="javascript:void(0)">+ Add Item</a>
+										</div>
                                         <input type="text" name="doc_no" id="doc_no" class="form-control" value="<?=(!empty($dataRow->doc_no))?$dataRow->doc_no:""?>">
                                     </div>
 
@@ -221,6 +224,11 @@
                                 <input type="hidden" name="item_type" id="item_type" value="1" />
                                 <input type="hidden" name="stock_eff" id="stock_eff" value="1" />
                                 <input type="hidden" name="org_price" id="org_price" class="org_price" value="" />
+
+                                <input type="hidden" name="location_id" id="location_id" value="" />
+                                <input type="hidden" name="batch_no" id="batch_no" value="" />
+                                <input type="hidden" name="unique_id" id="unique_id" value="" />
+                                <input type="hidden" name="packing_qty" id="packing_qty" class="form-control" value="" readonly>
                             </div>
                             
 
@@ -232,23 +240,19 @@
                                     <?=getItemListOption($itemList)?>
                                 </select>
                             </div>
-                            <div class="col-md-3 form-group">
+                            <div class="col-md-2 form-group">
                                 <label for="qty">Quantity</label>
                                 <input type="text" name="qty" id="qty" class="form-control floatOnly req" value="0">
-                            </div>
-                            <div class="col-md-3 form-group">
-                                <label for="packing_qty">Packing Standard</label>
-                                <input type="text" name="packing_qty" id="packing_qty" class="form-control" value="" readonly>
-                            </div>
-                            <div class="col-md-3 form-group">
-                                <label for="disc_per">Disc. (%)</label>
-                                <input type="text" name="disc_per" id="disc_per" class="form-control floatOnly" value="0">
-                            </div>
-                            <div class="col-md-3 form-group">
+                            </div>                            
+                            <div class="col-md-2 form-group">
                                 <label for="price">Price</label>
                                 <input type="text" name="price" id="price" class="form-control floatOnly req" value="0" />
                             </div>
-                            <div class="col-md-4 form-group">
+                            <div class="col-md-2 form-group">
+                                <label for="disc_per">Disc. (%)</label>
+                                <input type="text" name="disc_per" id="disc_per" class="form-control floatOnly" value="0">
+                            </div>
+                            <div class="col-md-2 form-group">
                                 <label for="unit_id">Unit</label>        
                                 <select name="unit_id" id="unit_id" class="form-control select2">
                                     <option value="">Select Unit</option>
@@ -256,14 +260,14 @@
                                 </select> 
                                 <input type="hidden" name="unit_name" id="unit_name" class="form-control" value="" />                       
                             </div>
-							<div class="col-md-4 form-group">
+							<div class="col-md-2 form-group">
                                 <label for="hsn_code">HSN Code</label>
                                 <select name="hsn_code" id="hsn_code" class="form-control select2">
                                     <option value="">Select HSN Code</option>
                                     <?=getHsnCodeListOption($hsnList)?>
                                 </select>
                             </div>
-                            <div class="col-md-4 form-group">
+                            <div class="col-md-2 form-group">
                                 <label for="gst_per">GST Per.(%)</label>
                                 <select name="gst_per" id="gst_per" class="form-control select2">
                                     <?php

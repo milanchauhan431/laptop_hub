@@ -190,5 +190,11 @@ class SalesInvoice extends MY_Controller{
 		$mpdf->WriteHTML($pdfData);
 		$mpdf->Output($pdfFileName,'I');
 	}
+
+    public function getPartyInvoiceItems(){
+        $data = $this->input->post();
+        $this->data['orderItems'] = $this->salesInvoice->getPendingInvoiceItems($data);
+        $this->load->view('credit_note/create_creditnote',$this->data);
+    }
 }
 ?>

@@ -332,6 +332,17 @@ class TransactionMainModel extends MasterModel{
 			return false;
 		}
 	}
+
+	public function getPartyInvoiceList($data){
+        $queryData  = array();
+        $queryData['tableName'] = $this->transMain;
+        $queryData['select'] = "trans_main.id,trans_main.entry_type,trans_main.trans_number,DATE_FORMAT(trans_main.trans_date,'%d-%m-%Y') as trans_date";
+        $queryData['where']['party_id'] = $data['party_id'];
+        $queryData['where_in']['vou_name_s'] = (in_array($data['order_type'],["Increase Sales","Decrease Sales","Sales Return"]))?"'Sale','GInc'":"'Purc','GExp'";
+        $queryData['like']['trans_main.trans_number'] = $data['doc_no'];
+        $result = $this->rows($queryData);
+        return $result;
+    }
 }
 	
 ?>

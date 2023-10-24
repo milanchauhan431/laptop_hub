@@ -470,5 +470,20 @@ class SalesInvoiceModel extends MasterModel{
             return ['status'=>2,'message'=>"somthing is wrong. Error : ".$e->getMessage()];
         }
     }
+
+    public function getPendingInvoiceItems($data){
+        $queryData = array();
+        $queryData['tableName'] = $this->transChild;
+        $queryData['select'] = "trans_child.*,(trans_child.qty - trans_child.dispatch_qty) as pending_qty,trans_details.i_col_1 as location_id,trans_details.t_col_1 as batch_no,trans_details.i_col_2 as unique_id,trans_main.entry_type as main_entry_type,trans_main.trans_number,trans_main.trans_date,trans_main.doc_no";
+        
+        $queryData['leftJoin']['trans_main'] = "trans_child.trans_main_id = trans_main.id";
+        $queryData['leftJoin']['item_master'] = "trans_child.item_id = item_master.id";
+        $queryData['leftJoin']['trans_details'] = "trans_child.trans_main_id = trans_details.main_ref_id AND trans_details.child_ref_id = trans_child.id AND trans_details.description = 'SI BATCH DETAILS' AND trans_details.table_name = '".$this->transChild."'";
+
+        $queryData['where']['trans_main.id'] = $data['id'];
+        $queryData['where']['trans_child.entry_type'] = $this->data['entryData']->id;
+        $queryData['where']['(trans_child.qty - trans_child.dispatch_qty) >'] = 0;
+        return $this->rows($queryData);
+    }
 }
 ?>
