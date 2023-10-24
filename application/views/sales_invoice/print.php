@@ -26,7 +26,7 @@
                     <b>BILL TO</b><br>
                     <b><?=$invData->party_name?></b><br>
                     <?=(!empty($partyData->party_address) ? $partyData->party_address : '')?><br>
-                    <b>GSTIN : <?= $invData->gstin?> | STATE CODE: <?=substr($invData->gstin, 0, 2)?> | CITY : <?=$partyData->city_name?></b>
+                    <b>GSTIN : <?= $invData->gstin?> | CITY : <?=$partyData->city_name?></b>
                 </td>
                 <td>
                     <b>Invoice No. : <?=$invData->trans_prefix . $invData->trans_no?></b>
@@ -170,14 +170,14 @@
                     <th class="text-right"><?=sprintf('%.2f',$invData->taxable_amount)?></th>
                 </tr>
                 <tr>
-                    <th class="text-left" colspan="5" rowspan="<?=$rwspan?>">
+                    <td class="text-left" colspan="5" rowspan="<?=$rwspan?>">
                         <b>Bank Name : </b> <?=$companyData->company_bank_name?><br>
                         <b>A/c. No. : </b><?=$companyData->company_acc_no?><br>
                         <b>IFSC Code : </b><?=$companyData->company_ifsc_code?><br>
                         <b>Branch : </b><?=$companyData->company_bank_branch?>
                         <hr>
                         <b>Note : </b> <?=$invData->remark?>
-                    </th>
+                    </td>
                     <?php if(empty($rwspan)): ?>
                         <th colspan="2" class="text-right">Round Off</th>
                         <td class="text-right"><?=sprintf('%.2f',$invData->round_off_amount)?></td>
@@ -185,21 +185,20 @@
                 </tr>
                 <?=$beforExp.$taxHtml.$afterExp?>
                 <tr>
-                    <th class="text-left" colspan="5" rowspan="<?=$fixRwSpan?>">
-                        Amount In Words : <br><?=numToWordEnglish(sprintf('%.2f',$invData->net_amount))?>
-                    </th>	
+                    <td class="text-left" colspan="5" rowspan="<?=$fixRwSpan?>">
+                        <b>Amount In Words :</b> <br><?=numToWordEnglish(sprintf('%.2f',$invData->net_amount))?>
+                    </td>	
                     
                     <?php if(empty($rwspan)): ?>
                         <th colspan="2" class="text-right">Grand Total</th>
                         <th class="text-right"><?=sprintf('%.2f',$invData->net_amount)?></th>
+                    <?php else: ?>
+                        <th colspan="2" class="text-right">Round Off</th>
+                        <td class="text-right"><?=sprintf('%.2f',$invData->round_off_amount)?></td>
                     <?php endif; ?>
                 </tr>
                 
                 <?php if(!empty($rwspan)): ?>
-                <tr>
-                    <th colspan="2" class="text-right">Round Off</th>
-                    <td class="text-right"><?=sprintf('%.2f',$invData->round_off_amount)?></td>
-                </tr>
                 <tr>
                     <th colspan="2" class="text-right">Grand Total</th>
                     <th class="text-right"><?=sprintf('%.2f',$invData->net_amount)?></th>

@@ -61,34 +61,33 @@ class SalesInvoice extends MY_Controller{
         else:
             $bQty = array();
             foreach($data['itemData'] as $key => $row):
-                if(!empty(floatVal($row['qty'])) && !empty($row['size'])):
-                    if(is_int(($row['qty'] / $row['packing_qty'])) == false):
-                        $errorMessage['qty'.$key] = "Invalid qty against packing standard.";
-                    endif;
-                endif;
 
                 if($row['stock_eff'] == 1):
-                    $postData = ['location_id' => $this->RTD_STORE->id,'batch_no' => "GB",'item_id' => $row['item_id'],'stock_required'=>1,'single_row'=>1];
-                    
-                    $stockData = $this->itemStock->getItemStockBatchWise($postData);  
-                    
-                    $stockQty = (!empty($stockData->qty))?$stockData->qty:0;
-                    if(!empty($row['id'])):
-                        $oldItem = $this->salesInvoice->getSalesInvoiceItem(['id'=>$row['id']]);
-                        $stockQty = $stockQty + $oldItem->qty;
-                    endif;
-                    
-                    if(!isset($bQty[$row['item_id']])):
-                        $bQty[$row['item_id']] = $row['qty'] ;
+                    if(empty($row['masterData']['t_col_1'])):
+                        $errorMessage['batch_no'.$key] = "Batch No. is required.";
                     else:
-                        $bQty[$row['item_id']] += $row['qty'];
-                    endif;
+                        $postData = ['location_id' => $row['masterData']['i_col_1'],'batch_no' => $row['masterData']['t_col_1'],'item_id' => $row['item_id'],'stock_required'=>1,'single_row'=>1];
+                        
+                        $stockData = $this->itemStock->getItemStockBatchWise($postData);  
+                        
+                        $stockQty = (!empty($stockData->qty))?$stockData->qty:0;
+                        if(!empty($row['id'])):
+                            $oldItem = $this->salesInvoice->getSalesInvoiceItem(['id'=>$row['id']]);
+                            $stockQty = $stockQty + $oldItem->qty;
+                        endif;
+                        
+                        if(!isset($bQty[$row['item_id']])):
+                            $bQty[$row['item_id']] = $row['qty'] ;
+                        else:
+                            $bQty[$row['item_id']] += $row['qty'];
+                        endif;
 
-                    if(empty($stockQty)):
-                        $errorMessage['qty'.$key] = "Stock not available.";
-                    else:
-                        if($bQty[$row['item_id']] > $stockQty):
+                        if(empty($stockQty)):
                             $errorMessage['qty'.$key] = "Stock not available.";
+                        else:
+                            if($bQty[$row['item_id']] > $stockQty):
+                                $errorMessage['qty'.$key] = "Stock not available.";
+                            endif;
                         endif;
                     endif;
                 endif;

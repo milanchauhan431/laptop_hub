@@ -219,12 +219,27 @@ class MY_Controller extends CI_Controller{
 
 	public function getItemBtachList(){
 		$data = $this->input->post();
+		$data['stock_required'] = 1;
 		$data['location_id'] = $this->RTD_STORE->id;
 		$result = $this->itemStock->getItemStockBatchWise($data);
 
 		$html = '<option value="">Select</option>';
 		foreach($result as $row):
 			$html .= '<option value="'.$row->batch_no.'" data-mir_trans_id="'.$row->child_ref_id.'" data-unique_id="'.$row->unique_id.'" data-price="'.$row->price.'">'.$row->batch_no.'</option>';
+		endforeach;
+
+		$this->printJson(['status'=>1,'batchOption'=>$html]);
+	}
+
+	public function getItemBtachWithLocationList(){
+		$data = $this->input->post();
+		$data['location_ids'] = [$this->RTD_STORE->id,$this->CUSTSYS_STORE->id];
+		$result = $this->itemStock->getBatchWiseItemStock($data);
+
+		$html = '<option value="">Select</option>';
+		foreach($result as $row):
+			$selected = (!empty($data['unique_id']) && $data['unique_id'] == $row->unique_id)?"selected":"";
+			$html .= '<option value="'.$row->unique_id.'" data-location_id="'.$row->location_id.'" data-batch_no="'.$row->batch_no.'" data-price="'.$row->price.'" '.$selected.'>'.$row->batch_no.' ['.$row->location.']</option>';
 		endforeach;
 
 		$this->printJson(['status'=>1,'batchOption'=>$html]);

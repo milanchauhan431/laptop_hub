@@ -127,8 +127,8 @@
                                         <input type="text" name="masterDetails[t_col_2]" id="master_t_col_2" class="form-control numericOnly" value="<?=(!empty($dataRow->contact_no))?$dataRow->contact_no:""?>">
                                     </div>
 
-                                    <div class="col-md-5 form-group">
-                                        <label for="master_t_col_3">Ship To</label>
+                                    <div class="col-md-8 form-group">
+                                        <label for="master_t_col_3">Address</label>
                                         <input type="text" name="masterDetails[t_col_3]" id="master_t_col_3" class="form-control" value="<?=(!empty($dataRow->ship_address))?$dataRow->ship_address:""?>">
                                     </div>
 
@@ -147,7 +147,7 @@
                                         <input type="date" name="ship_bill_date" id="ship_bill_date" class="form-control" value="<?=(!empty($dataRow->ship_bill_date))?$dataRow->ship_bill_date:""?>">
                                     </div>
 
-                                    <div class="col-md-3 form-group">
+                                    <div class="col-md-3 form-group hidden">
                                         <label for="bill_per">Bill (%)</label>
                                         <input type="text" name="masterDetails[i_col_1]" id="master_i_col_1" class="form-control numericOnly" value="<?=(!empty($dataRow->bill_per))?$dataRow->bill_per:"100"?>">
                                     </div>
@@ -167,6 +167,9 @@
 												<input type="hidden" id="item_type" class="itemFormInput" value="1" />
 												<input type="hidden" id="stock_eff" class="itemFormInput" value="1" />
 												<input type="hidden" id="org_price" class="itemFormInput" class="org_price" value="" />
+                                                <input type="hidden" id="packing_qty" class="itemFormInput" value="" >
+                                                <input type="hidden" id="location_id" class="itemFormInput" value="">
+                                                <input type="hidden" id="batch_no" class="itemFormInput" value="">
 											</div>
 											<div class="col-md-4 form-group">
 												<label for="item_id">Product Name</label>
@@ -188,21 +191,23 @@
 													<?=getItemListOption($itemList)?>
 												</select>
 											</div>
+                                            <div class="col-md-2 form-group">
+												<label for="unique_id">Batch No.</label>
+												<select id="unique_id" class="form-control select2 itemFormInput">
+                                                    <option value="">Select</option>
+                                                </select>
+											</div>
 											<div class="col-md-2 form-group">
 												<label for="qty">Quantity</label>
 												<input type="text" id="qty" class="form-control floatOnly itemFormInput req" value="0">
-											</div>
-											<div class="col-md-2 form-group">
-												<label for="packing_qty">Packing Standard</label>
-												<input type="text" id="packing_qty" class="form-control itemFormInput" value="" readonly>
-											</div>
-											<div class="col-md-2 form-group">
-												<label for="disc_per">Disc. (%)</label>
-												<input type="text" id="disc_per" class="form-control itemFormInput floatOnly" value="0">
-											</div>
+											</div>											
 											<div class="col-md-2 form-group">
 												<label for="price">Price</label>
 												<input type="text" id="price" class="form-control itemFormInput floatOnly req" value="0" />
+											</div>
+                                            <div class="col-md-2 form-group">
+												<label for="disc_per">Disc. (%)</label>
+												<input type="text" id="disc_per" class="form-control itemFormInput floatOnly" value="0">
 											</div>
 											<div class="col-md-2 form-group">
 												<label for="unit_id">Unit</label>        

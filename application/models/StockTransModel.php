@@ -125,6 +125,10 @@ class StockTransModel extends MasterModel{
             $queryData['where']['stock_transaction.location_id'] = $data['location_id'];
         endif;
 
+        if(!empty($data['location_ids'])):
+            $queryData['where_in']['stock_transaction.location_id'] = $data['location_ids'];
+        endif;
+
         if(!empty($data['batch_no'])):
             $queryData['where']['stock_transaction.batch_no'] = $data['batch_no'];
         endif;
@@ -173,5 +177,29 @@ class StockTransModel extends MasterModel{
         return $stockData;
     }
 
+    public function getBatchWiseItemStock($data=array()){
+        $item_id = $data['item_id'];
+        $location_ids = (is_array($data['location_ids']))?implode("','",$data['location_ids']):$data['location_ids'];
+        $locationCondition = (!empty($location_ids))?" AND st.location_id IN ('".$location_ids."')":"";
+        if(!empty($data['unique_id'])):
+            $unique_id = (is_array($data['unique_id']))?implode("','",$data['unique_id']):$data['unique_id'];
+            $where = "WHERE (st.unique_id IN ('".$unique_id."')  OR  st.qty > 0)".$locationCondition;
+        else:
+            $where = "WHERE st.qty > 0 ".$locationCondition;
+        endif;
+
+        $result = $this->db->query("SELECT st.* FROM (
+            SELECT stock_transaction.item_id, item_master.item_code, item_master.item_name, SUM(stock_transaction.qty * stock_transaction.p_or_m) as qty, stock_transaction.price, stock_transaction.unique_id, stock_transaction.batch_no,  stock_transaction.location_id,  lm.location, lm.store_name
+            FROM stock_transaction 
+            LEFT JOIN location_master as lm ON lm.id = stock_transaction.location_id
+            LEFT JOIN item_master ON item_master.id = stock_transaction.item_id
+            WHERE stock_transaction.item_id = $item_id
+            AND stock_transaction.is_delete = 0
+            GROUP BY stock_transaction.unique_id
+            ORDER BY stock_transaction.id ASC
+        ) as st $where")->result();
+
+        return $result;
+    }
 }
 ?>

@@ -1,3 +1,4 @@
+var itemCount = 0;
 $(document).ready(function(){
 	$("#itemForm .select2").select2();
 	$(document).on('click','.getPendingOrders',function(){
@@ -47,13 +48,7 @@ $(document).ready(function(){
         }
 	});
 
-    $(document).on('click', '.saveItem', function () {
-		/*var fd = $('#itemForm').serializeArray();
-		var formData = {};
-		$.each(fd, function (i, v) {
-			formData[v.name] = v.value;
-		});*/
-		
+    $(document).on('click', '.saveItem', function () {		
         var formData = {};
 		$.each($(".itemFormInput"),function(){
 			formData[$(this).attr('id')] = $(this).val();
@@ -64,30 +59,29 @@ $(document).ready(function(){
         if (formData.item_id == "") {
 			$(".item_id").html("Item Name is required.");
 		}
-		/* if (formData.item_name == "") {
-			$(".item_name").html("Item Name is required.");
-		} */
+		if (formData.batch_no == "") {
+			$(".batch_no").html("Batch No. is required.");
+		}
         if (formData.qty == "" || parseFloat(formData.qty) == 0) {
             $(".qty").html("Qty is required.");
         }
         if (formData.price == "" || parseFloat(formData.price) == 0) {
             $(".price").html("Price is required.");
         }
-		if(formData.packing_qty == "" || parseInt(formData.packing_qty) == 0){
-			$(".packing_qty").html("Packing standard is required.");
-		}
 
+		/* if(formData.packing_qty == "" || parseInt(formData.packing_qty) == 0){
+			$(".packing_qty").html("Packing standard is required.");
+		} */
         /* var item_ids = $(".item_id").map(function () { return $(this).val(); }).get();
         if ($.inArray(formData.item_id, item_ids) >= 0 && formData.row_index == "") {
             $(".item_name").html("Item already added.");
         } */
-
-		if(parseFloat(formData.qty) > 0 && parseInt(formData.packing_qty) > 0){
+		/* if(parseFloat(formData.qty) > 0 && parseInt(formData.packing_qty) > 0){
 			var totalBox = parseFloat(parseFloat(formData.qty) / parseFloat(formData.packing_qty));
 			if(!Number.isInteger(totalBox)){
 				$(".qty").html("Invalid qty against packing standard.");
 			}
-		}
+		} */
 
         var errorCount = $('#itemForm .error:not(:empty)').length;
 
@@ -97,8 +91,8 @@ $(document).ready(function(){
             var gst_amount = 0; var cgst_amt = 0; var sgst_amt = 0; var net_amount = 0; 
             var gst_per = 0; var cgst_per = 0; var sgst_per = 0; var igst_per = 0;
 
-			formData.org_price = (formData.org_price != "" || parseFloat(formData.org_price) > 0)?formData.org_price:0;
-			formData.price = parseFloat((parseFloat(formData.org_price) * parseFloat(($("#master_i_col_1").val() || 0)) / 100)).toFixed(2);
+			/* formData.org_price = (formData.org_price != "" || parseFloat(formData.org_price) > 0)?formData.org_price:0;
+			formData.price = parseFloat((parseFloat(formData.org_price) * parseFloat(($("#master_i_col_1").val() || 0)) / 100)).toFixed(2); */
 
             if (formData.disc_per == "" && formData.disc_per == "0") {
                 taxable_amount = amount = parseFloat(parseFloat(formData.qty) * parseFloat(formData.price)).toFixed(2);
@@ -142,6 +136,7 @@ $(document).ready(function(){
             $("#itemForm input:hidden").val('')
             $('#itemForm #row_index').val("");
             $('#itemForm #stock_eff').val(1);
+            $('#itemForm #unique_id').html('<option value="">Select</option>');
             $("#itemForm .select2").select2();
             if ($(this).data('fn') == "save") {
                 $("#item_id").focus();
@@ -159,6 +154,17 @@ $(document).ready(function(){
 		$("#itemForm .error").html("");
         $("#itemForm .select2").select2();
 	});  
+
+	$(document).on('change',"#itemForm #unique_id",function(){
+		var unique_id = $(this).val();
+		if(unique_id){
+			$("#itemForm #location_id").val($(this).find(":selected").data('location_id'));
+			$("#itemForm #batch_no").val($(this).find(":selected").data('batch_no'));
+		}else{
+			$("#itemForm #location_id").val("");
+			$("#itemForm #batch_no").val("");
+		}
+	});
 	
 	$(document).on('keyup change',"#itemForm #price",function(){
 		var price = $(this).val() || 0;
@@ -167,7 +173,7 @@ $(document).ready(function(){
 
 	$(document).on('change','#unit_id',function(){
 		$("#unit_name").val("");
-		if($(this).val()){ $("#unit_name").val($("#unit_id :selected").text()); }
+		if($(this).val()){ $("#unit_name").val($("#unit_id :selected").data('unit')); }
 	});
 
 	/*$(document).on('change','#hsn_code',function(){
@@ -187,10 +193,10 @@ $(document).ready(function(){
 				}
 			});
 		}
-	 });
+	});
 
 	//on change Bill Per.
-	$(document).on('keyup change','#master_i_col_1',function(){
+	/* $(document).on('keyup change','#master_i_col_1',function(){
 		var billPer = $(this).val();
 		billPer = (parseFloat(billPer) > 0)?billPer:0;
 		var rowCount = $('#salesInvoiceItems tbody tr').length;
@@ -263,11 +269,17 @@ $(document).ready(function(){
 				AddRow(formData); 				
 			}
 		}
-	});
+	}); */
 });
 
 function createInvoice(){
+	var fromEntryTypes = $("#saveSalesInvoice #from_entry_type").val();
+	var refIds = $("#saveSalesInvoice #ref_id").val();
 	var mainRefIds = []; var mainFromEntryType = [];
+
+	if(refIds != ""){ mainRefIds = refIds.split(","); }
+	if(fromEntryTypes != ""){ mainFromEntryType = fromEntryTypes.split(","); }
+
 	$(".orderItem:checked").map(function() {
 		row = $(this).data('row');
 		mainRefIds.push(row.trans_main_id);
@@ -317,15 +329,19 @@ function AddRow(data) {
 	cell.html(countRow);
 	cell.attr("style", "width:5%;");
 
-    var idInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][id]", value: data.id });
-    var itemIdInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][item_id]", class:"item_id", value: data.item_id });
-	var itemNameInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][item_name]", value: data.item_name });
-    var formEnteryTypeInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][from_entry_type]", value: data.from_entry_type });
-	var refIdInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][ref_id]", value: data.ref_id });
-    var itemCodeInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][item_code]", value: data.item_code });
-    var itemtypeInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][item_type]", value: data.item_type });
-	var stockEffInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][stock_eff]", value: data.stock_eff });
-    var pormInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][p_or_m]", value: -1 });
+    var idInput = $("<input/>", { type: "hidden", name: "itemData["+itemCount+"][id]", value: data.id });
+    var itemIdInput = $("<input/>", { type: "hidden", name: "itemData["+itemCount+"][item_id]", class:"item_id", value: data.item_id });
+	var itemNameInput = $("<input/>", { type: "hidden", name: "itemData["+itemCount+"][item_name]", value: data.item_name });
+    var formEnteryTypeInput = $("<input/>", { type: "hidden", name: "itemData["+itemCount+"][from_entry_type]", value: data.from_entry_type });
+	var refIdInput = $("<input/>", { type: "hidden", name: "itemData["+itemCount+"][ref_id]", value: data.ref_id });
+    var itemCodeInput = $("<input/>", { type: "hidden", name: "itemData["+itemCount+"][item_code]", value: data.item_code });
+    var itemtypeInput = $("<input/>", { type: "hidden", name: "itemData["+itemCount+"][item_type]", value: data.item_type });
+	var stockEffInput = $("<input/>", { type: "hidden", name: "itemData["+itemCount+"][stock_eff]", value: data.stock_eff });
+    var pormInput = $("<input/>", { type: "hidden", name: "itemData["+itemCount+"][p_or_m]", value: -1 });
+    var locationIdInput = $("<input/>", { type: "hidden", name: "itemData["+itemCount+"][masterData][i_col_1]", value: data.location_id });
+    var batchNoInput = $("<input/>", { type: "hidden", name: "itemData["+itemCount+"][masterData][t_col_1]", value: data.batch_no });
+    var uniqueIdInput = $("<input/>", { type: "hidden", name: "itemData["+itemCount+"][masterData][i_col_2]", value: data.unique_id });
+	var batchErrorDiv = $("<div></div>", { class: "error batch_no" + itemCount });
     cell = $(row.insertCell(-1));
     cell.html(data.item_name);
     cell.append(idInput);
@@ -337,64 +353,68 @@ function AddRow(data) {
     cell.append(itemtypeInput);
 	cell.append(stockEffInput);
     cell.append(pormInput);
+    cell.append(locationIdInput);
+    cell.append(batchNoInput);
+    cell.append(uniqueIdInput);
+    cell.append(batchErrorDiv);
 
-    var hsnCodeInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][hsn_code]", value: data.hsn_code });
+    var hsnCodeInput = $("<input/>", { type: "hidden", name: "itemData["+itemCount+"][hsn_code]", value: data.hsn_code });
 	cell = $(row.insertCell(-1));
 	cell.html(data.hsn_code);
 	cell.append(hsnCodeInput);
 
-    var qtyInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][qty]", class:"item_qty", value: data.qty });
-    var psInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][packing_qty]", value: data.packing_qty });
-	var qtyErrorDiv = $("<div></div>", { class: "error qty" + countRow });
+    var qtyInput = $("<input/>", { type: "hidden", name: "itemData["+itemCount+"][qty]", class:"item_qty", value: data.qty });
+    var psInput = $("<input/>", { type: "hidden", name: "itemData["+itemCount+"][packing_qty]", value: data.packing_qty });
+	var qtyErrorDiv = $("<div></div>", { class: "error qty" + itemCount });
 	cell = $(row.insertCell(-1));
 	cell.html(data.qty);
 	cell.append(qtyInput);
 	cell.append(psInput);
 	cell.append(qtyErrorDiv);
 
-    var unitIdInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][unit_id]", value: data.unit_id });
-	var unitNameInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][unit_name]", value: data.unit_name });
+    var unitIdInput = $("<input/>", { type: "hidden", name: "itemData["+itemCount+"][unit_id]", value: data.unit_id });
+	var unitNameInput = $("<input/>", { type: "hidden", name: "itemData["+itemCount+"][unit_name]", value: data.unit_name });
 	cell = $(row.insertCell(-1));
 	cell.html(data.unit_name);
 	cell.append(unitIdInput);
 	cell.append(unitNameInput);
 
-    var priceInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][price]", value: data.price});
-    var orgPriceInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][org_price]", value: data.org_price});
-	var priceErrorDiv = $("<div></div>", { class: "error price" + countRow });
+    var priceInput = $("<input/>", { type: "hidden", name: "itemData["+itemCount+"][price]", value: data.price});
+    var orgPriceInput = $("<input/>", { type: "hidden", name: "itemData["+itemCount+"][org_price]", value: data.org_price});
+	var priceErrorDiv = $("<div></div>", { class: "error price" + itemCount });
 	cell = $(row.insertCell(-1));
 	cell.html(data.price);
 	cell.append(priceInput);
 	cell.append(orgPriceInput);
 	cell.append(priceErrorDiv);
 
-    var discPerInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][disc_per]", value: data.disc_per});
-	var discAmtInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][disc_amount]", value: data.disc_amount });
+    var discPerInput = $("<input/>", { type: "hidden", name: "itemData["+itemCount+"][disc_per]", value: data.disc_per});
+	var discAmtInput = $("<input/>", { type: "hidden", name: "itemData["+itemCount+"][disc_amount]", value: data.disc_amount });
 	cell = $(row.insertCell(-1));
 	cell.html(data.disc_amount + '(' + data.disc_per + '%)');
 	cell.append(discPerInput);
 	cell.append(discAmtInput);
 
-    var cgstPerInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][cgst_per]", value: data.cgst_per });
-	var cgstAmtInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][cgst_amount]", class:'cgst_amount', value: data.cgst_amount });
+    var cgstPerInput = $("<input/>", { type: "hidden", name: "itemData["+itemCount+"][cgst_per]", value: data.cgst_per });
+	var cgstAmtInput = $("<input/>", { type: "hidden", name: "itemData["+itemCount+"][cgst_amount]", class:'cgst_amount', value: data.cgst_amount });
 	cell = $(row.insertCell(-1));
 	cell.html(data.cgst_amount + '(' + data.cgst_per + '%)');
 	cell.append(cgstPerInput);
 	cell.append(cgstAmtInput);
 	cell.attr("class", "cgstCol");
 
-	var sgstPerInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][sgst_per]", value: data.sgst_per });
-	var sgstAmtInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][sgst_amount]", class:"sgst_amount", value: data.sgst_amount });
+	var sgstPerInput = $("<input/>", { type: "hidden", name: "itemData["+itemCount+"][sgst_per]", value: data.sgst_per });
+	var sgstAmtInput = $("<input/>", { type: "hidden", name: "itemData["+itemCount+"][sgst_amount]", class:"sgst_amount", value: data.sgst_amount });
 	cell = $(row.insertCell(-1));
 	cell.html(data.sgst_amount + '(' + data.sgst_per + '%)');
 	cell.append(sgstPerInput);
 	cell.append(sgstAmtInput);
 	cell.attr("class", "sgstCol");
 
-	var gstPerInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][gst_per]", class:"gst_per", value: data.gst_per });
-	var igstPerInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][igst_per]", value: data.igst_per });
-	var gstAmtInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][gst_amount]", class:"gst_amount", value: data.gst_amount });
-	var igstAmtInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][igst_amount]", class:"igst_amount", value: data.igst_amount });
+	var gstPerInput = $("<input/>", { type: "hidden", name: "itemData["+itemCount+"][gst_per]", class:"gst_per", value: data.gst_per });
+	var igstPerInput = $("<input/>", { type: "hidden", name: "itemData["+itemCount+"][igst_per]", value: data.igst_per });
+	var gstAmtInput = $("<input/>", { type: "hidden", name: "itemData["+itemCount+"][gst_amount]", class:"gst_amount", value: data.gst_amount });
+	var igstAmtInput = $("<input/>", { type: "hidden", name: "itemData["+itemCount+"][igst_amount]", class:"igst_amount", value: data.igst_amount });
 	cell = $(row.insertCell(-1));
 	cell.html(data.igst_amount + '(' + data.igst_per + '%)');
 	cell.append(gstPerInput);
@@ -403,21 +423,21 @@ function AddRow(data) {
 	cell.append(igstAmtInput);
 	cell.attr("class", "igstCol");
 
-    var amountInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][amount]", class:"amount", value: data.amount });
-    var taxableAmountInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][taxable_amount]", class:"taxable_amount", value: data.taxable_amount });
+    var amountInput = $("<input/>", { type: "hidden", name: "itemData["+itemCount+"][amount]", class:"amount", value: data.amount });
+    var taxableAmountInput = $("<input/>", { type: "hidden", name: "itemData["+itemCount+"][taxable_amount]", class:"taxable_amount", value: data.taxable_amount });
 	cell = $(row.insertCell(-1));
 	cell.html(data.taxable_amount);
 	cell.append(amountInput);
 	cell.append(taxableAmountInput);
 	cell.attr("class", "amountCol");
 
-	var netAmtInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][net_amount]", value: data.net_amount });
+	var netAmtInput = $("<input/>", { type: "hidden", name: "itemData["+itemCount+"][net_amount]", value: data.net_amount });
 	cell = $(row.insertCell(-1));
 	cell.html(data.net_amount);
 	cell.append(netAmtInput);
 	cell.attr("class", "netAmtCol");
 
-    var itemRemarkInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][item_remark]", value: data.item_remark});
+    var itemRemarkInput = $("<input/>", { type: "hidden", name: "itemData["+itemCount+"][item_remark]", value: data.item_remark});
 	cell = $(row.insertCell(-1));
 	cell.html(data.item_remark);
 	cell.append(itemRemarkInput);
@@ -453,25 +473,40 @@ function AddRow(data) {
 	}
 
     claculateColumn();
+	itemCount++;
 }
 
 function Edit(data, button) {
 	var row_index = $(button).closest("tr").index();
 	//$("#itemModel").modal();
 	//$("#itemModel .btn-save").hide();
-	var trans_id = ''; var from_entry_type = ''; var ref_id = '';
+	var trans_id = ''; var from_entry_type = ''; var ref_id = '';var unique_id = "";
 	$.each(data, function (key, value) {
 		$("#itemForm #" + key).val(value);
 		
 		if(key=="id"){ trans_id = value; }
-		if(key=="from_entry_type"){ from_entry_type = from_entry_type; }
-		if(key=="ref_id"){ ref_id = ref_id; }
+		if(key=="from_entry_type"){ from_entry_type = value; }
+		if(key=="ref_id"){ ref_id = value; }
+		if(key=="unique_id"){ unique_id = value; }
 	});
+
+	
+	$.ajax({
+		url : base_url + controller + '/getItemBtachWithLocationList',
+		type : 'post',
+		data : {item_id : data.item_id,unique_id : data.unique_id},
+		dataType:'json',
+		success:function(res){
+			$("#itemForm #unique_id").html(res.batchOption);
+			$("#itemForm #unique_id").select2();			
+		}
+	});		
+
 	$("#itemForm #trans_id").val(trans_id);
 	$("#itemForm #trans_from_entry_type").val(from_entry_type);
 	$("#itemForm #trans_ref_id").val(ref_id);
 	
-	$("#itemForm #price").val(data.org_price);
+	//$("#itemForm #price").val(data.org_price);
 	$("#itemForm .select2").select2();
 	$("#itemForm #row_index").val(row_index);
 }
@@ -532,6 +567,17 @@ function resItemDetail(response = ""){
 		$("#itemForm #packing_qty").val(itemDetail.packing_standard);
         $("#itemForm #hsn_code").val(itemDetail.hsn_code);//$("#itemForm #hsn_code").select2();
         $("#itemForm #gst_per").val(parseFloat(itemDetail.gst_per).toFixed(0));$("#itemForm #gst_per").select2();
+
+		$.ajax({
+			url : base_url + controller + '/getItemBtachWithLocationList',
+			type : 'post',
+			data : {item_id : itemDetail.id},
+			dataType:'json',
+			success:function(res){
+				$("#itemForm #unique_id").html(res.batchOption);
+				$("#itemForm #unique_id").select2();
+			}
+		});
     }else{
         $("#itemForm #item_code").val("");
         $("#itemForm #item_name").val("");
@@ -544,6 +590,7 @@ function resItemDetail(response = ""){
 		$("#itemForm #packing_qty").val("");
         $("#itemForm #hsn_code").val("");//$("#itemForm #hsn_code").select2();
         $("#itemForm #gst_per").val(0);$("#itemForm #gst_per").select2(); 
+        $("#itemForm #unique_id").val(0);$("#itemForm #unique_id").select2();
     }
 }
 
