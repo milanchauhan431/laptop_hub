@@ -1,3 +1,4 @@
+var itemCount = 0;
 $(document).ready(function () {
     calculateCRDR();
 
@@ -87,10 +88,10 @@ function AddRow(data) {
 	cell.html(countRow);
 	cell.attr("style", "width:5%;");
 
-	var accIdInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][acc_id]", value: data.acc_id, class:'accIds' });
-	var ledgerNameInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][ledger_name]", value: data.ledger_name });
-	var priceInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][price]", value: data.price });
-	var transIdInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][id]", value: data.id });
+	var accIdInput = $("<input/>", { type: "hidden", name: "itemData["+itemCount+"][acc_id]", value: data.acc_id, class:'accIds' });
+	var ledgerNameInput = $("<input/>", { type: "hidden", name: "itemData["+itemCount+"][ledger_name]", value: data.ledger_name });
+	var priceInput = $("<input/>", { type: "hidden", name: "itemData["+itemCount+"][price]", value: data.price });
+	var transIdInput = $("<input/>", { type: "hidden", name: "itemData["+itemCount+"][id]", value: data.id });
 	cell = $(row.insertCell(-1));
 	cell.html(data.ledger_name);
 	cell.append(accIdInput);
@@ -98,21 +99,21 @@ function AddRow(data) {
 	cell.append(priceInput);
 	cell.append(transIdInput);
 
-	var crDrInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][cr_dr]", value: data.cr_dr });
-	var creditInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][credit_amount]", value: data.credit_amount, class:'credit_amount' });
-	var priceErrorDiv = $("<div></div>", { class: "error price" + countRow });
+	var crDrInput = $("<input/>", { type: "hidden", name: "itemData["+itemCount+"][cr_dr]", value: data.cr_dr });
+	var creditInput = $("<input/>", { type: "hidden", name: "itemData["+itemCount+"][credit_amount]", value: data.credit_amount, class:'credit_amount' });
+	var priceErrorDiv = $("<div></div>", { class: "error price" + itemCount });
 	cell = $(row.insertCell(-1));
 	cell.html(data.credit_amount);
 	cell.append(creditInput);
 	cell.append(crDrInput);
 	cell.append(priceErrorDiv);
 
-	var debitInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][debit_amount]", value: data.debit_amount, class:'debit_amount' });
+	var debitInput = $("<input/>", { type: "hidden", name: "itemData["+itemCount+"][debit_amount]", value: data.debit_amount, class:'debit_amount' });
 	cell = $(row.insertCell(-1));
 	cell.html(data.debit_amount);
 	cell.append(debitInput);
 
-	var itemRemarkInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][item_remark]", value: data.item_remark });
+	var itemRemarkInput = $("<input/>", { type: "hidden", name: "itemData["+itemCount+"][item_remark]", value: data.item_remark });
 	cell = $(row.insertCell(-1));
 	cell.html(data.item_remark);
 	cell.append(itemRemarkInput);
@@ -136,6 +137,7 @@ function AddRow(data) {
 	cell.attr("style", "width:10%;");
 
 	calculateCRDR();
+	itemCount++;
 }
 
 function Edit(data, button) {
