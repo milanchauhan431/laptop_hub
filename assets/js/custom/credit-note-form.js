@@ -70,6 +70,11 @@ $(document).ready(function(){
 
 			$(".ledgerColumn").hide();
 			$(".summary_desc").attr('style','width: 60%;');
+			if(order_type == "Sales Return"){
+				$(".itemStockEff").val(1);
+			}else{
+				$(".itemStockEff").val(0);
+			}
         });
 
 		
@@ -289,7 +294,7 @@ function AddRow(data) {
 	var refIdInput = $("<input/>", { type: "hidden", name: "itemData["+itemCount+"][ref_id]", value: data.ref_id });
     var itemCodeInput = $("<input/>", { type: "hidden", name: "itemData["+itemCount+"][item_code]", value: data.item_code });
     var itemtypeInput = $("<input/>", { type: "hidden", name: "itemData["+itemCount+"][item_type]", value: data.item_type });
-	var stockEffInput = $("<input/>", { type: "hidden", name: "itemData["+itemCount+"][stock_eff]", value: data.stock_eff });
+	var stockEffInput = $("<input/>", { type: "hidden", name: "itemData["+itemCount+"][stock_eff]", class:'itemStockEff', value: data.stock_eff });
     var pormInput = $("<input/>", { type: "hidden", name: "itemData["+itemCount+"][p_or_m]", value: 1 });
 	var locationIdInput = $("<input/>", { type: "hidden", name: "itemData["+itemCount+"][masterData][i_col_1]", value: data.location_id });
     var batchNoInput = $("<input/>", { type: "hidden", name: "itemData["+itemCount+"][masterData][t_col_1]", value: data.batch_no });
@@ -437,6 +442,12 @@ function Edit(data, button) {
 	$.each(data, function (key, value) {
 		$("#itemForm #" + key).val(value);
 	});
+
+	if($('#order_type').val() == "Sales Return"){
+		$('#itemForm #stock_eff').val("1");
+	}else{
+		$('#itemForm #stock_eff').val("0");
+	}
 
 	$("#itemForm .select2").select2();
 	$("#itemForm #row_index").val(row_index);

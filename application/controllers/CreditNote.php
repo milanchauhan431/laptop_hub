@@ -58,10 +58,8 @@ class CreditNote extends MY_Controller{
             $errorMessage['itemData'] = "Item Details is required.";
         else:
             foreach($data['itemData'] as $key => $row):
-                if(!empty(floatVal($row['qty'])) && !empty($row['size']) && $row['item_type'] == 1):
-                    if(is_int(($row['qty'] / $row['packing_qty'])) == false):
-                        $errorMessage['qty'.$key] = "Invalid qty against packing standard.";
-                    endif;
+                if(!empty($row['stock_eff']) && empty($row['masterData']['batch_no'])):
+                    $errorMessage['batch_no'.$key] = "Batch No. is required.";
                 endif;
             endforeach;
         endif;
