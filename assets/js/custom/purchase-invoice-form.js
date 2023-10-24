@@ -1,5 +1,8 @@
 var itemCount = 0;
 $(document).ready(function(){
+	$(".ledgerColumn").hide();
+	$(".summary_desc").attr('style','width: 60%;');
+
 	$(document).on('click','.getPendingOrders',function(){
 		var party_id = $('#party_id').val();
 		var party_name = $('#party_id :selected').text();
