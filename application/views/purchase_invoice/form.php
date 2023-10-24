@@ -146,7 +146,7 @@
                                 <div class="col-md-12 row">
                                     <div class="col-md-6"><h4>Item Details : </h4></div>
                                     <div class="col-md-6">
-                                        <button type="button" class="btn btn-outline-success waves-effect float-right add-item"><i class="fa fa-plus"></i> Add Item</button>
+                                        <!-- <button type="button" class="btn btn-outline-success waves-effect float-right add-item"><i class="fa fa-plus"></i> Add Item</button> -->
                                     </div>
                                 </div>
 
