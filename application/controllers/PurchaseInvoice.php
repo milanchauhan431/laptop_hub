@@ -92,5 +92,11 @@ class PurchaseInvoice extends MY_Controller{
             $this->printJson($this->purchaseInvoice->delete($id));
         endif;
     }
+
+    public function getPartyInvoiceItems(){
+        $data = $this->input->post();
+        $this->data['orderItems'] = $this->purchaseInvoice->getPendingInvoiceItems($data);
+        $this->load->view('debit_note/create_debitnote',$this->data);
+    }
 }
 ?>

@@ -186,6 +186,7 @@
                             $rwspan++;
                         endif;
                     endforeach;
+                    $fixRwSpan = (!empty($rwspan))?3:0;
                 ?>
                 <tr>
                     <th colspan="3" class="text-right">Total Qty.</th>
@@ -195,12 +196,17 @@
                     <th class="text-right"><?=sprintf('%.2f',$invData->taxable_amount)?></th>
                 </tr>
                 <tr >
-                    <th class="text-left" colspan="5" rowspan="<?=$rwspan?>">
+                    <td class="text-left" colspan="5" rowspan="<?=$rwspan?>">
                         <b>Bank Name : </b> <?=$companyData->company_bank_name?><br>
                         <b>A/c. No. : </b><?=$companyData->company_acc_no?><br>
                         <b>IFSC Code : </b><?=$companyData->company_ifsc_code?><br>
                         <b>Branch : </b><?=$companyData->company_bank_branch?>
-                    </th>
+                </td>
+
+                    <?php if(empty($rwspan)): ?>
+                        <th colspan="2" class="text-right">Round Off</th>
+                        <td class="text-right"><?=sprintf('%.2f',$invData->round_off_amount)?></td>
+                    <?php endif; ?>
                 </tr>
                 <!-- <tr>
                     <th class="text-left" colspan="5" rowspan="2">
@@ -209,19 +215,25 @@
                 </tr> -->
                 <?=$beforExp.$taxHtml.$afterExp?>
                 <tr>
-                    <th class="text-left" colspan="5" rowspan="3">
-                        Amount In Words : <br><?=numToWordEnglish(sprintf('%.2f',$invData->net_amount))?>
-                    </th>				
+                    <td class="text-left" colspan="5" rowspan="<?=$fixRwSpan?>">
+                        <b>Amount In Words :</b> <br><?=numToWordEnglish(sprintf('%.2f',$invData->net_amount))?>
+                    </td>
+                    
+                    <?php if(empty($rwspan)): ?>
+                        <th colspan="2" class="text-right">Grand Total</th>
+                        <th class="text-right"><?=sprintf('%.2f',$invData->net_amount)?></th>
+                    <?php else: ?>
+                        <th colspan="2" class="text-right">Round Off</th>
+                        <td class="text-right"><?=sprintf('%.2f',$invData->round_off_amount)?></td>
+                    <?php endif; ?>
                 </tr>
                 
-                <tr>
-                    <th colspan="2" class="text-right">Round Off</th>
-                    <td class="text-right"><?=sprintf('%.2f',$invData->round_off_amount)?></td>
-                </tr>
+                <?php if(!empty($rwspan)): ?>
                 <tr>
                     <th colspan="2" class="text-right">Grand Total</th>
                     <th class="text-right"><?=sprintf('%.2f',$invData->net_amount)?></th>
                 </tr>
+                <?php endif; ?>
             </tbody>
         </table>
 

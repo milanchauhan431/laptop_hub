@@ -2,7 +2,7 @@ var itemCount = 0;
 $(document).ready(function(){
 	$(".ledgerColumn").hide();
 	$(".summary_desc").attr('style','width: 60%;');
-	
+
 	$("#itemForm .select2").select2();
 	$(document).on('click','.getPendingOrders',function(){
 		var party_id = $('#party_id').val();
@@ -593,7 +593,7 @@ function resItemDetail(response = ""){
 		$("#itemForm #packing_qty").val("");
         $("#itemForm #hsn_code").val("");//$("#itemForm #hsn_code").select2();
         $("#itemForm #gst_per").val(0);$("#itemForm #gst_per").select2(); 
-        $("#itemForm #unique_id").val(0);$("#itemForm #unique_id").select2();
+        $("#itemForm #unique_id").html('<option value="">Select</option>');$("#itemForm #unique_id").select2();
     }
 }
 

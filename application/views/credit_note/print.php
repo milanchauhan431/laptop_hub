@@ -196,12 +196,12 @@
                     <th class="text-right"><?=sprintf('%.2f',$invData->taxable_amount)?></th>
                 </tr>
                 <tr >
-                    <th class="text-left" colspan="5" rowspan="<?=$rwspan?>">
+                    <td class="text-left" colspan="5" rowspan="<?=$rwspan?>">
                         <b>Bank Name : </b> <?=$companyData->company_bank_name?><br>
                         <b>A/c. No. : </b><?=$companyData->company_acc_no?><br>
                         <b>IFSC Code : </b><?=$companyData->company_ifsc_code?><br>
                         <b>Branch : </b><?=$companyData->company_bank_branch?>
-                    </th>
+                    </td>
 
                     <?php if(empty($rwspan)): ?>
                         <th colspan="2" class="text-right">Round Off</th>
@@ -215,9 +215,9 @@
                 </tr> -->
                 <?=$beforExp.$taxHtml.$afterExp?>
                 <tr>
-                    <th class="text-left" colspan="5" rowspan="<?=$fixRwSpan?>">
-                        Amount In Words : <br><?=numToWordEnglish(sprintf('%.2f',$invData->net_amount))?>
-                    </th>
+                    <td class="text-left" colspan="5" rowspan="<?=$fixRwSpan?>">
+                        <b>Amount In Words :</b> <br><?=numToWordEnglish(sprintf('%.2f',$invData->net_amount))?>
+                    </td>
                     
                     <?php if(empty($rwspan)): ?>
                         <th colspan="2" class="text-right">Grand Total</th>

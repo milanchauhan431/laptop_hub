@@ -76,16 +76,16 @@ class SalesInvoice extends MY_Controller{
                             $stockQty = $stockQty + $oldItem->qty;
                         endif;
                         
-                        if(!isset($bQty[$row['item_id']])):
-                            $bQty[$row['item_id']] = $row['qty'] ;
+                        if(!isset($bQty[$row['masterData']['i_col_2']])):
+                            $bQty[$row['masterData']['i_col_2']] = $row['qty'] ;
                         else:
-                            $bQty[$row['item_id']] += $row['qty'];
+                            $bQty[$row['masterData']['i_col_2']] += $row['qty'];
                         endif;
 
                         if(empty($stockQty)):
                             $errorMessage['qty'.$key] = "Stock not available.";
                         else:
-                            if($bQty[$row['item_id']] > $stockQty):
+                            if($bQty[$row['masterData']['i_col_2']] > $stockQty):
                                 $errorMessage['qty'.$key] = "Stock not available.";
                             endif;
                         endif;
