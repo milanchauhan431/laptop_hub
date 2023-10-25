@@ -3,8 +3,8 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 function getSalesDtHeader($page){
     /* Lead Header  */
-    $data['lead'][] = ["name"=>"Action","style"=>"width:5%;"];
-	$data['lead'][] = ["name"=>"#","style"=>"width:5%;","textAlign"=>"center"]; 
+    $data['lead'][] = ["name"=>"Action","style"=>"width:5%;","sortable"=>"FALSE"];
+	$data['lead'][] = ["name"=>"#","style"=>"width:5%;","textAlign"=>"center","sortable"=>"FALSE"]; 
 	$data['lead'][] = ["name"=>"Approach Date"];
 	$data['lead'][] = ["name"=>"Approach No"];
 	$data['lead'][] = ["name"=>"Lead From"];
@@ -16,8 +16,8 @@ function getSalesDtHeader($page){
     $data['lead'][] = ["name"=>"Followup Remark","sortable"=>"FALSE"];
     $data['lead'][] = ["name"=>"Next Followup Date","sortable"=>"FALSE"];
 
-    $data['lead_won'][] = ["name"=>"Action","style"=>"width:5%;"];
-	$data['lead_won'][] = ["name"=>"#","style"=>"width:5%;","textAlign"=>"center"]; 
+    $data['lead_won'][] = ["name"=>"Action","style"=>"width:5%;","sortable"=>"FALSE"];
+	$data['lead_won'][] = ["name"=>"#","style"=>"width:5%;","textAlign"=>"center","sortable"=>"FALSE"]; 
 	$data['lead_won'][] = ["name"=>"Approach Date"];
 	$data['lead_won'][] = ["name"=>"Approach No"];
 	$data['lead_won'][] = ["name"=>"Lead From"];
@@ -27,8 +27,8 @@ function getSalesDtHeader($page){
     $data['lead_won'][] = ["name"=>"Followup Date","sortable"=>"FALSE"];
     $data['lead_won'][] = ["name"=>"Followup Remark","sortable"=>"FALSE"];
 
-    $data['lead_lost'][] = ["name"=>"Action","style"=>"width:5%;"];
-	$data['lead_lost'][] = ["name"=>"#","style"=>"width:5%;","textAlign"=>"center"]; 
+    $data['lead_lost'][] = ["name"=>"Action","style"=>"width:5%;","sortable"=>"FALSE"];
+	$data['lead_lost'][] = ["name"=>"#","style"=>"width:5%;","textAlign"=>"center","sortable"=>"FALSE"]; 
 	$data['lead_lost'][] = ["name"=>"Approach Date"];
 	$data['lead_lost'][] = ["name"=>"Approach No"];
 	$data['lead_lost'][] = ["name"=>"Lead From"];

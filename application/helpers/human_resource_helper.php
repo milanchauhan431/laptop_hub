@@ -16,14 +16,14 @@ function getHrDtHeader($page){
     $data['designation'][] = ["name"=>"Remark"];
 
     /* Employee Category Header */
-    $data['employeeCategory'][] = ["name"=>"Action","style"=>"width:5%;"];
-    $data['employeeCategory'][] = ["name"=>"#","style"=>"width:5%;"];
+    $data['employeeCategory'][] = ["name"=>"Action","style"=>"width:5%;","sortable"=>"FALSE"];
+    $data['employeeCategory'][] = ["name"=>"#","style"=>"width:5%;","sortable"=>"FALSE"];
     $data['employeeCategory'][] = ["name"=>"Category Name"];
     $data['employeeCategory'][] = ["name"=>"Over Time"];
 
     /* Shift Header */
-    $data['shift'][] = ["name"=>"Action","style"=>"width:5%;"];
-	$data['shift'][] = ["name"=>"#","style"=>"width:5%;"];
+    $data['shift'][] = ["name"=>"Action","style"=>"width:5%;","sortable"=>"FALSE"];
+	$data['shift'][] = ["name"=>"#","style"=>"width:5%;","sortable"=>"FALSE"];
 	$data['shift'][] = ["name"=>"Shift Name"];
 	$data['shift'][] = ["name"=>"Start Time"];
 	$data['shift'][] = ["name"=>"End Time"];
@@ -32,8 +32,8 @@ function getHrDtHeader($page){
 	$data['shift'][] = ["name"=>"Shift Hour"];
 
     /* Employee Header */
-    $data['employees'][] = ["name"=>"Action","style"=>"width:5%;"];
-	$data['employees'][] = ["name"=>"#","style"=>"width:5%;","textAlign"=>'center']; 
+    $data['employees'][] = ["name"=>"Action","style"=>"width:5%;","sortable"=>"FALSE"];
+	$data['employees'][] = ["name"=>"#","style"=>"width:5%;","textAlign"=>'center',"sortable"=>"FALSE"]; 
     $data['employees'][] = ["name"=>"Employee Name"];
     $data['employees'][] = ["name"=>"Emp Code","textAlign"=>'center'];
     $data['employees'][] = ["name"=>"Department"];

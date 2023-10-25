@@ -14,11 +14,11 @@ class GateInward extends MY_Controller{
     }
 
     public function index(){
-        $this->data['tableHeader'] = getStoreDtHeader("pendingGE");
+        $this->data['tableHeader'] = getStoreDtHeader("gateInward");
 		$this->load->view($this->indexPage,$this->data);
     }
 
-    public function getDTRows($type = 1,$status = 0){
+    public function getDTRows($type = 2,$status = 0){
         $data = $this->input->post();
         $data['trans_type'] = $type;
         $data['trans_status'] = $status;

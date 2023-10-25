@@ -4,8 +4,8 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 /* get Pagewise Table Header */
 function getStoreDtHeader($page){
     /* Location Master header */
-    $data['storeLocation'][] = ["name"=>"Action","style"=>"width:5%;",'textAlign'=>'center'];
-    $data['storeLocation'][] = ["name"=>"#","style"=>"width:5%;",'textAlign'=>'center']; 
+    $data['storeLocation'][] = ["name"=>"Action","style"=>"width:5%;","sortable"=>"FALSE",'textAlign'=>'center'];
+    $data['storeLocation'][] = ["name"=>"#","style"=>"width:5%;","sortable"=>"FALSE",'textAlign'=>'center']; 
     $data['storeLocation'][] = ["name"=>"Store Name"];
     $data['storeLocation'][] = ["name"=>"Location"];
     $data['storeLocation'][] = ["name"=>"Remark"];
@@ -36,8 +36,8 @@ function getStoreDtHeader($page){
     $data['pendingGE'][] = ['name' => "CH. Date"];
 
     /* Gate Inward Pending/Compeleted Tab Header */
-    $data['gateInward'][] = ["name" => "Action", "style" => "width:5%;", "textAlign" => "center"];
-    $data['gateInward'][] = ["name" => "#", "style" => "width:5%;", "textAlign" => "center"];
+    $data['gateInward'][] = ["name" => "Action", "style" => "width:5%;","sortable"=>"FALSE", "textAlign" => "center"];
+    $data['gateInward'][] = ["name" => "#", "style" => "width:5%;","sortable"=>"FALSE", "textAlign" => "center"];
     $data['gateInward'][] = ["name"=> "GI No.", "textAlign" => "center"];
     $data['gateInward'][] = ["name" => "GI Date", "textAlign" => "center"];
     $data['gateInward'][] = ["name" => "Party Name"];
@@ -56,8 +56,8 @@ function getStoreDtHeader($page){
     $data['stockTrans'][] = ["name" => "Remark"];
 
     /* Service Table Header */
-    $data['serviceGI'][] = ["name" => "Action", "style" => "width:5%;", "textAlign" => "center"];
-    $data['serviceGI'][] = ["name" => "#", "style" => "width:5%;", "textAlign" => "center"];
+    $data['serviceGI'][] = ["name" => "Action", "style" => "width:5%;","sortable"=>"FALSE", "textAlign" => "center"];
+    $data['serviceGI'][] = ["name" => "#", "style" => "width:5%;","sortable"=>"FALSE", "textAlign" => "center"];
     $data['serviceGI'][] = ["name"=> "GI No.", "textAlign" => "center"];
     $data['serviceGI'][] = ["name" => "GI Date", "textAlign" => "center"];
     $data['serviceGI'][] = ["name" => "Item Name"];
@@ -65,8 +65,8 @@ function getStoreDtHeader($page){
     $data['serviceGI'][] = ["name" => "Repaired Qty"];
     $data['serviceGI'][] = ["name" => "Pending Qty"];
 
-    $data['service'][] = ["name" => "Action", "style" => "width:5%;", "textAlign" => "center"];
-    $data['service'][] = ["name" => "#", "style" => "width:5%;", "textAlign" => "center"];
+    $data['service'][] = ["name" => "Action", "style" => "width:5%;","sortable"=>"FALSE", "textAlign" => "center"];
+    $data['service'][] = ["name" => "#", "style" => "width:5%;","sortable"=>"FALSE", "textAlign" => "center"];
     $data['service'][] = ["name"=> "Entry No.", "textAlign" => "center"];
     $data['service'][] = ["name" => "Entry Date", "textAlign" => "center"];
     $data['service'][] = ["name" => "Product Name"];

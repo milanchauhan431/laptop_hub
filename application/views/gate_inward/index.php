@@ -8,14 +8,14 @@
                         <div class="row">
                             <div class="col-md-5">
                                 <ul class="nav nav-pills">
-                                    <li class="nav-item"> 
+                                    <!-- <li class="nav-item"> 
                                         <button onclick="statusTab('giTable','1/0','getStoreDtHeader','pendingGE');" class="nav-tab btn waves-effect waves-light btn-outline-info active" id="pending_ge" style="outline:0px" data-toggle="tab" aria-expanded="false">Pending GE</button> 
+                                    </li> -->
+                                    <li class="nav-item">
+                                        <button onclick="statusTab('giTable','2/0');" class="nav-tab btn waves-effect waves-light btn-outline-danger" id="pending_gi" style="outline:0px" data-toggle="tab" aria-expanded="false">Pending</button>
                                     </li>
                                     <li class="nav-item">
-                                        <button onclick="statusTab('giTable','2/0','getStoreDtHeader','gateInward');" class="nav-tab btn waves-effect waves-light btn-outline-danger" id="pending_gi" style="outline:0px" data-toggle="tab" aria-expanded="false">Pending GI</button>
-                                    </li>
-                                    <li class="nav-item">
-                                        <button onclick="statusTab('giTable','2/1','getStoreDtHeader','gateInward');" class="nav-tab btn waves-effect waves-light btn-outline-success" id="completed_gi" style="outline:0px" data-toggle="tab" aria-expanded="false">Completed GI</button>
+                                        <button onclick="statusTab('giTable','2/1');" class="nav-tab btn waves-effect waves-light btn-outline-success" id="completed_gi" style="outline:0px" data-toggle="tab" aria-expanded="false">Completed</button>
                                     </li>
                                 </ul>
                             </div>
