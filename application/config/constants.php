@@ -86,11 +86,11 @@ defined('EXIT_DATABASE')       OR define('EXIT_DATABASE', 8); // database error
 defined('EXIT__AUTO_MIN')      OR define('EXIT__AUTO_MIN', 9); // lowest automatically-assigned error code
 defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
 define('FIREBASE_API_KEY','');
-	
+
 define("LIVE_LINK","https://laptophub.scubeerp.in/");
 
 define('HOST_NAME','localhost');
-if($_SERVER['HTTP_HOST'] == 'localhost' || $_SERVER['HTTP_HOST'] == "192.168.1.5"):
+if($_SERVER['HTTP_HOST'] == 'localhost' || $_SERVER['HTTP_HOST'] == "192.168.1.2"):
 	define('SERVER_PREFIX','');
 	define('USER_NAME','root');
 	define('PASSWORD','');
