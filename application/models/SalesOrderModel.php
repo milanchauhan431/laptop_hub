@@ -9,9 +9,10 @@ class SalesOrderModel extends MasterModel{
 
     public function getDTRows($data){
         $data['tableName'] = $this->transChild;
-        $data['select'] = "trans_child.id as trans_child_id,trans_child.item_name,trans_child.qty,trans_child.dispatch_qty,(trans_child.qty - trans_child.dispatch_qty) as pending_qty,trans_main.id,trans_main.trans_number,DATE_FORMAT(trans_main.trans_date,'%d-%m-%Y') as trans_date,trans_main.party_name,trans_main.sales_type,trans_child.trans_status";
+        $data['select'] = "trans_child.id as trans_child_id,trans_child.item_name,trans_child.qty,trans_child.dispatch_qty,(trans_child.qty - trans_child.dispatch_qty) as pending_qty,trans_main.id,trans_main.trans_number,DATE_FORMAT(trans_main.trans_date,'%d-%m-%Y') as trans_date,trans_main.party_name,trans_main.sales_type,trans_child.trans_status,employee_master.emp_name as service_inpectore_name";
 
         $data['leftJoin']['trans_main'] = "trans_main.id = trans_child.trans_main_id";
+        $data['leftJoin']['employee_master'] = "employee_master.id = trans_child.initiate_by";
 
         $data['where']['trans_child.entry_type'] = $data['entry_type'];
 
@@ -38,6 +39,7 @@ class SalesOrderModel extends MasterModel{
         $data['searchCol'][] = "trans_child.qty";
         $data['searchCol'][] = "trans_child.dispatch_qty";
         $data['searchCol'][] = "(trans_child.qty - trans_child.dispatch_qty)";
+        $data['searchCol'][] = "employee_master.emp_name";
 
         $columns =array(); foreach($data['searchCol'] as $row): $columns[] = $row; endforeach;
         if(isset($data['order'])){$data['order_by'][$columns[$data['order'][0]['column']]] = $data['order'][0]['dir'];}
