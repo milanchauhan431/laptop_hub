@@ -2,6 +2,8 @@
     <div class="col-md-12">
         <input type="hidden" name="mir_trans_id" value="<?=$mir_trans_id?>">
         <input type="hidden" name="item_id" value="<?=$item_id?>">
+        <input type="hidden" name="unique_id" value="<?=$unique_id?>">
+
         <div class="row" id="NewkitForm">
             <div class="col-md-4 form-group">
                 <label for="item_id">Item Name</label>
