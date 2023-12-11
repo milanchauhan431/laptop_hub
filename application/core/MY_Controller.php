@@ -87,6 +87,7 @@ class MY_Controller extends CI_Controller{
 		$this->load->model('GateEntryModel','gateEntry');
 		$this->load->model('GateInwardModel','gateInward');
 		$this->load->model('ServicesModel','services');
+		$this->load->model('CustomizationModel','customize');
 
 		/* Accounting Model */
 		$this->load->model("PurchaseInvoiceModel","purchaseInvoice");
@@ -107,7 +108,7 @@ class MY_Controller extends CI_Controller{
 		/* Estimation Model [Cash Entry] */
 		$this->load->model("EstimateModel",'estimate');
 
-		$this->setSessionVariables(["masterModel","dashboard","permission","terms","transport","hsnModel","materialGrade","itemCategory","brandMaster","sizeMaster","item","department","designation","employeeCategory","shiftModel","employee","party","transMainModel","taxMaster","expenseMaster","salesOrder","purchaseOrder","purchaseIndent","vehicleType","storeLocation","gateEntry","gateInward","salesInvoice","estimate","paymentVoucher","leads","salesEnquiry","salesQuotation","gstExpense","gstIncome","journalEntry","creditNote","debitNote","services"]);
+		$this->setSessionVariables(["masterModel","dashboard","permission","terms","transport","hsnModel","materialGrade","itemCategory","brandMaster","sizeMaster","item","department","designation","employeeCategory","shiftModel","employee","party","transMainModel","taxMaster","expenseMaster","salesOrder","purchaseOrder","purchaseIndent","vehicleType","storeLocation","gateEntry","gateInward","salesInvoice","estimate","paymentVoucher","leads","salesEnquiry","salesQuotation","gstExpense","gstIncome","journalEntry","creditNote","debitNote","services","customize"]);
 	}
 
 	public function setSessionVariables($modelNames){
@@ -239,7 +240,7 @@ class MY_Controller extends CI_Controller{
 		$html = '<option value="">Select</option>';
 		foreach($result as $row):
 			$selected = (!empty($data['unique_id']) && $data['unique_id'] == $row->unique_id)?"selected":"";
-			$html .= '<option value="'.$row->unique_id.'" data-location_id="'.$row->location_id.'" data-batch_no="'.$row->batch_no.'" data-price="'.$row->price.'" '.$selected.'>'.$row->batch_no.' ['.$row->location.']</option>';
+			$html .= '<option value="'.$row->unique_id.'" data-location_id="'.$row->location_id.'" data-batch_no="'.$row->batch_no.'" data-price="'.$row->price.'" '.$selected.'>'.$row->batch_no.' ['.$row->location.(($row->ref_no != $row->batch_no)?" - ".$row->ref_no:"").']</option>';
 		endforeach;
 
 		$this->printJson(['status'=>1,'batchOption'=>$html]);
