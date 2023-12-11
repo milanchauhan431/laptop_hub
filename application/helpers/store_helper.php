@@ -74,6 +74,24 @@ function getStoreDtHeader($page){
     $data['service'][] = ["name" => "Amount"];
     $data['service'][] = ["name" => "Remark"];
 
+    $data['pendingCustomization'][] = ["name" => "Action", "style" => "width:5%;","sortable"=>"FALSE", "textAlign" => "center"];
+    $data['pendingCustomization'][] = ["name" => "#", "style" => "width:5%;","sortable"=>"FALSE", "textAlign" => "center"];
+    $data['pendingCustomization'][] = ["name"=> "SO. No.", "textAlign" => "center"];
+    $data['pendingCustomization'][] = ["name" => "SO. Date", "textAlign" => "center"];
+    $data['pendingCustomization'][] = ["name" => "Product Name"];
+    $data['pendingCustomization'][] = ["name" => "Qty"];
+    $data['pendingCustomization'][] = ["name" => "Remark"];
+
+    $data['customization'][] = ["name" => "Action", "style" => "width:5%;","sortable"=>"FALSE", "textAlign" => "center"];
+    $data['customization'][] = ["name" => "#", "style" => "width:5%;","sortable"=>"FALSE", "textAlign" => "center"];
+    $data['customization'][] = ["name"=> "Entry No.", "textAlign" => "center"];
+    $data['customization'][] = ["name" => "Entry Date", "textAlign" => "center"];
+    $data['customization'][] = ["name" => "Ref. No.", "textAlign" => "center"];
+    $data['customization'][] = ["name" => "Product Name"];
+    $data['customization'][] = ["name" => "Qty"];
+    $data['customization'][] = ["name" => "Amount"];
+    $data['customization'][] = ["name" => "Remark"];
+
     return tableHeader($data[$page]);
 }
 
@@ -142,9 +160,9 @@ function getGateInwardData($data){
             $deleteButton = '<a class="btn btn-danger btn-delete permission-remove" href="javascript:void(0)" onclick="trash('.$deleteParam.');" datatip="Remove" flow="down"><i class="ti-trash"></i></a>';
         endif;
 
-        $itemKitParam = "{'postData':{'id' : ".$data->mir_trans_id.",'item_id':".$data->item_id."},'modal_id' : 'modal-xl', 'form_id' : 'itemKitForm', 'title' : 'Item Kit [Item Name : ".$data->item_name."]','fnedit':'addItemKit','fnsave':'saveItemKit'}";
+        $itemKitParam = "{'postData':{'id' : ".$data->mir_trans_id.",'item_id':".$data->item_id.",'unique_id':".$data->unique_id."},'modal_id' : 'modal-xl', 'form_id' : 'itemKitForm', 'title' : 'Item Kit [Item Name : ".$data->item_name."]','fnedit':'addItemKit','fnsave':'saveItemKit'}";
         $itemKit = '<a href="javascript:void(0);" type="button" class="btn btn-info permission-modify" datatip="Item Kit" flow="down" onclick="edit('.$itemKitParam.');"><i class="fas fa-plus"></i></a>';
-        if($data->item_stock_type != 1):
+        if($data->item_stock_type != 1 || empty($data->trans_status)):
             $itemKit = "";
         endif;
 
@@ -190,4 +208,20 @@ function getServicesData($data){
     endif;
 }
 
+/* Customization Table Data */
+function getCustomizationData($data){
+    if($data->entry_type == 20):
+        $customizeParam = "{'postData':{'ref_id' : ".$data->trans_child_id.",'item_id':".$data->item_id.",'item_name':'".$data->item_name."','trans_type':2,'qty':".floatVal($data->qty)."},'modal_id' : 'modal-xl', 'form_id' : 'customizeForm', 'title' : 'Customize','fnedit':'addCustomize','fnsave':'saveCustomize'}";
+        $customize = '<a href="javascript:void(0);" type="button" class="btn btn-warning permission-modify" datatip="Customize" flow="down" onclick="edit('.$customizeParam.');"><i class="fa fa-plus"></i></a>';
+        $action = getActionButton($customize);
+
+        return [$action,$data->sr_no,$data->trans_number,formatDate($data->trans_date),$data->item_name,floatVal($data->qty),$data->item_remark];
+    else:
+        $deleteParam = "{'postData':{'id' : ".$data->id."},'message' : 'Record'}";
+        $deleteButton = '<a class="btn btn-danger btn-delete permission-remove" href="javascript:void(0)" onclick="trash('.$deleteParam.');" datatip="Remove" flow="down"><i class="ti-trash"></i></a>';
+        $action = getActionButton($deleteButton);
+
+        return [$action,$data->sr_no,$data->trans_number,formatDate($data->trans_date),$data->ref_no,$data->item_name,floatVal($data->qty),$data->total_amount,$data->remark];
+    endif;
+}
 ?>
