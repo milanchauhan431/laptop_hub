@@ -189,7 +189,7 @@ class StockTransModel extends MasterModel{
         endif;
 
         $result = $this->db->query("SELECT st.* FROM (
-            SELECT stock_transaction.item_id, item_master.item_code, item_master.item_name, SUM(stock_transaction.qty * stock_transaction.p_or_m) as qty, stock_transaction.price, stock_transaction.unique_id, stock_transaction.batch_no,  stock_transaction.location_id,  lm.location, lm.store_name
+            SELECT stock_transaction.item_id, item_master.item_code, item_master.item_name, SUM(stock_transaction.qty * stock_transaction.p_or_m) as qty, stock_transaction.price, stock_transaction.unique_id, stock_transaction.batch_no, stock_transaction.ref_no, stock_transaction.location_id,  lm.location, lm.store_name
             FROM stock_transaction 
             LEFT JOIN location_master as lm ON lm.id = stock_transaction.location_id
             LEFT JOIN item_master ON item_master.id = stock_transaction.item_id
