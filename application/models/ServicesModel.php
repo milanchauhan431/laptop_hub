@@ -214,7 +214,7 @@ class ServicesModel extends MasterModel{
             $serviceTrans = $this->getServiceTransaction(['service_id'=>$id]);
             
             //check reparing stock
-            if($serviceData->trans_type == 1):
+            //if($serviceData->trans_type == 1):
                 $postData = ['location_id' => $this->RTD_STORE->id,'batch_no' => $serviceData->batch_no,'item_id' => $serviceData->kit_item_id,'stock_required'=>1,'single_row'=>1];                    
                 $stockData = $this->itemStock->getItemStockBatchWise($postData);
                 $stockQty = (!empty($stockData->qty))?$stockData->qty:0;
@@ -243,59 +243,13 @@ class ServicesModel extends MasterModel{
                         endif;
                     endif;
                 endforeach;
-            endif;
-
-            //check customized stock
-            if($serviceData->trans_type == 2):
-                $postData = ['location_id' => $this->CUSTSYS_STORE->id,'batch_no' => $serviceData->batch_no,'item_id' => $serviceData->item_id,'stock_required'=>1,'single_row'=>1];                    
-                $stockData = $this->itemStock->getItemStockBatchWise($postData);
-                $stockQty = (!empty($stockData->qty))?$stockData->qty:0;
-
-                if(empty($stockQty)):
-                    return ['status'=>0,'message'=>"Product Stock not availabel. you can not delete it."];
-                else:
-                    if($serviceData->qty > $stockQty):
-                        return ['status'=>0,'message'=>"Product Stock not availabel. you can not delete it."];
-                    endif;
-                endif;
-
-                $stockQty = 0;
-                foreach($serviceTrans as $row):
-                    if($row->kit_status == 1):
-                        $postData = ['location_id' => $this->REJ_STORE->id,'batch_no' => $serviceData->batch_no,'item_id' => $row->kit_item_id,'stock_required'=>1,'single_row'=>1];                    
-                        $stockData = $this->itemStock->getItemStockBatchWise($postData);
-                        $stockQty = (!empty($stockData->qty))?$stockData->qty:0;
-
-                        if(empty($stockQty)):
-                            return ['status'=>0,'message'=>"Part Stock not availabel. you can not delete it."];
-                        else:
-                            if($row->qty > $stockQty):
-                                return ['status'=>0,'message'=>"Part Stock not availabel. you can not delete it."];
-                            endif;
-                        endif;
-                    endif;
-
-                    if($row->kit_status == 3):
-                        $postData = ['location_id' => $this->RTD_STORE->id,'batch_no' => $row->batch_no,'item_id' => $row->kit_item_id,'stock_required'=>1,'single_row'=>1];                    
-                        $stockData = $this->itemStock->getItemStockBatchWise($postData);
-                        $stockQty = (!empty($stockData->qty))?$stockData->qty:0;
-
-                        if(empty($stockQty)):
-                            return ['status'=>0,'message'=>"Part Stock not availabel. you can not delete it."];
-                        else:
-                            if($row->qty > $stockQty):
-                                return ['status'=>0,'message'=>"Part Stock not availabel. you can not delete it."];
-                            endif;
-                        endif;
-                    endif;
-                endforeach;
-            endif;
+            //endif;
 
             $result = $this->trash($this->serviceMaster,['id'=>$id]);
             $this->trash($this->serviceTrans,['service_id'=>$id]);
             $this->remove($this->stockTrans,['entry_type'=>$serviceData->entry_type,'main_ref_id' => $serviceData->id]);
 
-            if($serviceData->trans_type == 1):
+            //if($serviceData->trans_type == 1):
                 //update mir transaction
                 $setData = array();
                 $setData['tableName'] = $this->mirTrans;
@@ -313,7 +267,7 @@ class ServicesModel extends MasterModel{
                 $setData['where']['location_id'] = $this->RTD_STORE->id;
                 $setData['update']['price'] = '(SELECT (price + repairing_price) as price FROM mir_transaction WHERE id='.$serviceData->ref_id.')';
                 $this->setValue($setData);
-            endif;
+            //endif;
 
             if ($this->db->trans_status() !== FALSE):
                 $this->db->trans_commit();
@@ -323,160 +277,6 @@ class ServicesModel extends MasterModel{
             $this->db->trans_rollback();
             return ['status'=>2,'message'=>"somthing is wrong. Error : ".$e->getMessage()];
         }	
-    }
-
-    public function saveCustomize($data){
-        try{
-            if(empty($data['id'])):
-                $nextNoData = ['table_name'=>$this->serviceMaster,'customWhere' => 'trans_type = '.$data['trans_type']];
-                $data['trans_no'] = $this->transMainModel->getNextTransNo($nextNoData);
-                $data['trans_prefix'] = $this->transMainModel->getPrefix("CSM/");
-                $data['trans_number'] = $data['trans_prefix'].sprintf("%04d",$data['trans_no']);
-            endif;
-
-            $kitData = $data['kitData']; 
-            $newKitData = (!empty($data['newKitData']))?$data['newKitData']:array();
-            unset($data['kitData'],$data['newKitData']);
-
-            $result = $this->store($this->serviceMaster,$data);
-
-            //minus from ready to dispatch store
-            $itmStcData = $this->itemStock->getStockTrans(['batch_no'=>$data['batch_no'],'location_id'=>$this->RTD_STORE->id,'item_id'=>$data['item_id']]);
-            $stockTransData = [
-                'id' => "",
-                'entry_type' => $data['entry_type'],
-                'unique_id' => $data['unique_id'],
-                'ref_date' => $data['trans_date'],
-                'ref_no' => $data['trans_number'],
-                'main_ref_id' => $result['id'],
-                'child_ref_id' => 0,
-                'location_id' => $this->RTD_STORE->id,
-                'batch_no' => $data['batch_no'],
-                'party_id' => 0,
-                'item_id' => $data['item_id'],
-                'p_or_m' => -1,
-                'qty' => $data['qty'],
-                'price' => $data['purchase_price']
-            ];
-            $this->store($this->stockTrans,$stockTransData);
-
-            //plus in customized store
-            $stockTransData = [
-                'id' => "",
-                'entry_type' => $data['entry_type'],
-                'unique_id' => $this->transMainModel->getStockUniqueId(['location_id' => $this->CUSTSYS_STORE->id,'batch_no' => $data['batch_no'],'item_id' => $data['item_id']]),
-                'ref_date' => $data['trans_date'],
-                'ref_no' => $data['trans_number'],
-                'main_ref_id' => $result['id'],
-                'child_ref_id' => 0,
-                'location_id' => $this->CUSTSYS_STORE->id,
-                'batch_no' => $data['batch_no'],
-                'party_id' => 0,
-                'item_id' => $data['item_id'],
-                'p_or_m' => 1,
-                'qty' => $data['qty'],
-                'price' => $data['price']
-            ];
-            $this->store($this->stockTrans,$stockTransData);
-
-            //remove or replace kit item in product and stock effect
-            foreach($kitData as $row):
-                $row['service_id'] = $result['id'];
-                $itemTrans = $this->store($this->serviceTrans,$row);
-
-                //if part replace
-                if($row['kit_status'] == 1):
-                    $stockData = [
-                        'id' => "",
-                        'entry_type' => $data['entry_type'],
-                        'unique_id' => $this->transMainModel->getStockUniqueId(['location_id' => $this->REJ_STORE->id,'batch_no' => $data['batch_no'],'item_id' => $row['kit_item_id']]),
-                        'ref_date' => $data['trans_date'],
-                        'ref_no' => $data['trans_number'],
-                        'main_ref_id' => $result['id'],
-                        'child_ref_id' => $itemTrans['id'],
-                        'location_id' => $this->REJ_STORE->id,
-                        'batch_no' => $data['batch_no'],
-                        'party_id' => 0,
-                        'item_id' => $row['kit_item_id'],
-                        'p_or_m' => 1,
-                        'qty' => $row['qty'],
-                        'price' => 0,//$row['price']
-                    ];
-                    $this->store($this->stockTrans,$stockData);
-
-                    $stockData = [
-                        'id' => "",
-                        'entry_type' => $data['entry_type'],
-                        'unique_id' => $row['unique_id'],
-                        'ref_date' => $data['trans_date'],
-                        'ref_no' => $data['trans_number'],
-                        'main_ref_id' => $result['id'],
-                        'child_ref_id' => $itemTrans['id'],
-                        'location_id' => $row['location_id'],
-                        'batch_no' => $row['batch_no'],
-                        'party_id' => 0,
-                        'item_id' => $row['kit_item_id'],
-                        'p_or_m' => -1,
-                        'qty' => $row['qty'],
-                        'price' => $row['price']
-                    ];
-                    $this->store($this->stockTrans,$stockData);
-                endif;
-
-                if($row['kit_status'] == 3):
-                    $stockData = [
-                        'id' => "",
-                        'entry_type' => $data['entry_type'],
-                        'unique_id' => $this->transMainModel->getStockUniqueId(['location_id' => $this->RTD_STORE->id,'batch_no' => $data['batch_no'],'item_id' => $row['kit_item_id']]),
-                        'ref_date' => $data['trans_date'],
-                        'ref_no' => $data['trans_number'],
-                        'main_ref_id' => $result['id'],
-                        'child_ref_id' => $itemTrans['id'],
-                        'location_id' => $this->RTD_STORE->id,
-                        'batch_no' => $data['batch_no'],
-                        'party_id' => 0,
-                        'item_id' => $row['kit_item_id'],
-                        'p_or_m' => 1,
-                        'qty' => $row['qty'],
-                        'price' => $row['price']
-                    ];
-                    $this->store($this->stockTrans,$stockData);
-                endif;
-            endforeach;
-
-            //new kit item add in product and minus stock
-            foreach($newKitData as $row):
-                $row['kit_status'] = 4;
-                $row['service_id'] = $result['id'];
-                $itemTrans = $this->store($this->serviceTrans,$row);
-
-                $stockData = [
-                    'id' => "",
-                    'entry_type' => $data['entry_type'],
-                    'unique_id' => $row['unique_id'],
-                    'ref_date' => $data['trans_date'],
-                    'ref_no' => $data['trans_number'],
-                    'main_ref_id' => $result['id'],
-                    'child_ref_id' => $itemTrans['id'],
-                    'location_id' => $row['location_id'],
-                    'batch_no' => $row['batch_no'],
-                    'party_id' => 0,
-                    'item_id' => $row['kit_item_id'],
-                    'p_or_m' => -1,
-                    'qty' => $row['qty'],
-                    'price' => $row['price']
-                ];
-                $this->store($this->stockTrans,$stockData);
-            endforeach;
-
-            if ($this->db->trans_status() !== FALSE):
-                $this->db->trans_commit();
-                return $result;
-            endif;
-        }catch(\Exception $e){
-            $this->db->trans_rollback();
-            return ['status'=>2,'message'=>"somthing is wrong. Error : ".$e->getMessage()];
-        }
     }
 }
 ?>

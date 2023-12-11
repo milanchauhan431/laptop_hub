@@ -9,21 +9,21 @@
                             <div class="col-md-6">
                                 <ul class="nav nav-pills">
                                     <li class="nav-item"> 
-                                        <button onclick="statusTab('serviceTable','2/26','getStoreDtHeader','serviceGI');" class="nav-tab btn waves-effect waves-light btn-outline-danger active" id="pending_ser" style="outline:0px" data-toggle="tab" aria-expanded="false">Pending Repairing</button> 
+                                        <button onclick="statusTab('serviceTable','2/26','getStoreDtHeader','serviceGI');" class="nav-tab btn waves-effect waves-light btn-outline-danger active" id="pending_ser" style="outline:0px" data-toggle="tab" aria-expanded="false">Pending</button> 
                                     </li>
                                     <li class="nav-item">
-                                        <button onclick="statusTab('serviceTable','1/58','getStoreDtHeader','service');" class="nav-tab btn waves-effect waves-light btn-outline-success" id="completed_ser" style="outline:0px" data-toggle="tab" aria-expanded="false">Completed Repairing</button>
+                                        <button onclick="statusTab('serviceTable','1/58','getStoreDtHeader','service');" class="nav-tab btn waves-effect waves-light btn-outline-success" id="completed_ser" style="outline:0px" data-toggle="tab" aria-expanded="false">Completed</button>
                                     </li>
-                                    <li class="nav-item">
+                                    <!-- <li class="nav-item">
                                         <button onclick="statusTab('serviceTable','2/58','getStoreDtHeader','service');" class="nav-tab btn waves-effect waves-light btn-outline-warning" id="completed_csm" style="outline:0px" data-toggle="tab" aria-expanded="false">Customized</button>
-                                    </li>
+                                    </li> -->
                                 </ul>
                             </div>
                             <!-- <div class="col-md-2 text-center">
                                 <h4 class="card-title">Service</h4>
                             </div> -->
                             <div class="col-md-6">
-                                <button type="button" class="btn waves-effect waves-light btn-outline-primary float-right permission-write addNew press-add-btn" data-button="both" data-modal_id="modal-xl" data-function="addCustomize" data-fnsave="saveCustomize"  data-form_title="Customize"><i class="fa fa-plus"></i> Customize</button>
+                                <!-- <button type="button" class="btn waves-effect waves-light btn-outline-primary float-right permission-write addNew press-add-btn" data-button="both" data-modal_id="modal-xl" data-function="addCustomize" data-fnsave="saveCustomize"  data-form_title="Customize"><i class="fa fa-plus"></i> Customize</button> -->
                             </div>
                         </div>                                         
                     </div>
