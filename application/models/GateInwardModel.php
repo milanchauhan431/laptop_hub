@@ -19,7 +19,7 @@ class GateInwardModel extends masterModel{
         else:
             $data['tableName'] = $this->mirTrans;
 
-            $data['select'] = "mir.id,mir.trans_number,DATE_FORMAT(mir.trans_date,'%d-%m-%Y') as trans_date,mir.qty as no_of_items,party_master.party_name,item_master.item_name,mir.inv_no,ifnull(DATE_FORMAT(mir.inv_date,'%d-%m-%Y'),'') as inv_date,mir.doc_no,ifnull(DATE_FORMAT(mir.doc_date,'%d-%m-%Y'),'') as doc_date,trans_main.trans_number as po_number,mir.qty_kg,mir.inward_qty,mir_transaction.trans_status,mir.trans_type,mir_transaction.qty,mir_transaction.id as mir_trans_id,mir_transaction.item_id,mir_transaction.short_qty,(mir_transaction.short_qty - mir_transaction.repaired_qty) as reparing_pending_qty,mir_transaction.item_stock_type";
+            $data['select'] = "mir.id,mir.trans_number,DATE_FORMAT(mir.trans_date,'%d-%m-%Y') as trans_date,mir.qty as no_of_items,party_master.party_name,item_master.item_name,mir.inv_no,ifnull(DATE_FORMAT(mir.inv_date,'%d-%m-%Y'),'') as inv_date,mir.doc_no,ifnull(DATE_FORMAT(mir.doc_date,'%d-%m-%Y'),'') as doc_date,trans_main.trans_number as po_number,mir.qty_kg,mir.inward_qty,mir_transaction.trans_status,mir.trans_type,mir_transaction.qty,mir_transaction.id as mir_trans_id,mir_transaction.item_id,mir_transaction.short_qty,(mir_transaction.short_qty - mir_transaction.repaired_qty) as reparing_pending_qty,mir_transaction.item_stock_type,mir_transaction.unique_id";
 
             $data['leftJoin']['mir'] = "mir.id = mir_transaction.mir_id";
             $data['leftJoin']['item_master'] = "item_master.id = mir_transaction.item_id";
@@ -297,7 +297,8 @@ class GateInwardModel extends masterModel{
     public function saveInspectedMaterial($data){
         try{
             $this->db->trans_begin();
-
+            
+            $result = "";
             foreach($data['itemData'] as $key => $row):
                 $mirData = $this->getGateInward($row['mir_id']);
                 $mirItem = $this->getInwardItem(['id'=>$row['id']]);
@@ -310,12 +311,19 @@ class GateInwardModel extends masterModel{
                 
                 $totalQty = 0;
                 $totalQty = ($row['ok_qty'] + $row['reject_qty'] + $row['short_qty']);
-                if($mirItem->qty < $totalQty):
+                if(floatval($mirItem->qty) < floatval($totalQty)):
+                    $result = ['status'=>0,'message'=>['ok_qty_'.$key => "Invalid Qty."]];
                     $this->db->trans_rollback(); break;
-                    return ['status'=>0,'message'=>['ok_qty_'.$key => "Invalid Qty."]];
+                endif;
+
+                $itemKit = $this->getItemKitList(['mir_trans_id'=>$row['id']]);
+                if(!empty($itemKit)):
+                    $result = ['status'=>2,'message'=>"Item Kit generated. You can not change inspection data."];
+                    $this->db->trans_rollback(); break;
                 endif;
 
                 $row['trans_status'] = ($totalQty >= $mirItem->qty)?1:0;
+                $row['unique_id'] = $this->transMainModel->getStockUniqueId(['location_id' => $mirItem->location_id,'batch_no' => $mirData->trans_number,'item_id' => $mirItem->item_id]);
 
                 $this->store($this->mirTrans,$row);
 
@@ -323,7 +331,7 @@ class GateInwardModel extends masterModel{
                     $stockData = [
                         'id' => "",
                         'entry_type' => $this->data['entryData']->id,
-                        'unique_id' => $this->transMainModel->getStockUniqueId(['location_id' => $mirItem->location_id,'batch_no' => $mirData->trans_number,'item_id' => $mirItem->item_id]),
+                        'unique_id' => $row['unique_id'],
                         'ref_date' => $mirData->trans_date,
                         'ref_no' => $mirData->trans_number,
                         'main_ref_id' => $mirData->id,
@@ -346,6 +354,7 @@ class GateInwardModel extends masterModel{
                         'id' => "",
                         'entry_type' => $this->data['entryData']->id,
                         'unique_id' => $this->transMainModel->getStockUniqueId(['location_id' => $this->REJ_STORE->id,'batch_no' => $mirData->trans_number,'item_id' => $mirItem->item_id]),
+                        'ref_unique_id' => $row['unique_id'],
                         'ref_date' => $mirData->trans_date,
                         'ref_no' => $mirData->trans_number,
                         'main_ref_id' => $mirData->id,
@@ -368,6 +377,7 @@ class GateInwardModel extends masterModel{
                         'id' => "",
                         'entry_type' => $this->data['entryData']->id,
                         'unique_id' => $this->transMainModel->getStockUniqueId(['location_id' => $this->REP_STORE->id,'batch_no' => $mirData->trans_number,'item_id' => $mirItem->item_id]),
+                        'ref_unique_id' => $row['unique_id'],
                         'ref_date' => $mirData->trans_date,
                         'ref_no' => $mirData->trans_number,
                         'main_ref_id' => $mirData->id,
@@ -385,7 +395,9 @@ class GateInwardModel extends masterModel{
                 endif;
             endforeach;
 
-            $result = ['status'=>1,'message'=>"Material Inspected successfully."];
+            if(empty($result)):
+                $result = ['status'=>1,'message'=>"Material Inspected successfully."];
+            endif;
 
             if ($this->db->trans_status() !== FALSE):
                 $this->db->trans_commit();
@@ -429,6 +441,7 @@ class GateInwardModel extends masterModel{
             foreach($data['kitData'] as $row):
                 $row['mir_trans_id'] = $data['mir_trans_id'];
                 $row['item_id'] = $data['item_id'];
+                $row['unique_id'] = $data['unique_id'];
                 $row['is_delete'] = 0;
 
                 $this->store($this->itemKit,$row);

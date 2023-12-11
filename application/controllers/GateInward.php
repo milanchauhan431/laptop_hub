@@ -220,6 +220,7 @@ class GateInward extends MY_Controller{
         $data = $this->input->post();
         $this->data['mir_trans_id'] = $data['id'];
         $this->data['item_id'] = $data['item_id'];
+        $this->data['unique_id'] = $data['unique_id'];
         $this->data['itemList'] = $this->item->getItemList();
         $this->data['kitList'] = $this->gateInward->getItemKitList(['mir_trans_id'=>$data['id']]);
         $this->load->view($this->itemKitForm,$this->data);
