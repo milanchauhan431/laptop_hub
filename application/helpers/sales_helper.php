@@ -70,6 +70,7 @@ function getSalesDtHeader($page){
     $data['salesOrders'][] = ["name"=>"Order Qty"];
     $data['salesOrders'][] = ["name"=>"Dispatch Qty"];
     $data['salesOrders'][] = ["name"=>"Pending Qty"];
+    $data['salesOrders'][] = ["name"=>"Service Inspector"];
 
     /* Estimate [Cash] Header */
     $data['estimate'][] = ["name"=>"Action","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"];
@@ -195,7 +196,7 @@ function getSalesOrderData($data){
 
     $action = getActionButton($printBtn.$editButton.$deleteButton);
 
-    return [$action,$data->sr_no,$data->trans_number,$data->trans_date,$data->party_name,$data->item_name,$data->qty,$data->dispatch_qty,$data->pending_qty];
+    return [$action,$data->sr_no,$data->trans_number,$data->trans_date,$data->party_name,$data->item_name,$data->qty,$data->dispatch_qty,$data->pending_qty,$data->service_inpectore_name];
 }
 
 /* Estimate [Cash] Table Data */

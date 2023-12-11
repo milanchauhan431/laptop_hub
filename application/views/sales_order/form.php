@@ -219,16 +219,16 @@
                             <div class="col-md-4 form-group">
                                 <label for="qty">Quantity</label>
                                 <input type="text" name="qty" id="qty" class="form-control floatOnly req" value="0">
-                            </div>
-                            <div class="col-md-4 form-group">
-                                <label for="disc_per">Disc. (%)</label>
-                                <input type="text" name="disc_per" id="disc_per" class="form-control floatOnly" value="0">
-                            </div>
+                            </div>                            
                             <div class="col-md-4 form-group">
                                 <label for="price">Price</label>
                                 <input type="text" name="price" id="price" class="form-control floatOnly req" value="0" />
                             </div>
                             <div class="col-md-4 form-group">
+                                <label for="disc_per">Disc. (%)</label>
+                                <input type="text" name="disc_per" id="disc_per" class="form-control floatOnly" value="0">
+                            </div>
+                            <div class="col-md-3 form-group">
                                 <label for="unit_id">Unit</label>        
                                 <select name="unit_id" id="unit_id" class="form-control select2">
                                     <option value="">Select Unit</option>
@@ -236,19 +236,30 @@
                                 </select> 
                                 <input type="hidden" name="unit_name" id="unit_name" class="form-control" value="" />                       
                             </div>
-							<div class="col-md-4 form-group">
+							<div class="col-md-3 form-group">
                                 <label for="hsn_code">HSN Code</label>
                                 <select name="hsn_code" id="hsn_code" class="form-control select2">
                                     <option value="">Select HSN Code</option>
                                     <?=getHsnCodeListOption($hsnList)?>
                                 </select>
                             </div>
-                            <div class="col-md-4 form-group">
+                            <div class="col-md-2 form-group">
                                 <label for="gst_per">GST Per.(%)</label>
                                 <select name="gst_per" id="gst_per" class="form-control select2">
                                     <?php
                                         foreach($this->gstPer as $per=>$text):
                                             echo '<option value="'.$per.'">'.$text.'</option>';
+                                        endforeach;
+                                    ?>
+                                </select>
+                            </div>
+                            <div class="col-md-4 form-group">
+                                <label for="initiate_by">Service Inspector</label>
+                                <select name="initiate_by" id="initiate_by" class="form-control select2">
+                                    <option value="">Select Inspector</option>
+                                    <?php
+                                        foreach($employeeList as $row):
+                                            echo '<option value="'.$row->id.'">'.$row->emp_name.'</option>';
                                         endforeach;
                                     ?>
                                 </select>

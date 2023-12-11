@@ -41,6 +41,7 @@ class SalesOrders extends MY_Controller{
 		$this->data['taxList'] = $this->taxMaster->getActiveTaxList(2);
         $this->data['expenseList'] = $this->expenseMaster->getActiveExpenseList(2);
         $this->data['termsList'] = $this->terms->getTermsList(['type'=>'Sales']);
+        $this->data['employeeList'] = $this->employee->getEmployeeList(['is_active'=>1]);
         $this->load->view($this->form,$this->data);
     }
 
@@ -114,6 +115,7 @@ class SalesOrders extends MY_Controller{
 		$this->data['taxList'] = $this->taxMaster->getActiveTaxList(2);
         $this->data['expenseList'] = $this->expenseMaster->getActiveExpenseList(2);
         $this->data['termsList'] = $this->terms->getTermsList(['type'=>'Sales']);
+        $this->data['employeeList'] = $this->employee->getEmployeeList();
         $this->load->view($this->form,$this->data);
     }
 

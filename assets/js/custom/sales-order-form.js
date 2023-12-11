@@ -295,9 +295,11 @@ function AddRow(data) {
 	cell.attr("class", "netAmtCol");
 
     var itemRemarkInput = $("<input/>", { type: "hidden", name: "itemData["+itemCount+"][item_remark]", value: data.item_remark});
+    var serviceInspectorInput = $("<input/>", { type: "hidden", name: "itemData["+itemCount+"][initiate_by]", value: data.initiate_by});
 	cell = $(row.insertCell(-1));
 	cell.html(data.item_remark);
 	cell.append(itemRemarkInput);
+	cell.append(serviceInspectorInput);
 
 	/* cell = $(row.insertCell(-1));
 	var filePostData = {"index":itemCount,"inputName":"itemData["+itemCount+"][attachment]","inputStatus":"itemData["+countRow+"][attachment_status]","file":((data.attachment != "")?base_url+"assets/uploads/sales_order/"+data.attachment:""),"fileName":((data.attachment != "")?data.attachment:"")};
