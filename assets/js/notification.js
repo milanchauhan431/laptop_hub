@@ -41,7 +41,8 @@ messaging.onMessage((payload) => {
     var notificationOptions = {
         body: payload.message,
         icon : payload.image,
-        click_action : payload.onclick
+        tag : payload.onclick,
+        onclick : payload.onclick
     };
 
     const notification = new Notification(notificationTitle, notificationOptions);
