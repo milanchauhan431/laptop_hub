@@ -60,6 +60,7 @@ messaging.onBackgroundMessage((payload) => {
 
 self.addEventListener('notificationclick', function(event) {
     var url = event.notification.onclick;
+    console.log(event.notification);
     event.notification.close();
   
     if(url != "user_visible_auto_notification"){
