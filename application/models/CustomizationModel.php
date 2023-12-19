@@ -251,6 +251,19 @@ class CustomizationModel extends MasterModel{
 
             $this->edit($this->transChild,['id'=>$data['ref_id']],['initiate_at'=>date("Y-m-d H:i:s")]);
 
+            $queryData = [];
+            $queryData['tableName'] = $this->transChild;
+            $queryData['select'] = "trans_child.item_name,trans_main.trans_number";
+            $queryData['leftJoin']['trans_main'] = "trans_main.id = trans_child.trans_main_id";
+            $queryData['where']['trans_child.id'] = $data['ref_id'];
+            $orderData = $this->row($queryData);
+
+            /* Send Notification */            
+            $notifyData['notificationTitle'] = "Customization Completed.";
+            $notifyData['notificationMsg'] = "Order No. : ".$orderData->trans_number."\nItem Name : ".$orderData->item_name;
+            $notifyData['callBack'] = base_url("salesOrders");
+            $this->notify($notifyData);
+
             if ($this->db->trans_status() !== FALSE):
                 $this->db->trans_commit();
                 return $result;

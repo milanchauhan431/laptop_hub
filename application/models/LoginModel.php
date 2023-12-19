@@ -14,7 +14,13 @@ class LoginModel extends CI_Model{
 			else:
 				if($resData->is_active == 0):
 					return ['status'=>0,'message'=>'Your Account is Inactive. Please Contact Your Admin.'];
-				else:									
+				else:		
+					//update fcm notification token
+					if(isset($data['web_push_token'])):
+						$this->db->where('id',$resData->id);
+						$this->db->update($this->employeeMaster,['web_push_token'=>$data['web_push_token']]);
+					endif;
+
 					//Employe Data
 					$this->session->set_userdata('LoginOk','login success');
 					$this->session->set_userdata('loginId',$resData->id);

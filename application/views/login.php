@@ -52,6 +52,7 @@
                                 <?php if($errorMsg = $this->session->flashdata('loginError')): ?>
                                     <div class="error errorMsg"><?=$errorMsg?></div>
                                 <?php endif; ?>
+                                <input type="hidden" name="web_push_token" id="web_push_token" value="">
                                 <div class="input-group mt-3">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1"><i class="ti-user"></i></span>
@@ -139,6 +140,11 @@
     <!-- Bootstrap tether Core JavaScript -->
     <script src="<?=base_url()?>assets/libs/popper.js/dist/umd/popper.min.js"></script>
     <script src="<?=base_url()?>assets/libs/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <!-- Firebase App is always required and must be first -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script> 
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js"></script>
+    <script type="module" src="<?=base_url()?>assets/js/notification.js?v=<?=time()?>"></script>
     <!-- ============================================================== -->
     <!-- This page plugin js -->
     <!-- ============================================================== -->
@@ -179,6 +185,10 @@
             }
         }
         
+        if (Notification.permission !== "granted"){  
+            Notification.requestPermission();  
+            console.log("send permission req.");
+        }
     </script>
 </body>
 

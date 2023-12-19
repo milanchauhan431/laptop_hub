@@ -42,8 +42,10 @@ class MY_Controller extends CI_Controller{
 		$this->isLoggedin();
 		$this->data['headData'] = new StdClass;
 		$this->load->library('form_validation');
+		$this->load->library('fcm');
 		
 		$this->load->model('masterModel');
+		$this->load->model('NotificationModel','notification');
 		$this->load->model('DashboardModel','dashboard');
 		$this->load->model('PermissionModel','permission');
 		$this->load->model('StockTransModel','itemStock');
@@ -108,7 +110,7 @@ class MY_Controller extends CI_Controller{
 		/* Estimation Model [Cash Entry] */
 		$this->load->model("EstimateModel",'estimate');
 
-		$this->setSessionVariables(["masterModel","dashboard","permission","terms","transport","hsnModel","materialGrade","itemCategory","brandMaster","sizeMaster","item","department","designation","employeeCategory","shiftModel","employee","party","transMainModel","taxMaster","expenseMaster","salesOrder","purchaseOrder","purchaseIndent","vehicleType","storeLocation","gateEntry","gateInward","salesInvoice","estimate","paymentVoucher","leads","salesEnquiry","salesQuotation","gstExpense","gstIncome","journalEntry","creditNote","debitNote","services","customize"]);
+		$this->setSessionVariables(["masterModel","dashboard","permission","terms","transport","hsnModel","materialGrade","itemCategory","brandMaster","sizeMaster","item","department","designation","employeeCategory","shiftModel","employee","party","transMainModel","taxMaster","expenseMaster","salesOrder","purchaseOrder","purchaseIndent","vehicleType","storeLocation","gateEntry","gateInward","salesInvoice","estimate","paymentVoucher","leads","salesEnquiry","salesQuotation","gstExpense","gstIncome","journalEntry","creditNote","debitNote","services","customize","notification"]);
 	}
 
 	public function setSessionVariables($modelNames){

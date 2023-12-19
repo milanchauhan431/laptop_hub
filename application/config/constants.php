@@ -90,7 +90,7 @@ define('FIREBASE_API_KEY','');
 define("LIVE_LINK","https://laptophub.scubeerp.in/");
 
 define('HOST_NAME','localhost');
-if($_SERVER['HTTP_HOST'] == 'localhost' || $_SERVER['HTTP_HOST'] == "192.168.1.2"):
+if($_SERVER['HTTP_HOST'] == 'localhost' || $_SERVER['HTTP_HOST'] == "192.168.1.16"):
 	define('SERVER_PREFIX','');
 	define('USER_NAME','root');
 	define('PASSWORD','');

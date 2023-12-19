@@ -109,7 +109,6 @@
 <script src="<?=base_url()?>assets/extra-libs/comboSelect/jquery.combo.select.js"></script>
 
 <!-- Select2 js -->
-<!-- Select2 js -->
 <script src="<?=base_url()?>assets/extra-libs/select2/js/select2.full.min.js"></script>
 <script src="<?=base_url()?>assets/js/pages/multiselect/js/bootstrap-multiselect.js"></script>
 <script src="<?=base_url();?>assets/js/custom/jp-tagsinput.min.js"></script>
@@ -120,6 +119,11 @@
 <script src="<?=base_url()?>assets/libs/perfect-scrollbar/dist/perfect-scrollbar.jquery.min.js"></script>
 <script src="<?=base_url()?>assets/libs/bootstrap-switch/dist/js/bootstrap-switch.min.js"></script>
 <script src="<?=base_url()?>assets/libs/inputmask/dist/min/jquery.inputmask.bundle.min.js"></script>
+
+<!-- Firebase App is always required and must be first -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script> 
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js"></script>
+<script type="module" src="<?=base_url()?>assets/js/notification.js?v=<?=time()?>"></script>
 
 <div class="ajaxModal"></div>
 <div class="centerImg">
