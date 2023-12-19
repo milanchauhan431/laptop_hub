@@ -41,7 +41,7 @@ messaging.onMessage((payload) => {
     var notificationOptions = {
         body: payload.message,
         icon : payload.image,
-        click_action : payload.click_action
+        click_action : payload.onclick
     };
 
     const notification = new Notification(notificationTitle, notificationOptions);
@@ -49,9 +49,9 @@ messaging.onMessage((payload) => {
     // Handle the click event
     notification.onclick = function () {
         // Open your web page on notification click
-        window.open(payload.click_action, '_blank'); // '_blank' opens the link in a new tab
+        window.open(payload.onclick, '_blank'); // '_blank' opens the link in a new tab
         // Alternatively, you can use the following to navigate in the same window
-        //window.location.href = payload.click_action;
+        //window.location.href = payload.onclick;
     };
 });
 
