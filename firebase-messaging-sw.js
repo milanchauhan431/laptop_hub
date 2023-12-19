@@ -52,14 +52,14 @@ messaging.onBackgroundMessage((payload) => {
     var notificationOptions = {
         body : payload.message,
         icon : payload.image,
-        click_action : payload.onclick,
+        tag : payload.onclick,
         onclick : payload.onclick
     }; 
     return self.registration.showNotification(notificationTitle,notificationOptions);    
 });
 
 self.addEventListener('notificationclick', function(event) {
-    var url = event.notification.onclick;
+    var url = event.notification.tag;
     console.log(event.notification);
     event.notification.close();
   
