@@ -109,7 +109,7 @@ class Fcm
         $res['data']['message'] = $this->message;
         $res['data']['image'] = $this->image;
         $res['data']['payload'] = $this->data;
-        $res['data']['click_action'] = $this->link;
+        $res['data']['onclick'] = $this->link;
         $res['data']['timestamp'] = date('Y-m-d G:i:s');
         return $res;
     }
