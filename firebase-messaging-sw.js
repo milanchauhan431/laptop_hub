@@ -27,7 +27,7 @@ const messaging = firebase.messaging();
 // implement this optional method.
 // [START background_handler]
 messaging.setBackgroundMessageHandler(function (payload) {
-    console.log('[firebase-messaging-sw.js] Set background message ', payload);
+    //console.log('[firebase-messaging-sw.js] Set background message ', payload);
 	
     // Customize notification here
     payload = JSON.parse(payload.data.data);
@@ -35,7 +35,7 @@ messaging.setBackgroundMessageHandler(function (payload) {
     var notificationOptions = {
         body : payload.message,
         icon : payload.image,
-        click_action : payload.onclick,
+        tag : payload.onclick,
         onclick : payload.onclick,
     };
     return self.registration.showNotification(notificationTitle,notificationOptions);  
@@ -47,7 +47,7 @@ messaging.onBackgroundMessage((payload) => {
 	
     // Customize notification here
     payload = JSON.parse(payload.data.data);
-    console.log('[firebase-messaging-sw.js] Received background message ', payload);
+    //console.log('[firebase-messaging-sw.js] Received background message ', payload);
     var notificationTitle = payload.title;
     var notificationOptions = {
         body : payload.message,
@@ -60,7 +60,7 @@ messaging.onBackgroundMessage((payload) => {
 
 self.addEventListener('notificationclick', function(event) {
     var url = event.notification.tag;
-    console.log(event.notification);
+    //console.log(event.notification);
     event.notification.close();
   
     if(url != "user_visible_auto_notification"){
