@@ -35,7 +35,8 @@ messaging.setBackgroundMessageHandler(function (payload) {
     var notificationOptions = {
         body : payload.message,
         icon : payload.image,
-        click_action : payload.click_action
+        click_action : payload.click_action,
+        link : payload.click_action,
     };
     return self.registration.showNotification(notificationTitle,notificationOptions);  
 });
@@ -50,14 +51,14 @@ messaging.onBackgroundMessage((payload) => {
     var notificationOptions = {
         body : payload.message,
         icon : payload.image,
-        click_action : payload.click_action
+        click_action : payload.click_action,
+        link : payload.click_action
     }; 
     return self.registration.showNotification(notificationTitle,notificationOptions);    
 });
 
 self.addEventListener('notificationclick', function(event) {
-    var url = event.notification.click_action;
-    console.log(event.notification);
+    var url = event.notification.link;
     event.notification.close();
   
     if(url != "user_visible_auto_notification"){
