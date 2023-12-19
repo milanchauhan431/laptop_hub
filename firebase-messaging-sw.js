@@ -35,8 +35,8 @@ messaging.setBackgroundMessageHandler(function (payload) {
     var notificationOptions = {
         body : payload.message,
         icon : payload.image,
-        click_action : payload.click_action,
-        onclick : payload.click_action,
+        click_action : payload.onclick,
+        onclick : payload.onclick,
     };
     return self.registration.showNotification(notificationTitle,notificationOptions);  
 });
@@ -52,8 +52,8 @@ messaging.onBackgroundMessage((payload) => {
     var notificationOptions = {
         body : payload.message,
         icon : payload.image,
-        click_action : payload.click_action,
-        onclick : payload.click_action
+        click_action : payload.onclick,
+        onclick : payload.onclick
     }; 
     return self.registration.showNotification(notificationTitle,notificationOptions);    
 });
