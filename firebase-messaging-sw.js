@@ -57,6 +57,7 @@ messaging.onBackgroundMessage((payload) => {
 
 self.addEventListener('notificationclick', function(event) {
     var url = event.notification.click_action;
+    console.log(event.notification);
     event.notification.close();
   
     if(url != "user_visible_auto_notification"){
@@ -70,7 +71,7 @@ self.addEventListener('notificationclick', function(event) {
                 if (client.url == url && 'focus' in client)
                     return client.focus();
             }
-            
+
             if(clients.openWindow)
                 return clients.openWindow(url);
         }));
