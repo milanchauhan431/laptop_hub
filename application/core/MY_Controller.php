@@ -182,7 +182,8 @@ class MY_Controller extends CI_Controller{
 			/* Load QR Code Library */
 			$this->load->library('ciqrcode');
 			
-			if (!file_exists($dir)) {mkdir($dir, 0775, true);}
+			if(!file_exists($dir)){ mkdir($dir, 0775, true);}
+			$this->trashFiles([$dir]);
 
 			/* QR Configuration  */
 			$config['cacheable']    = true;
@@ -206,6 +207,24 @@ class MY_Controller extends CI_Controller{
 
 		return false;
 	}
+
+	public function trashFiles($dirs = array()){
+        foreach($dirs as $dir):
+            $files = array();
+            $files = scandir($dir);
+            unset($files[0],$files[1]);
+
+            /*** cycle through all files in the directory ***/
+            foreach($files as $file):
+                /*** if file is 24 hours (86400 seconds) old then delete it ***/
+                if(time() - filectime($dir.'/'.$file) > 86400):
+                    unlink($dir.'/'.$file);
+                endif;
+            endforeach;
+        endforeach;
+
+        return true;
+    }
 
 	public function getTableHeader(){
 		$data = $this->input->post();

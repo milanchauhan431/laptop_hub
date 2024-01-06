@@ -144,12 +144,18 @@ class GateInward extends MY_Controller{
 		
         $logo=base_url('assets/images/logo.png');
 
+        $qrFilePath = 'assets/uploads/qr_code/';
+        $qrCode = $this->getQRCode($irData->trans_number,$qrFilePath,str_replace(["/","-"],"_",$irData->trans_number));
+
+        $html = "";
         foreach($irData->itemData as $row):
-			$itemList .='<style>.top-table-border th,.top-table-border td{font-size:12px;}</style>
+			$html ='<style>.top-table-border th,.top-table-border td{font-size:12px;}</style>
             <table class="table">
                 <tr>
                     <td><img src="'.$logo.'" style="max-height:40px;"></td>
-                    <td class="org_title text-right" style="font-size:18px;">IIR Tag</td>
+                    <td class="org_title text-right" style="font-size:18px;">
+                        <img src="'.base_url($qrCode).'" style="max-height:40px;">
+                    </td>
                 </tr>
             </table>
             <table class="table top-table-border">
@@ -184,6 +190,8 @@ class GateInward extends MY_Controller{
                     <td colspan="3">'.date("d-m-Y h:i:s a").'</td>
                 </tr>
             </table>'; $i++;
+
+            for($j=1;$j<=$row->qty;$j++): $itemList .= $html;  endfor;
         endforeach;
 		
         $pdfData = '<div style="width:100mm;height:25mm;">'.$itemList.'</div>';
