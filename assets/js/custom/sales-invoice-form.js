@@ -72,7 +72,8 @@ $(document).ready(function(){
 			setPlaceHolder();
 			$("#itemModel").modal();
 			$("#itemModel .btn-close").show();
-			$("#itemModel .btn-save").show();	
+			$("#itemModel .btn-save").show();
+			$('#itemForm #stock_eff').val(1);	
             $("#itemForm .select2").select2();
 			setTimeout(function(){ $("#itemForm #item_id").focus(); },500);	
 		}else{ 
