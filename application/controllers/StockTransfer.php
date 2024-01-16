@@ -62,6 +62,11 @@ class StockTransfer extends MY_Controller{
                     endif;
                 endif;
             endforeach;
+
+            $data['issue_qty'] = array_sum(array_column($data['batchData'],'batch_qty'));
+            if(empty($data['issue_qty'])):
+                $errorMessage['batchError'] = "Batch Detail is required.";
+            endif;
         endif;
 
         if(!empty($errorMessage)):
