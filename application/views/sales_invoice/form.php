@@ -39,8 +39,7 @@
 
                                     <div class="col-md-5 form-group">
                                         <label for="party_id">Customer Name</label>
-                                        <div class="float-right">	
-                                            
+                                        <div class="float-right">        
 											<span class="dropdown float-right m-r-5">
 												<a class="text-primary font-bold waves-effect waves-dark" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" datatip="Progress" flow="down">+ Add New</a>
 
@@ -52,8 +51,16 @@
 												</div>
 											</span>
 
-                                            <span class="float-right m-r-10">
-                                                <a class="text-primary font-bold waves-effect waves-dark getPendingOrders" href="javascript:void(0)">+ Sales Order</a>
+                                            <span class="dropdown float-right m-r-10">
+                                                <a class="text-primary font-bold waves-effect waves-dark" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" datatip="Progress" flow="down">+ Create Inv.</a>
+
+                                                <div class="dropdown-menu dropdown-menu-left user-dd animated flipInY" x-placement="start-left">
+                                                    <div class="d-flex no-block align-items-center p-10 bg-primary text-white">ACTION</div>
+
+                                                    <a class="dropdown-item getPendingOrders" href="javascript:void(0)">+ Sales Order</a>
+
+                                                    <a class="dropdown-item getPendingServices" href="javascript:void(0)">+ Ext. Service</a>
+                                                </div>
                                             </span>
 										</div>
                                         <select name="party_id" id="party_id" class="form-control select2 partyDetails partyOptions req" data-res_function="resPartyDetail" data-party_category="1">

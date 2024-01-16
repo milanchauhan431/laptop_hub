@@ -92,6 +92,17 @@ function getStoreDtHeader($page){
     $data['customization'][] = ["name" => "Amount"];
     $data['customization'][] = ["name" => "Remark"];
 
+    $data['externalServices'][] = ["name" => "Action", "style" => "width:5%;","sortable"=>"FALSE", "textAlign" => "center"];
+    $data['externalServices'][] = ["name" => "#", "style" => "width:5%;","sortable"=>"FALSE", "textAlign" => "center"];
+    $data['externalServices'][] = ["name"=> "Entry No.", "textAlign" => "center"];
+    $data['externalServices'][] = ["name" => "Entry Date", "textAlign" => "center"];
+    $data['externalServices'][] = ["name" => "Party Name"];
+    $data['externalServices'][] = ["name" => "Product Name"];
+    $data['externalServices'][] = ["name" => "Qty"];
+    $data['externalServices'][] = ["name" => "Amount"];
+    $data['externalServices'][] = ["name" => "Remark"];
+    $data['externalServices'][] = ["name" => "Service Inspector"];
+
     return tableHeader($data[$page]);
 }
 
@@ -223,5 +234,28 @@ function getCustomizationData($data){
 
         return [$action,$data->sr_no,$data->trans_number,formatDate($data->trans_date),$data->ref_no,$data->item_name,floatVal($data->qty),$data->total_amount,$data->remark];
     endif;
+}
+
+/* External Service Table Data */
+function getExternalServicesData($data){
+    $completeButton = $editButton = $deleteButton = "";
+
+    if(empty($data->trans_status)):
+        $editParam = "{'postData':{'id' : ".$data->id."},'modal_id' : 'modal-xl', 'form_id' : 'editExternalService', 'title' : 'Update External Service'}";
+        $editButton = '<a class="btn btn-warning btn-edit permission-modify" href="javascript:void(0)" datatip="Edit" flow="down" onclick="edit('.$editParam.');"><i class="ti-pencil-alt" ></i></a>';
+
+        $deleteParam = "{'postData':{'id' : ".$data->id."},'message' : 'Record'}";
+        $deleteButton = '<a class="btn btn-danger btn-delete permission-remove" href="javascript:void(0)" onclick="trash('.$deleteParam.');" datatip="Remove" flow="down"><i class="ti-trash"></i></a>';
+
+        $completeParam = "{'postData':{'id' : ".$data->id."},'modal_id' : 'modal-xl', 'form_id' : 'completeExternalService', 'title' : 'Complete Service', 'fnedit' : 'completeService', 'fnsave' : 'saveCompleteService'}";
+        $completeButton = '<a class="btn btn-success btn-edit permission-modify" href="javascript:void(0)" datatip="Complete" flow="down" onclick="edit('.$completeParam.');"><i class="ti-check" ></i></a>';
+    else:
+        $deleteParam = "{'postData':{'id' : ".$data->id."},'message' : 'Are you sure want to save this change ?','fnsave' : 'uncompleteService'}";
+        $deleteButton = '<a class="btn btn-danger btn-delete permission-remove" href="javascript:void(0)" onclick="confirmStore('.$deleteParam.');" datatip="Reversed" flow="down"><i class="ti-close"></i></a>';
+    endif;
+
+    $action = getActionButton($completeButton.$editButton.$deleteButton);
+
+    return [$action,$data->sr_no,$data->trans_number,formatDate($data->trans_date),$data->party_name,$data->item_name,$data->qty,$data->total_amount,$data->remark,$data->emp_name];
 }
 ?>

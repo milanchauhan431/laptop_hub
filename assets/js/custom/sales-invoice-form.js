@@ -2,8 +2,8 @@ var itemCount = 0;
 $(document).ready(function(){
 	$(".ledgerColumn").hide();
 	$(".summary_desc").attr('style','width: 60%;');
-
 	$("#itemForm .select2").select2();
+
 	$(document).on('click','.getPendingOrders',function(){
 		var party_id = $('#party_id').val();
 		var party_name = $('#party_id :selected').text();
@@ -22,6 +22,35 @@ $(document).ready(function(){
 					$('#modal-xl .modal-body form').attr('id',"createInvoiceForm");
 					$('#modal-xl .modal-footer .btn-save').html('<i class="fa fa-check"></i> Create Invoice');
 					$("#modal-xl .modal-footer .btn-save").attr('onclick',"createInvoice();");
+
+					
+				}
+			});
+		} else {
+			$('.party_id').html("Party is required.");
+		}	
+	});
+
+	$(document).on('click','.getPendingServices',function(){
+		var party_id = $('#party_id').val();
+		var party_name = $('#party_id :selected').text();
+		$('.party_id').html("");
+
+		if (party_id != "" || party_id != 0) {
+			$.ajax({
+				url: base_url + 'externalServices/getPartyServices',
+				type: 'post',
+				data: { party_id: party_id },
+				success: function (response) {
+					$("#modal-xl").modal();
+					$('#modal-xl .modal-body').html('');
+					$('#modal-xl .modal-title').html("Carete Invoice [ Party Name : "+party_name+" ]");
+					$('#modal-xl .modal-body').html(response);
+					$('#modal-xl .modal-body form').attr('id',"createInvoiceForm");
+					$('#modal-xl .modal-footer .btn-save').html('<i class="fa fa-check"></i> Create Invoice');
+					$("#modal-xl .modal-footer .btn-save").attr('onclick',"createInvoice();");
+
+					
 				}
 			});
 		} else {
@@ -62,7 +91,7 @@ $(document).ready(function(){
         if (formData.item_id == "") {
 			$(".item_id").html("Item Name is required.");
 		}
-		if (formData.batch_no == "") {
+		if (formData.batch_no == "" && formData.item_type != 8) {
 			$(".batch_no").html("Batch No. is required.");
 		}
         if (formData.qty == "" || parseFloat(formData.qty) == 0) {
@@ -276,6 +305,10 @@ $(document).ready(function(){
 });
 
 function createInvoice(){
+	$("#saveSalesInvoice #ref_id").val("");
+	$("#saveSalesInvoice #from_entry_type").val("");
+	$("#tempItem").html('<tr id="noData"><td colspan="15" align="center">No data available in table</td></tr>');
+
 	var fromEntryTypes = $("#saveSalesInvoice #from_entry_type").val();
 	var refIds = $("#saveSalesInvoice #ref_id").val();
 	var mainRefIds = []; var mainFromEntryType = [];
@@ -571,20 +604,28 @@ function resItemDetail(response = ""){
         $("#itemForm #hsn_code").val(itemDetail.hsn_code);//$("#itemForm #hsn_code").select2();
         $("#itemForm #gst_per").val(parseFloat(itemDetail.gst_per).toFixed(0));$("#itemForm #gst_per").select2();
 
-		$.ajax({
-			url : base_url + controller + '/getItemBtachWithLocationList',
-			type : 'post',
-			data : {item_id : itemDetail.id},
-			dataType:'json',
-			success:function(res){
-				$("#itemForm #unique_id").html(res.batchOption);
-				$("#itemForm #unique_id").select2();
-			}
-		});
+		if(itemDetail.item_type != 8){
+			$.ajax({
+				url : base_url + controller + '/getItemBtachWithLocationList',
+				type : 'post',
+				data : {item_id : itemDetail.id},
+				dataType:'json',
+				success:function(res){
+					$("#itemForm #unique_id").html(res.batchOption);
+					$("#itemForm #unique_id").select2();
+					$("#itemForm #stock_eff").val("1");
+				}
+			});
+		}else{
+			$("#itemForm #unique_id").html('<option value="">Select</option>');$("#itemForm #unique_id").select2();
+			$("#itemForm #stock_eff").val("0");
+		}
+		
     }else{
         $("#itemForm #item_code").val("");
         $("#itemForm #item_name").val("");
         $("#itemForm #item_type").val("");
+		$("#itemForm #stock_eff").val("1");
         $("#itemForm #unit_id").val("");$("#itemForm #unit_id").select2();
         $("#itemForm #unit_name").val("");
 		$("#itemForm #disc_per").val("");

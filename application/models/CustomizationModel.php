@@ -76,6 +76,8 @@ class CustomizationModel extends MasterModel{
 
     public function saveCustomize($data){
         try{
+            $this->db->trans_begin();
+
             if(empty($data['id'])):
                 $nextNoData = ['table_name'=>$this->serviceMaster,'customWhere' => 'trans_type = '.$data['trans_type']];
                 $data['trans_no'] = $this->transMainModel->getNextTransNo($nextNoData);

@@ -96,6 +96,16 @@ function getMasterDtHeader($page){
     $data['consumable'][] = ["name"=>"GST (%)"];
     $data['consumable'][] = ["name"=>"Defual Disc. (%)"];
 
+    /* Services Header */
+    $data['services'][] = ["name"=>"Action","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['services'][] = ["name"=>"#","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"]; 
+    $data['services'][] = ["name"=>"Item Code"];
+    $data['services'][] = ["name"=>"Item Name"];
+    $data['services'][] = ["name"=>"Category Name"];
+    $data['services'][] = ["name"=>"Unit"];
+    $data['services'][] = ["name"=>"HSN Code"];
+    $data['services'][] = ["name"=>"GST (%)"];
+
     return tableHeader($data[$page]);
 }
 
@@ -202,5 +212,9 @@ function getProductData($data){
 
     $action = getActionButton($editButton.$deleteButton);
 
-    return [$action,$data->sr_no,$data->item_code,$data->item_name,$data->category_name,$data->unit_name,floatVal($data->price),$data->hsn_code,floatVal($data->gst_per),floatVal($data->defualt_disc)];
+    if($data->item_type != 8):
+        return [$action,$data->sr_no,$data->item_code,$data->item_name,$data->category_name,$data->unit_name,floatVal($data->price),$data->hsn_code,floatVal($data->gst_per),floatVal($data->defualt_disc)];
+    else:
+        return [$action,$data->sr_no,$data->item_code,$data->item_name,$data->category_name,$data->unit_name,$data->hsn_code,floatVal($data->gst_per)];
+    endif;
 }

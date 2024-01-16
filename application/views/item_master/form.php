@@ -2,9 +2,11 @@
     <div class="col-md-12">
         <div class="row">
             <input type="hidden" name="id" id="id" value="<?=(!empty($dataRow->id))?$dataRow->id:""?>">
-            <input type="hidden" name="item_type" id="item_type" value="<?=(!empty($dataRow->item_type))?$dataRow->item_type:$item_type?>">
-
+            <input type="hidden" name="item_type" id="item_type" value="<?=(!empty($dataRow->item_type))?$dataRow->item_type:$item_type?>">  
             
+            <?php
+                $itemType = (!empty($dataRow->item_type))?$dataRow->item_type:$item_type;
+            ?>
 
             <div class="col-md-3 form-group">
                 <label for="item_code">Item Code</label>
@@ -37,17 +39,15 @@
                 </select>
             </div>
 
-            <div class="col-md-2 form-group">
+            <div class="col-md-2 form-group <?=($itemType == 8)?"hidden":""?>">
                 <label for="defualt_disc">Defual Disc. (%)</label>
                 <input type="text" name="defualt_disc" class="form-control floatOnly req" value="<?=(!empty($dataRow->defualt_disc)) ? $dataRow->defualt_disc : ""?>" />
             </div>
 
-            <div class="col-md-2 form-group">
+            <div class="col-md-2 form-group <?=($itemType == 8)?"hidden":""?>">
                 <label for="price">Price</label>
                 <input type="text" name="price" id="price" class="form-control floatOnly" value="<?=(!empty($dataRow->price))?$dataRow->price:""?>">
-            </div>
-
-            
+            </div>            
 
             <div class="col-md-2 form-group">
                 <label for="hsn_code">HSN Code</label>
@@ -78,12 +78,12 @@
                 </select>
             </div>
 
-            <div class="col-md-2 form-group">
+            <div class="col-md-2 form-group <?=($itemType == 8)?"hidden":""?>">
                 <label for="wh_min_qty">Min. Stock Qty (WH)</label>
                 <input type="text" name="wh_min_qty" class="form-control floatOnly" value="<?= (!empty($dataRow->wh_min_qty)) ? $dataRow->wh_min_qty : "" ?>" />
             </div>
             
-            <div class="col-md-2 form-group">
+            <div class="col-md-2 form-group <?=($itemType == 8)?"hidden":""?>">
                 <label for="wkg">Weight/Nos <small>(In Kg.)</small> </label>
                 <input type="text" name="wkg" class="form-control floatOnly" value="<?= (!empty($dataRow->wkg)) ? $dataRow->wkg : "" ?>" />
             </div>
@@ -93,7 +93,7 @@
                 <input type="text" name="packing_standard" id="packing_standard" class="form-control numericOnly req" value="<?=(!empty($dataRow->packing_standard))?$dataRow->packing_standard:""?>">
             </div>
 
-            <div class="col-md-8 form-group">
+            <div class="col-md-8 form-group <?=($itemType == 8)?"hidden":""?>">
                 <label for="description">Product Description</label>
                 <textarea name="description" id="description" class="form-control" rows="1"><?=(!empty($dataRow->description))?$dataRow->description:""?></textarea>
             </div>

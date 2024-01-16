@@ -60,12 +60,21 @@ class SalesInvoiceModel extends MasterModel{
                 $dataRow = $this->getSalesInvoice(['id'=>$data['id'],'itemList'=>1]);
                 foreach($dataRow->itemList as $row):
                     if(!empty($row->ref_id)):
-                        $setData = array();
-                        $setData['tableName'] = $this->transChild;
-                        $setData['where']['id'] = $row->ref_id;
-                        $setData['set']['dispatch_qty'] = 'dispatch_qty, - '.$row->qty;
-                        $setData['update']['trans_status'] = "(CASE WHEN dispatch_qty >= qty THEN 1 ELSE 0 END)";
-                        $this->setValue($setData);
+                        if($row->from_entry_type == 61):
+                            $setData = array();
+                            $setData['tableName'] = "service_transaction";
+                            $setData['where']['id'] = $row->ref_id;
+                            $setData['set']['inv_qty'] = 'inv_qty, - '.$row->qty;
+                            $setData['update']['inv_status'] = "(CASE WHEN inv_qty >= qty THEN 1 ELSE 0 END)";
+                            $this->setValue($setData);
+                        else:
+                            $setData = array();
+                            $setData['tableName'] = $this->transChild;
+                            $setData['where']['id'] = $row->ref_id;
+                            $setData['set']['dispatch_qty'] = 'dispatch_qty, - '.$row->qty;
+                            $setData['update']['trans_status'] = "(CASE WHEN dispatch_qty >= qty THEN 1 ELSE 0 END)";
+                            $this->setValue($setData);
+                        endif;
                     endif;
 
                     $this->trash($this->transChild,['id'=>$row->id]);
@@ -204,16 +213,25 @@ class SalesInvoiceModel extends MasterModel{
                 endif;
 
                 if(!empty($row['ref_id'])):
-                    $setData = array();
-                    $setData['tableName'] = $this->transChild;
-                    $setData['where']['id'] = $row['ref_id'];
-                    $setData['set']['dispatch_qty'] = 'dispatch_qty, + '.$row['qty'];
-                    $setData['update']['trans_status'] = "(CASE WHEN dispatch_qty >= qty THEN 1 ELSE 0 END)";
-                    $this->setValue($setData);
+                    if($row['from_entry_type'] == 61):
+                        $setData = array();
+                        $setData['tableName'] = "service_transaction";
+                        $setData['where']['id'] = $row['ref_id'];
+                        $setData['set']['inv_qty'] = 'inv_qty, + '.$row['qty'];
+                        $setData['update']['inv_status'] = "(CASE WHEN inv_qty >= qty THEN 1 ELSE 0 END)";
+                        $this->setValue($setData);
+                    else:
+                        $setData = array();
+                        $setData['tableName'] = $this->transChild;
+                        $setData['where']['id'] = $row['ref_id'];
+                        $setData['set']['dispatch_qty'] = 'dispatch_qty, + '.$row['qty'];
+                        $setData['update']['trans_status'] = "(CASE WHEN dispatch_qty >= qty THEN 1 ELSE 0 END)";
+                        $this->setValue($setData);
+                    endif;
                 endif;
             endforeach;
 
-            if(!empty($data['ref_id'])):
+            if(!empty($data['ref_id']) && $data['from_entry_type'] != 61):
                 $refIds = explode(",",$data['ref_id']);
                 foreach($refIds as $main_id):
                     $setData = array();
@@ -427,18 +445,27 @@ class SalesInvoiceModel extends MasterModel{
             
             foreach($dataRow->itemList as $row):
                 if(!empty($row->ref_id)):
-                    $setData = array();
-                    $setData['tableName'] = $this->transChild;
-                    $setData['where']['id'] = $row->ref_id;
-                    $setData['set']['dispatch_qty'] = 'dispatch_qty, - '.$row->qty;
-                    $setData['update']['trans_status'] = "(CASE WHEN dispatch_qty >= qty THEN 1 ELSE 0 END)";
-                    $this->setValue($setData);
+                    if($row->from_entry_type == 61):
+                        $setData = array();
+                        $setData['tableName'] = "service_transaction";
+                        $setData['where']['id'] = $row->ref_id;
+                        $setData['set']['inv_qty'] = 'inv_qty, - '.$row->qty;
+                        $setData['update']['inv_status'] = "(CASE WHEN inv_qty >= qty THEN 1 ELSE 0 END)";
+                        $this->setValue($setData);
+                    else:
+                        $setData = array();
+                        $setData['tableName'] = $this->transChild;
+                        $setData['where']['id'] = $row->ref_id;
+                        $setData['set']['dispatch_qty'] = 'dispatch_qty, - '.$row->qty;
+                        $setData['update']['trans_status'] = "(CASE WHEN dispatch_qty >= qty THEN 1 ELSE 0 END)";
+                        $this->setValue($setData);
+                    endif;
                 endif;
 
                 $this->trash($this->transChild,['id'=>$row->id]);
             endforeach;
 
-            if(!empty($dataRow->ref_id)):
+            if(!empty($dataRow->ref_id) && $dataRow->from_entry_type != 61):
                 $oldRefIds = explode(",",$dataRow->ref_id);
                 foreach($oldRefIds as $main_id):
                     $setData = array();

@@ -20,7 +20,7 @@ class MY_Controller extends CI_Controller{
 	public $automotiveArray = ["1" => 'Yes', "2" => "No"];
 	public $vendorTypes = ['Manufacture', 'Service'];
 
-	public $itemTypes = [1 => "Finish Goods", 2 => "Consumable", 3 => "Raw Material"/* , 4 => "Capital Goods", 5 => "Machineries", 6 => "Instruments", 7 => "Gauges", 8 => "Services", 9 => "Packing Material", 10 => "Scrap" */];
+	public $itemTypes = [1 => "Finish Goods", 2 => "Consumable", 3 => "Raw Material"/* , 4 => "Capital Goods", 5 => "Machineries", 6 => "Instruments", 7 => "Gauges"*/, 8 => "Services"/*, 9 => "Packing Material", 10 => "Scrap" */];
 	public $stockTypes = [0=>"None",1=>'Batch Wise'/* ,2=>"Serial Wise" */];
 	public $fgColorCode = ["WHITE"=>"W","GREY"=>"G"];
 	public $fgCapacity = ["3 Ton"=>"3T","5 Ton"=>"5T"];
@@ -90,6 +90,7 @@ class MY_Controller extends CI_Controller{
 		$this->load->model('GateInwardModel','gateInward');
 		$this->load->model('ServicesModel','services');
 		$this->load->model('CustomizationModel','customize');
+		$this->load->model('ExternalServicesModel','externalServices');
 
 		/* Accounting Model */
 		$this->load->model("PurchaseInvoiceModel","purchaseInvoice");
@@ -110,7 +111,7 @@ class MY_Controller extends CI_Controller{
 		/* Estimation Model [Cash Entry] */
 		$this->load->model("EstimateModel",'estimate');
 
-		$this->setSessionVariables(["masterModel","dashboard","permission","terms","transport","hsnModel","materialGrade","itemCategory","brandMaster","sizeMaster","item","department","designation","employeeCategory","shiftModel","employee","party","transMainModel","taxMaster","expenseMaster","salesOrder","purchaseOrder","purchaseIndent","vehicleType","storeLocation","gateEntry","gateInward","salesInvoice","estimate","paymentVoucher","leads","salesEnquiry","salesQuotation","gstExpense","gstIncome","journalEntry","creditNote","debitNote","services","customize","notification"]);
+		$this->setSessionVariables(["masterModel","dashboard","permission","terms","transport","hsnModel","materialGrade","itemCategory","brandMaster","sizeMaster","item","department","designation","employeeCategory","shiftModel","employee","party","transMainModel","taxMaster","expenseMaster","salesOrder","purchaseOrder","purchaseIndent","vehicleType","storeLocation","gateEntry","gateInward","salesInvoice","estimate","paymentVoucher","leads","salesEnquiry","salesQuotation","gstExpense","gstIncome","journalEntry","creditNote","debitNote","services","customize","notification","externalServices"]);
 	}
 
 	public function setSessionVariables($modelNames){
@@ -241,6 +242,9 @@ class MY_Controller extends CI_Controller{
 
 	public function getItemBtachList(){
 		$data = $this->input->post();
+
+		$itemDetail = $this->item->getItem(['id'=>$data['item_id']]);
+
 		$data['stock_required'] = 1;
 		$data['location_id'] = $this->RTD_STORE->id;
 		$result = $this->itemStock->getItemStockBatchWise($data);
@@ -250,7 +254,7 @@ class MY_Controller extends CI_Controller{
 			$html .= '<option value="'.$row->batch_no.'" data-mir_trans_id="'.$row->child_ref_id.'" data-unique_id="'.$row->unique_id.'" data-price="'.$row->price.'">'.$row->batch_no.'</option>';
 		endforeach;
 
-		$this->printJson(['status'=>1,'batchOption'=>$html]);
+		$this->printJson(['status'=>1,'itemDetail'=>$itemDetail,'batchOption'=>$html]);
 	}
 
 	public function getItemBtachWithLocationList(){

@@ -562,6 +562,15 @@ function getItemListOption($itemList,$itemId = 0){
 	return $options;
 }
 
+function getEmployeeListOptions($employeeList,$emp_id = 0){
+	$options = '';
+	foreach($employeeList as $row):
+		$selected = (!empty($emp_id) && $row->id == $emp_id)?"selected":"";
+		$options .= '<option value="'.$row->id.'" '.$selected.'>'.$row->emp_name.'</option>';
+	endforeach;
+	return $options;
+}
+
 function getItemUnitListOption($unitList,$unit_id = 0){
 	$options = '';
 	foreach($unitList as $row):
