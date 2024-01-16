@@ -55,6 +55,28 @@ function getStoreDtHeader($page){
     $data['stockTrans'][] = ["name" => "Packing Standard"];
     $data['stockTrans'][] = ["name" => "Remark"];
 
+    /* Stock Request Table Header */
+    $data['stockRequest'][] = ["name" => "Action", "style" => "width:5%;", "textAlign" => "center"];
+    $data['stockRequest'][] = ["name" => "#", "style" => "width:5%;", "textAlign" => "center"];
+    $data['stockRequest'][] = ["name" => "Date"];
+    $data['stockRequest'][] = ["name"=> "Branch"];
+    $data['stockRequest'][] = ["name" => "Item Name"];
+    $data['stockRequest'][] = ["name" => "Req. Qty."];
+    $data['stockRequest'][] = ["name" => "Issue Qty."];
+    $data['stockRequest'][] = ["name" => "Pending Qty."];
+    $data['stockRequest'][] = ["name" => "Remark"];
+
+    /* Stock Transfer Table Header */
+    $data['stockTransfer'][] = ["name" => "Action", "style" => "width:5%;", "textAlign" => "center"];
+    $data['stockTransfer'][] = ["name" => "#", "style" => "width:5%;", "textAlign" => "center"];
+    $data['stockTransfer'][] = ["name" => "Date"];
+    $data['stockTransfer'][] = ["name"=> "Branch"];
+    $data['stockTransfer'][] = ["name" => "Item Name"];
+    $data['stockTransfer'][] = ["name" => "Req. Qty."];
+    $data['stockTransfer'][] = ["name" => "Issue Qty."];
+    $data['stockTransfer'][] = ["name" => "Pending Qty."];
+    $data['stockTransfer'][] = ["name" => "Remark"];
+
     /* Service Table Header */
     $data['serviceGI'][] = ["name" => "Action", "style" => "width:5%;","sortable"=>"FALSE", "textAlign" => "center"];
     $data['serviceGI'][] = ["name" => "#", "style" => "width:5%;","sortable"=>"FALSE", "textAlign" => "center"];
@@ -200,6 +222,38 @@ function getStockTransData($data){
     $action = getActionButton($deleteButton);
 
     return [$action,$data->sr_no,formatDate($data->ref_date),$data->item_code,$data->item_name,$data->qty,$data->size,$data->remark];
+}
+
+/* Stock Request Table Data */
+function getStockRequestData($data){
+    $editButton = $deleteButton = "";
+    if(empty($data->trans_status)):
+        $editParam = "{'postData':{'id' : ".$data->id."},'modal_id' : 'modal-md', 'form_id' : 'editStockRequest', 'title' : 'Update Request'}";
+        $editButton = '<a class="btn btn-warning btn-edit permission-modify" href="javascript:void(0)" datatip="Edit" flow="down" onclick="edit('.$editParam.');"><i class="ti-pencil-alt" ></i></a>';
+
+        $deleteParam = "{'postData':{'id' : ".$data->id."},'message' : 'Stock Request'}";
+        $deleteButton = '<a class="btn btn-danger btn-delete permission-remove" href="javascript:void(0)" onclick="trash('.$deleteParam.');" datatip="Remove" flow="down"><i class="ti-trash"></i></a>';
+    endif;
+
+    $action = getActionButton($editButton.$deleteButton);
+
+    return [$action,$data->sr_no,formatDate($data->trans_date),$data->company_code,$data->item_name,floatval($data->qty),floatval($data->issue_qty),floatval($data->pending_qty),$data->remark];
+}
+
+/* Stock Request Table Data */
+function getStockTransferData($data){
+    $editButton = $deleteButton = "";
+    if(empty($data->trans_status)):
+        $editParam = "{'postData':{'id' : ".$data->id."},'modal_id' : 'modal-xl', 'form_id' : 'editStockTransfer', 'title' : 'Stock Transfer','fnedit':'stockTransfer'}";
+        $editButton = '<a class="btn btn-success btn-edit permission-modify" href="javascript:void(0)" datatip="Edit" flow="down" onclick="edit('.$editParam.');"><i class="ti-check" ></i></a>';
+
+        $deleteParam = "{'postData':{'id' : ".$data->id.",'cm_id':".$data->cm_id."},'message' : 'Stock Request','fndelete':'rejectStockTransfer'}";
+        $deleteButton = '<a class="btn btn-dark btn-delete permission-remove" href="javascript:void(0)" onclick="trash('.$deleteParam.');" datatip="Reject" flow="down"><i class="ti-close"></i></a>';
+    endif;
+
+    $action = getActionButton($editButton.$deleteButton);
+
+    return [$action,$data->sr_no,formatDate($data->trans_date),$data->company_code,$data->item_name,floatval($data->qty),floatval($data->issue_qty),floatval($data->pending_qty),$data->remark];
 }
 
 /* Service Table Data */

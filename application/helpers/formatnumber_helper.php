@@ -540,6 +540,16 @@ function getPrefix($prefix,$explodeBy = '/'){return explode($explodeBy,$prefix);
 /** GET NO WITH FORMATED PREFIX **/
 function getPrefixNumber($prefix,$no,$explodeBy = '/'){ $prfx = explode($explodeBy,$prefix);return $prefix.$explodeBy.$no; }
 
+function getCompanyListOption($companyList,$companyId = 0){
+	$options = '';
+	foreach($companyList as $row):
+		$selected = (!empty($companyId) && $companyId == $row->id)?"selected":"";
+		$options .= '<option value="'.$row->id.'" '.$selected.'>'.$row->company_code.'</option>';
+	endforeach;
+
+	return $options;
+}
+
 /* Get Party List Options */
 function getPartyListOption($partyList,$partyId = 0){
 	$options = '';

@@ -766,7 +766,7 @@ class MasterModel extends CI_Model{
     public function store($tableName,$data,$msg = "Record"){
         $id = $data['id'];
         unset($data['id']);
-        $data['cm_id'] = $this->cm_id;
+        $data['cm_id'] = (isset($data['cm_id']))?$data['cm_id']:$this->cm_id;
         if(empty($id)):
             $data['created_by'] = (isset($data['created_by']))?$data['created_by']:$this->loginId;
             $data['created_at'] = date("Y-m-d H:i:s");
@@ -789,7 +789,7 @@ class MasterModel extends CI_Model{
 
     /* Update Row */
     public function edit($tableName,$where,$data,$msg = "Record"){
-        $data['cm_id'] = $this->cm_id;
+        $data['cm_id'] = (isset($data['cm_id']))?$data['cm_id']:$this->cm_id;
         $data['updated_by'] = $this->loginId;
         $data['updated_at'] = date("Y-m-d H:i:s");
 
@@ -804,7 +804,7 @@ class MasterModel extends CI_Model{
 
     /* Update Row */
     public function editCustom($tableName,$customWhere,$data,$where=Array()){
-        $data['cm_id'] = $this->cm_id;
+        $data['cm_id'] = (isset($data['cm_id']))?$data['cm_id']:$this->cm_id;
         $data['updated_by'] = $this->loginId;
         $data['updated_at'] = date("Y-m-d H:i:s");
 
@@ -919,6 +919,27 @@ class MasterModel extends CI_Model{
 
 	/* Print Executed Query */
     public function printQuery(){  print_r($this->db->last_query());exit; }	
+
+    public function getCompanyList($postData=array()){
+		$data['tableName'] = 'company_info';
+        $data['select'] = "company_info.*,bcountry.name as company_country, bstate.name as company_state, bstate.gst_statecode as company_state_code, bcity.name as company_city, dcountry.name as delivery_country, dstate.name as delivery_state, dstate.gst_statecode as delivery_state_code, dcity.name as delivery_city";
+
+        $data['leftJoin']['countries as bcountry'] = "company_info.company_country_id = bcountry.id";
+        $data['leftJoin']['states as bstate'] = "company_info.company_state_id = bstate.id";
+        $data['leftJoin']['cities as bcity'] = "company_info.company_city_id = bcity.id";
+
+        $data['leftJoin']['countries as dcountry'] = "company_info.delivery_country_id = dcountry.id";
+        $data['leftJoin']['states as dstate'] = "company_info.delivery_state_id = dstate.id";
+        $data['leftJoin']['cities as dcity'] = "company_info.delivery_city_id = dcity.id";
+
+        if(!empty($postData['other'])):
+		    $data['cm_id'] = array_diff([1,2,3,4],[$this->cm_id]);
+        else:
+            $data['cm_id'] = [1,2,3,4];
+        endif;
+
+		return $this->rows($data);
+	}
 
 	/* Company Information */
 	public function getCompanyInfo(){

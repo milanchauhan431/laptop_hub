@@ -72,7 +72,7 @@ class TransactionMainModel extends MasterModel{
 		$queryData['where']['item_id'] = $data['item_id'];
 		$queryData['where']['location_id'] = $data['location_id'];
 		$queryData['where']['batch_no'] = $data['batch_no'];
-		$queryData['cm_id'] = $this->cm_id;
+		$queryData['cm_id'] = (!empty($data['cm_id']))?$data['cm_id']:$this->cm_id;
 		$result = $this->row($queryData);
 
 		if(!empty($result->unique_id)):
@@ -82,7 +82,7 @@ class TransactionMainModel extends MasterModel{
 		$queryData = array();
 		$queryData['tableName'] = "stock_transaction";
 		$queryData['select'] = "ifnull((MAX(unique_id) + 1),1) as unique_id";
-		$queryData['cm_id'] = $this->cm_id;
+		$queryData['cm_id'] = (!empty($data['cm_id']))?$data['cm_id']:$this->cm_id;
 		return $this->row($queryData)->unique_id;
 	}
 	

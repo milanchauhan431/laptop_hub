@@ -13,6 +13,8 @@ class ItemModel extends MasterModel{
         $data['where']['item_master.item_type'] = $data['item_type'];
         $data['where']['item_master.active'] = 1;
 
+        $data['cm_id'] = [0,$this->cm_id];
+
         $data['searchCol'][] = "";
         $data['searchCol'][] = "";
         $data['searchCol'][] = "item_master.item_code";
@@ -71,8 +73,10 @@ class ItemModel extends MasterModel{
             $queryData['where']['item_master.active'] = 1;
         endif;
 
-        if(!empty($data['cm_id'])):
+        if(isset($data['cm_id'])):
             $queryData['cm_id'] = $data['cm_id'];
+        else:
+            $queryData['cm_id'] = [0,$this->cm_id];
         endif;
 
         return $this->rows($queryData);
@@ -97,6 +101,7 @@ class ItemModel extends MasterModel{
             $queryData['where_in']['item_master.item_type'] = $data['item_types'];
         endif;
 
+        $queryData['cm_id'] = [0,$this->cm_id];
         return $this->row($queryData);
     }
 
@@ -130,6 +135,8 @@ class ItemModel extends MasterModel{
             $queryData['where']['item_type'] = $data['item_type'];
         if(!empty($data['id']))
             $queryData['where']['id !='] = $data['id'];
+
+        $queryData['cm_id'] = [0,$this->cm_id];
 
         $queryData['resultType'] = "numRows";
         return $this->specificRow($queryData);

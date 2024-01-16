@@ -93,7 +93,15 @@
                 <input type="text" name="packing_standard" id="packing_standard" class="form-control numericOnly req" value="<?=(!empty($dataRow->packing_standard))?$dataRow->packing_standard:""?>">
             </div>
 
-            <div class="col-md-8 form-group <?=($itemType == 8)?"hidden":""?>">
+            <div class="col-md-2 form-group">
+                <label for="cm_id">For All Branch</label>
+                <select name="cm_id" id="cm_id" class="form-control">
+                    <option value="<?=$this->cm_id?>" <?=(!empty($dataRow->cm_id) && $dataRow->cm_id == $this->cm_id)?"selected":""?> >No</option>
+                    <option value="0" <?=(!empty($dataRow->id) && $dataRow->cm_id == 0)?"selected":""?> >Yes</option>
+                </select>
+            </div>
+
+            <div class="col-md-6 form-group <?=($itemType == 8)?"hidden":""?>">
                 <label for="description">Product Description</label>
                 <textarea name="description" id="description" class="form-control" rows="1"><?=(!empty($dataRow->description))?$dataRow->description:""?></textarea>
             </div>
