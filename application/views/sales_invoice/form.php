@@ -85,7 +85,7 @@
                                         </select>
                                     </div>
 
-                                    <div class="col-md-2 form-group hidden">
+                                    <div class="col-md-2 form-group">
 										<label for="memo_type">Memo Type</label>
 										<select name="memo_type" id="memo_type" class="form-control">
 											<option value="DEBIT" <?=(!empty($dataRow->memo_type) && $dataRow->memo_type == "DEBIT")?"selected":""?> >Debit</option>
@@ -93,7 +93,7 @@
 										</select>
 									</div>
 
-                                    <div class="col-md-4 form-group">
+                                    <div class="col-md-3 form-group">
 										<label for="sp_acc_id">GST Type </label>
                                         <select name="sp_acc_id" id="sp_acc_id" class="form-control select2 req">
 											<?=getSpAccListOption($salesAccounts,((!empty($dataRow->sp_acc_id))?$dataRow->sp_acc_id:0))?>
@@ -134,7 +134,7 @@
                                         <input type="text" name="masterDetails[t_col_2]" id="master_t_col_2" class="form-control numericOnly" value="<?=(!empty($dataRow->contact_no))?$dataRow->contact_no:""?>">
                                     </div>
 
-                                    <div class="col-md-8 form-group">
+                                    <div class="col-md-7 form-group">
                                         <label for="master_t_col_3">Address</label>
                                         <input type="text" name="masterDetails[t_col_3]" id="master_t_col_3" class="form-control" value="<?=(!empty($dataRow->ship_address))?$dataRow->ship_address:""?>">
                                     </div>
