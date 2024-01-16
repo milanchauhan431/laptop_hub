@@ -9,7 +9,7 @@ class SalesOrderModel extends MasterModel{
 
     public function getDTRows($data){
         $data['tableName'] = $this->transChild;
-        $data['select'] = "trans_child.id as trans_child_id,trans_child.item_name,trans_child.qty,trans_child.dispatch_qty,(trans_child.qty - trans_child.dispatch_qty) as pending_qty,trans_main.id,trans_main.trans_number,DATE_FORMAT(trans_main.trans_date,'%d-%m-%Y') as trans_date,trans_main.party_name,trans_main.sales_type,trans_child.trans_status,employee_master.emp_name as service_inpectore_name";
+        $data['select'] = "trans_child.id as trans_child_id,trans_child.item_name,trans_child.qty,trans_child.dispatch_qty,(trans_child.qty - trans_child.dispatch_qty) as pending_qty,trans_main.id,trans_main.trans_number,DATE_FORMAT(trans_main.trans_date,'%d-%m-%Y') as trans_date,trans_main.party_name,trans_main.sales_type,trans_child.trans_status,employee_master.emp_name as service_inpectore_name,DATE_FORMAT(trans_child.initiate_at,'%d-%m-%Y') as service_completed_at";
 
         $data['leftJoin']['trans_main'] = "trans_main.id = trans_child.trans_main_id";
         $data['leftJoin']['employee_master'] = "employee_master.id = trans_child.initiate_by";
@@ -40,6 +40,7 @@ class SalesOrderModel extends MasterModel{
         $data['searchCol'][] = "trans_child.dispatch_qty";
         $data['searchCol'][] = "(trans_child.qty - trans_child.dispatch_qty)";
         $data['searchCol'][] = "employee_master.emp_name";
+        $data['searchCol'][] = "DATE_FORMAT(trans_child.initiate_at,'%d-%m-%Y')";
 
         $columns =array(); foreach($data['searchCol'] as $row): $columns[] = $row; endforeach;
         if(isset($data['order'])){$data['order_by'][$columns[$data['order'][0]['column']]] = $data['order'][0]['dir'];}
@@ -258,9 +259,13 @@ class SalesOrderModel extends MasterModel{
     public function getPendingOrderItems($data){
         $queryData = array();
         $queryData['tableName'] = $this->transChild;
-        $queryData['select'] = "trans_child.*,(trans_child.qty - trans_child.dispatch_qty) as pending_qty,trans_main.entry_type as main_entry_type,trans_main.trans_number,trans_main.trans_date,trans_main.doc_no,IF(trans_child.packing_qty <> 0,trans_child.packing_qty,item_master.packing_standard) AS packing_qty";
+        $queryData['select'] = "trans_child.*,(trans_child.qty - trans_child.dispatch_qty) as pending_qty,trans_main.entry_type as main_entry_type,trans_main.trans_number,trans_main.trans_date,trans_main.doc_no,IF(trans_child.packing_qty <> 0,trans_child.packing_qty,item_master.packing_standard) AS packing_qty,stock_transaction.unique_id,stock_transaction.batch_no,stock_transaction.location_id";
+
         $queryData['leftJoin']['trans_main'] = "trans_child.trans_main_id = trans_main.id";
         $queryData['leftJoin']['item_master'] = "trans_child.item_id = item_master.id";
+        $queryData['leftJoin']['service_master'] = "service_master.ref_id = trans_child.id";
+        $queryData['leftJoin']['stock_transaction'] = "stock_transaction.unique_id = service_master.new_unique_id";
+
         $queryData['where']['trans_main.party_id'] = $data['party_id'];
         $queryData['where']['trans_child.entry_type'] = $this->data['entryData']->id;
         $queryData['where']['(trans_child.qty - trans_child.dispatch_qty) >'] = 0;
