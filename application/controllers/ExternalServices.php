@@ -38,7 +38,7 @@ class ExternalServices extends MY_Controller{
         $this->data['trans_prefix'] = $this->data['entryData']->trans_prefix;
         $this->data['trans_no'] = $this->data['entryData']->trans_no;
         $this->data['trans_number'] = $this->data['entryData']->trans_prefix.$this->data['entryData']->trans_no;
-        $this->data['partyList'] = $this->party->getPartyList();
+        $this->data['partyList'] = $this->party->getPartyList(['party_category'=>"1,2,3"]);
         $this->data['itemList'] = $this->item->getItemList();
         $this->data['employeeList'] = $this->employee->getEmployeeList();
         $this->load->view($this->form,$this->data);
@@ -67,7 +67,7 @@ class ExternalServices extends MY_Controller{
     public function edit(){
         $data = $this->input->post();
         $this->data['dataRow'] = $this->externalServices->getExternalServices($data);
-        $this->data['partyList'] = $this->party->getPartyList();
+        $this->data['partyList'] = $this->party->getPartyList(['party_category'=>"1,2,3"]);
         $this->data['itemList'] = $this->item->getItemList();
         $this->data['employeeList'] = $this->employee->getEmployeeList();
         $this->load->view($this->form,$this->data);

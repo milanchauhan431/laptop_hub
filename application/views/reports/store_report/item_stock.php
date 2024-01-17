@@ -15,10 +15,7 @@
                                     <div class="input-group-append <?=($this->cm_id != 1)?"hidden":""?>" style="width:50%;">
                                         <select name="cm_id" id="cm_id" class="form-control select2">
                                             <option value="1,2,3,4">ALL Branch</option>
-                                            <option value="1" <?=($this->cm_id == 1)?"selected":""?> >Branch 1</option>
-                                            <option value="2" <?=($this->cm_id == 2)?"selected":""?> >Branch 2</option>
-                                            <option value="3" <?=($this->cm_id == 3)?"selected":""?> >Branch 3</option>
-                                            <option value="4" <?=($this->cm_id == 4)?"selected":""?> >Branch 4</option>
+                                            <?=getCompanyListOption($companyList,$this->cm_id)?>
                                         </select>
                                     </div>
                                     <div class="input-group-append" style="<?=($this->cm_id != 1)?"width:40%;margin-left:40%;":"width:30%;"?>">
@@ -43,12 +40,16 @@
                             <table id='reportTable' class="table table-bordered">
 								<thead class="thead-info" id="theadData">
                                     <tr class="text-center">
-                                        <th colspan="4">Stock Register</th>
+                                        <th colspan="8">Stock Register</th>
                                     </tr>
 									<tr>
 										<th class="text-center">#</th>
 										<th class="text-left">Item Code</th>
 										<th class="text-left">Item Description</th>
+										<th class="text-right">Ready Qty.</th>
+										<th class="text-right">Customized Qty.</th>
+										<th class="text-right">Repairable Qty.</th>
+										<th class="text-right">Scrap Qty.</th>
 										<th class="text-right">Balance Qty.</th>
 									</tr>
 								</thead>

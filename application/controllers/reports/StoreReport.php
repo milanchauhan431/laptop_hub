@@ -9,11 +9,13 @@ class StoreReport extends MY_Controller{
     public function stockRegister(){
         $this->data['pageHeader'] = 'STOCK REGISTER';
         $this->data['headData']->pageUrl = "reports/storeReport/stockRegister";
+        $this->data['companyList'] = $this->masterModel->getCompanyList();
         $this->load->view("reports/store_report/item_stock",$this->data);
     }
 
     public function getStockRegisterData(){
         $data = $this->input->post();
+
         $result = $this->storeReport->getStockRegisterData($data);
 
         $tbody = '';$i=1;
@@ -22,6 +24,10 @@ class StoreReport extends MY_Controller{
                 <td  class="text-center">'.$i++.'</td>
                 <td  class="text-left">'.$row->item_code.'</td>
                 <td  class="text-left"><a href="'.base_url("reports/storeReport/stockTransactions/".$row->id."/".$row->cm_id).'">'.$row->item_name.'</a></td>
+                <td  class="text-right">'.floatVal($row->ready_material_qty).'</td>
+                <td  class="text-right">'.floatVal($row->customized_system_qty).'</td>
+                <td  class="text-right">'.floatVal($row->repairable_qty).'</td>
+                <td  class="text-right">'.floatVal($row->scrap_qty).'</td>
                 <td  class="text-right">'.floatVal($row->stock_qty).'</td>
             </tr>';
         endforeach;
